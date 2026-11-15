@@ -110,9 +110,6 @@ async def _enviar_dm_com_retry(
             *componentes,
             accent_colour=embed.color.value if embed.color else COR_PRIMARIA,
         ))
-(partes)[:3900] or "## NÊMESIS • Comunicado"),
-            accent_colour=COR_PRIMARIA,
-        ))
     if view is None:
         raise ValueError("É necessário informar um cartão para enviar a DM.")
     user_id = getattr(membro, "id", "desconhecido")
