@@ -171,6 +171,24 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
             for linha in linhas for controle in linha.children
         ))
 
+        botao_preferencias = next(
+            botao for botao in _botoes_do_container(container)
+            if botao.custom_id == "nemesis:alternar_notas_dm"
+        )
+        mensagem = Mock()
+        mensagem.components = view.children
+        mensagem.embeds = []
+        reconstruido = _reconstruir_cartao_preferencias(
+            mensagem, botao_preferencias
+        )
+        container_reconstruido = reconstruido.children[0]
+        galerias_reconstruidas = [
+            item for item in container_reconstruido.children
+            if isinstance(item, discord.ui.MediaGallery)
+        ]
+        self.assertEqual(len(galerias_reconstruidas), 1)
+        self.assertEqual(len(galerias_reconstruidas[0].items), 1)
+
     def test_reconstrucao_de_embed_legada_preserva_imagem_e_conteudo_longo(self):
         original = discord.ui.View(timeout=None)
         botao = AlternarAvisosButton()
