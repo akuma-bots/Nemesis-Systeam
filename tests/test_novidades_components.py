@@ -3,7 +3,9 @@ from unittest.mock import AsyncMock, Mock, patch
 
 import discord
 
-from cogs.boas_vindas_dm import (\n    AlternarAvisosButton, BoasVindasLayoutView, _reconstruir_cartao_preferencias,\n)
+from cogs.boas_vindas_dm import (
+    AlternarAvisosButton, BoasVindasLayoutView, _reconstruir_cartao_preferencias,
+)
 from cogs.novidades import _enviar_dm_com_retry
 from utils.apresentacao import (
     dividir_texto_components_v2,
@@ -171,7 +173,7 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
             title="Notas antigas",
             description="Conteúdo preservado.\n" * 260,
         )
-        embed.set_image(url="https://example.com/arquivo.png")
+        embed.set_image(url="https://example.com/arquivo.png")\n        embed.set_footer(text="Nêmesis Systeam")
         mensagem = Mock()
         mensagem.components = []
         mensagem.embeds = [embed]
