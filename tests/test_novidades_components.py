@@ -194,6 +194,10 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
         ]
         self.assertEqual(len(galerias_reconstruidas), 1)
         self.assertEqual(len(galerias_reconstruidas[0].items), 1)
+        self.assertEqual(
+            galerias_reconstruidas[0].items[0].media.url,
+            "https://example.com/avatar.png",
+        )
 
     def test_reconstrucao_de_embed_legada_preserva_imagem_e_conteudo_longo(self):
         original = discord.ui.View(timeout=None)
@@ -222,6 +226,10 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
         ]
         self.assertEqual(len(galerias), 1)
         self.assertEqual(len(galerias[0].items), 1)
+        self.assertEqual(
+            galerias[0].items[0].media.url,
+            "https://example.com/arquivo.png",
+        )
 
 
 if __name__ == "__main__":
