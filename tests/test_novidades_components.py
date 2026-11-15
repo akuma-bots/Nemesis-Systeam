@@ -4,7 +4,9 @@ from unittest.mock import AsyncMock, Mock, patch
 import discord
 
 from cogs.boas_vindas_dm import (
-    AlternarAvisosButton, BoasVindasLayoutView, _reconstruir_cartao_preferencias,
+    AlternarAvisosButton,
+    BoasVindasLayoutView,
+    _reconstruir_cartao_preferencias,
 )
 from cogs.novidades import _enviar_dm_com_retry
 from utils.apresentacao import (
@@ -115,7 +117,11 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
         container = reconstruido.children[0]
         self.assertIsInstance(container, discord.ui.Container)
         textos = _textos_do_container(container)
-        self.assertEqual("".join(textos), ("A" * 4000) + "\n\n" + ("B" * 1200))
+        self.assertEqual(
+            "".join(textos[:-1]),
+            ("A" * 4000) + "\n\n" + ("B" * 1200),
+        )
+        self.assertEqual(textos[-1], "-# Nêmesis Systeam")
         self.assertTrue(all(len(texto) <= 3900 for texto in textos))
 
         botoes = _botoes_do_container(container)
@@ -133,7 +139,7 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
     def test_cartao_boas_vindas_preserva_texto_imagem_e_controles_aninhados(self):
         embed = discord.Embed(
             title="Boas-vindas",
-            description="Etapa completa.\\n" * 320,
+            description="Etapa completa.\n" * 320,
         )
         embed.set_thumbnail(url="https://example.com/avatar.png")
         membro = Mock()
@@ -144,7 +150,8 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
         container = view.children[0]
         self.assertIsInstance(container, discord.ui.Container)
         textos = _textos_do_container(container)
-        self.assertEqual("".join(textos), texto_embed_components_v2(embed))
+        self.assertEqual("".join(textos[:-1]), texto_embed_components_v2(embed))
+        self.assertEqual(textos[-1], "-# NÊMESIS • INTEGRAÇÃO OFICIAL • NΞM")
         self.assertTrue(all(len(texto) <= 3900 for texto in textos))
         self.assertTrue(any(
             isinstance(item, discord.ui.MediaGallery)
@@ -173,7 +180,8 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
             title="Notas antigas",
             description="Conteúdo preservado.\n" * 260,
         )
-        embed.set_image(url="https://example.com/arquivo.png")\n        embed.set_footer(text="Nêmesis Systeam")
+        embed.set_image(url="https://example.com/arquivo.png")
+        embed.set_footer(text="Nêmesis Systeam")
         mensagem = Mock()
         mensagem.components = []
         mensagem.embeds = [embed]
