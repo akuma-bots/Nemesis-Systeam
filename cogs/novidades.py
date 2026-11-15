@@ -1,4 +1,7 @@
-from utils.apresentacao import criar_embed, COR_PRIMARIA
+from utils.apresentacao import (
+    criar_embed, COR_PRIMARIA, dividir_texto_components_v2,
+    texto_embed_components_v2, imagens_embed_components_v2,
+)
 import asyncio
 import json
 import logging
@@ -90,22 +93,24 @@ async def _enviar_dm_com_retry(
     membro: discord.abc.User,
     *,
     view: discord.ui.LayoutView | None = None,
-    embed: discord.Embed | None = None,
-) -> str:
-    """Envia uma única vez; aceita embed legado convertendo-o para cartão V2."""
-    if view is None and embed is not None:
-        partes = []
-        if embed.title:
-            partes.append(f"## {embed.title}")
-        if embed.description:
-            partes.append(embed.description)
-        for campo in embed.fields:
-            partes.append(f"**{campo.name}**\n{campo.value}")
-        if embed.footer and embed.footer.text:
-            partes.append(f"-# {embed.footer.text}")
+    embed: discord.Embed | None =    if view is None and embed is not None:
+        texto = texto_embed_components_v2(embed) or "## NÊMESIS • Comunicado"
+        componentes = [
+            discord.ui.TextDisplay(parte)
+            for parte in dividir_texto_components_v2(texto)
+        ]
+        imagens = imagens_embed_components_v2(embed)
+        if imagens:
+            componentes.append(discord.ui.MediaGallery(*[
+                discord.MediaGalleryItem(url=url, description=descricao)
+                for url, descricao in imagens
+            ]))
         view = discord.ui.LayoutView(timeout=None)
         view.add_item(discord.ui.Container(
-            discord.ui.TextDisplay("\n\n".join(partes)[:3900] or "## NÊMESIS • Comunicado"),
+            *componentes,
+            accent_colour=embed.color.value if embed.color else COR_PRIMARIA,
+        ))
+(partes)[:3900] or "## NÊMESIS • Comunicado"),
             accent_colour=COR_PRIMARIA,
         ))
     if view is None:
