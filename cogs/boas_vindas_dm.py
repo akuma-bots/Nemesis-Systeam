@@ -323,16 +323,23 @@ class BoasVindasLayoutView(discord.ui.LayoutView):
     def __init__(self, membro: discord.abc.User, autor_id: int, selecionado: str = "inicio"):
         super().__init__(timeout=900)
         embed = _embed_inicio(membro) if selecionado == "inicio" else _embed_codigos(selecionado)
-        linhas = [f"## {embed.title or 'INTEGRAÇÃO NÊMESIS'}"]
-        if embed.description:
-            linhas.append(embed.description)
-        for campo in embed.fields:
-            linhas.append(f"**{campo.name}**\n{campo.value}")
+        texto = texto_embed_components_v2(embed) or "## INTEGRAÇÃO NÊMESIS"
+        componentes = [
+            discord.ui.TextDisplay(parte)
+            for parte in dividir_texto_components_v2(texto)
+        ]
+        imagens = imagens_embed_components_v2(embed)
+        if imagens:
+            componentes.append(discord.ui.MediaGallery(*[
+                discord.MediaGalleryItem(url=url, description=descricao)
+                for url, descricao in imagens
+            ]))
+
         guia = adicionar_seletor_guia(discord.ui.View(timeout=900)).children[0]
         seletor = SeletorBoasVindas(autor_id, selecionado)
         avisos = AlternarAvisosButton()
         self.add_item(discord.ui.Container(
-            discord.ui.TextDisplay("\n\n".join(linhas)[:3900]),
+            *componentes,
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.TextDisplay("### ◈ NAVEGAÇÃO DA ORGANIZAÇÃO"),
             discord.ui.ActionRow(guia),
