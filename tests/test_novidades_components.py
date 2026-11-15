@@ -1,9 +1,9 @@
 import unittest
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import AsyncMock, Mock, patch
 
 import discord
 
-from cogs.boas_vindas_dm import AlternarAvisosButton, _reconstruir_cartao_preferencias
+from cogs.boas_vindas_dm import (\n    AlternarAvisosButton, BoasVindasLayoutView, _reconstruir_cartao_preferencias,\n)
 from cogs.novidades import _enviar_dm_com_retry
 from utils.apresentacao import (
     dividir_texto_components_v2,
@@ -127,6 +127,40 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(alternar.custom_id, "nemesis:alternar_notas_dm")
         self.assertIsNotNone(alternar.callback)
+
+    def test_cartao_boas_vindas_preserva_texto_imagem_e_controles_aninhados(self):
+        embed = discord.Embed(
+            title="Boas-vindas",
+            description="Etapa completa.\\n" * 320,
+        )
+        embed.set_thumbnail(url="https://example.com/avatar.png")
+        membro = Mock()
+
+        with patch("cogs.boas_vindas_dm._embed_inicio", return_value=embed):
+            view = BoasVindasLayoutView(membro, 987)
+
+        container = view.children[0]
+        self.assertIsInstance(container, discord.ui.Container)
+        textos = _textos_do_container(container)
+        self.assertEqual("".join(textos), texto_embed_components_v2(embed))
+        self.assertTrue(all(len(texto) <= 3900 for texto in textos))
+        self.assertTrue(any(
+            isinstance(item, discord.ui.MediaGallery)
+            for item in container.children
+        ))
+        linhas = [
+            item for item in container.children
+            if isinstance(item, discord.ui.ActionRow)
+        ]
+        self.assertEqual(len(linhas), 3)
+        self.assertTrue(any(
+            isinstance(controle, discord.ui.Select)
+            for linha in linhas for controle in linha.children
+        ))
+        self.assertTrue(any(
+            isinstance(controle, discord.ui.Button)
+            for linha in linhas for controle in linha.children
+        ))
 
     def test_reconstrucao_de_embed_legada_preserva_imagem_e_conteudo_longo(self):
         original = discord.ui.View(timeout=None)
