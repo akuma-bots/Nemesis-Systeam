@@ -967,10 +967,11 @@ class Logs(commands.Cog):
             detalhe = f"Entrou no canal de voz {depois.channel.name}."
             await self._enviar_log(canal, criar_embed(description=f"🔊 {detalhe}", color=0x57F287), categoria="voz")
             await registrar_global(member.guild, "historico_membros", "Entrada em chamada", detalhe, cor=0x57F287)
-        elif antes.channel != depois.channel:
+        elif antes.channel is not None and depois.channel is not None and antes.channel.id != depois.channel.id:
             detalhe = f"Mudou de {antes.channel.name} para {depois.channel.name}."
             await self._enviar_log(canal, criar_embed(description=f"🔀 {detalhe}", color=0xFEE75C), categoria="voz")
             await registrar_global(member.guild, "historico_membros", "Movimentação em chamada", detalhe, cor=0xFEE75C)
+        # Saídas de canais de voz não são registradas, conforme a configuração da NÊMESIS.
 
         alteracoes_estado = []
         for atributo, rotulo in (
