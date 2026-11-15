@@ -78,7 +78,7 @@ def dividir_texto_components_v2(texto: str, limite: int = 3900) -> list[str]:
     while inicio < len(texto):
         fim = min(inicio + limite, len(texto))
         if fim < len(texto):
-            quebra = texto.rfind("\\n", inicio, fim)
+            quebra = texto.rfind("\n", inicio, fim)
             if quebra > inicio:
                 fim = quebra + 1
         partes.append(texto[inicio:fim])
@@ -101,14 +101,14 @@ def texto_embed_components_v2(embed: discord.Embed) -> str:
         partes.append(embed.description)
 
     for campo in embed.fields:
-        partes.append(f"**{campo.name}**\\n{campo.value}")
+        partes.append(f"**{campo.name}**\n{campo.value}")
 
     if embed.footer and embed.footer.text:
         partes.append(f"-# {embed.footer.text}")
     if embed.timestamp:
         partes.append(f"-# {discord.utils.format_dt(embed.timestamp, style='F')}")
 
-    return "\\n\\n".join(partes)
+    return "\n\n".join(partes)
 
 
 def imagens_embed_components_v2(embed: discord.Embed) -> list[tuple[str, str]]:
