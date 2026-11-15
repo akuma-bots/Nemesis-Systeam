@@ -137,10 +137,10 @@ class SeletorBoasVindas(discord.ui.Select):
         texto = texto_embed_components_v2(embed)
         imagens = imagens_embed_components_v2(embed)
     else:
-        texto = "\\n\\n".join(textos)
+        texto = "\n\n".join(textos)
 
     if not texto:
-        texto = "## NÊMESIS • NOTAS DE ATUALIZAÇÃO\\nConfigure o recebimento de comunicados automáticos."
+        texto = "## NÊMESIS • NOTAS DE ATUALIZAÇÃO\nConfigure o recebimento de comunicados automáticos."
 
     origem = getattr(botao, "view", None)
     itens = []
@@ -204,7 +204,7 @@ class SeletorBoasVindas(discord.ui.Select):
             async def callback(interaction, item=original, clone=novo):
                 item._values = clone._values
                 if hasattr(clone, "_resolved"):
-                    clone._resolved = clone._resolved
+                    item._resolved = clone._resolved
                 await item.callback(interaction)
             novo.callback = callback
             seletores.append(novo)
@@ -264,8 +264,6 @@ class SeletorBoasVindas(discord.ui.Select):
         )
 
     layout = discord.ui.LayoutView(timeout=None)
-    layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
-    return layout
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     return layout
 
