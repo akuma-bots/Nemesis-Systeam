@@ -150,7 +150,13 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
         container = view.children[0]
         self.assertIsInstance(container, discord.ui.Container)
         textos = _textos_do_container(container)
-        self.assertEqual("".join(textos[:-1]), texto_embed_components_v2(embed))
+        texto_conteudo = []
+        for item in container.children:
+            if isinstance(item, discord.ui.TextDisplay):
+                if item.content == "### ◈ NAVEGAÇÃO DA ORGANIZAÇÃO":
+                    break
+                texto_conteudo.append(item.content)
+        self.assertEqual("".join(texto_conteudo), texto_embed_components_v2(embed))
         self.assertEqual(textos[-1], "-# NÊMESIS • INTEGRAÇÃO OFICIAL • NΞM")
         self.assertTrue(all(len(texto) <= 3900 for texto in textos))
         self.assertTrue(any(
