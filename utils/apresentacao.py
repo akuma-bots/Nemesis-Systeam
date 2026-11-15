@@ -63,6 +63,69 @@ def criar_embed(
     return embed
 
 
+
+def dividir_texto_components_v2(texto: str, limite: int = 3900) -> list[str]:
+    """Divide texto em blocos seguros para TextDisplay sem descartar caracteres."""
+    texto = str(texto or "")
+    limite = int(limite)
+    if limite < 1 or limite > 4000:
+        raise ValueError("O limite de TextDisplay deve ficar entre 1 e 4000 caracteres.")
+    if not texto:
+        return [""]
+
+    partes = []
+    inicio = 0
+    while inicio < len(texto):
+        fim = min(inicio + limite, len(texto))
+        if fim < len(texto):
+            quebra = texto.rfind("\\n", inicio, fim)
+            if quebra > inicio:
+                fim = quebra + 1
+        partes.append(texto[inicio:fim])
+        inicio = fim
+    return partes
+
+
+def texto_embed_components_v2(embed: discord.Embed) -> str:
+    """Converte os elementos textuais de uma embed em texto integral para Components V2."""
+    partes = []
+    autor = embed.author
+    if autor and autor.name:
+        nome_autor = f"[{autor.name}]({autor.url})" if autor.url else autor.name
+        partes.append(f"**{nome_autor}**")
+
+    if embed.title:
+        titulo = f"[{embed.title}]({embed.url})" if embed.url else embed.title
+        partes.append(f"## {titulo}")
+    if embed.description:
+        partes.append(embed.description)
+
+    for campo in embed.fields:
+        partes.append(f"**{campo.name}**\\n{campo.value}")
+
+    if embed.footer and embed.footer.text:
+        partes.append(f"-# {embed.footer.text}")
+    if embed.timestamp:
+        partes.append(f"-# {discord.utils.format_dt(embed.timestamp, style='F')}")
+
+    return "\\n\\n".join(partes)
+
+
+def imagens_embed_components_v2(embed: discord.Embed) -> list[tuple[str, str]]:
+    """Retorna miniatura e imagem da embed, sem duplicar a mesma URL."""
+    imagens = []
+    vistas = set()
+    for atributo, descricao in (
+        ("thumbnail", "Miniatura do comunicado"),
+        ("image", "Imagem do comunicado"),
+    ):
+        url = getattr(getattr(embed, atributo, None), "url", None)
+        if url and url not in vistas:
+            vistas.add(url)
+            imagens.append((str(url), descricao))
+    return imagens
+
+
 def cor_por_estado(sucesso: bool, *, aviso: bool = False) -> int:
     if sucesso:
         return COR_SUCESSO
