@@ -1,4 +1,7 @@
-from utils.apresentacao import criar_embed, COR_PRIMARIA
+from utils.apresentacao import (
+    criar_embed, COR_PRIMARIA, dividir_texto_components_v2,
+    texto_embed_components_v2, imagens_embed_components_v2,
+)
 from utils.preferencias_notificacoes import obter_preferencias, definir_preferencia
 from utils.guia_servidores import (
     adicionar_seletor_guia,
@@ -117,35 +120,27 @@ class SeletorBoasVindas(discord.ui.Select):
             await interaction.response.send_message("Esta mensagem de boas-vindas foi enviada para outra pessoa.", ephemeral=True)
             return
         chave = self.values[0]
-        await interaction.response.edit_message(
-            view=BoasVindasLayoutView(interaction.user, self.autor_id, chave)
-        )
-
-
-
-def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.ui.Button) -> discord.ui.LayoutView:
-    """Preserva texto, seletores e atalhos ao atualizar a preferência por DM."""
-    texto = ""
+        await interaction.response.edit_medef _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.ui.Button) -> discord.ui.LayoutView:
+    """Preserva todo o texto, mídias, seletores e atalhos ao atualizar a preferência por DM."""
+    textos = []
     pendentes = list(getattr(mensagem, "components", []) or [])
     while pendentes:
         item = pendentes.pop(0)
-        conteudo = str(getattr(item, "content", "") or "").strip()
-        if conteudo and not texto:
-            texto = conteudo
+        conteudo = getattr(item, "content", None)
+        if isinstance(conteudo, str) and conteudo:
+            textos.append(conteudo)
         pendentes.extend(list(getattr(item, "children", []) or []))
 
-    if not texto and mensagem.embeds:
+    imagens = []
+    if not textos and mensagem.embeds:
         embed = mensagem.embeds[0]
-        partes = []
-        if embed.title:
-            partes.append(f"## {embed.title}")
-        if embed.description:
-            partes.append(embed.description)
-        for campo in embed.fields:
-            partes.append(f"**{campo.name}**\n{campo.value}")
-        if embed.footer and embed.footer.text:
-            partes.append(f"-# {embed.footer.text}")
-        texto = "\n\n".join(partes)
+        texto = texto_embed_components_v2(embed)
+        imagens = imagens_embed_components_v2(embed)
+    else:
+        texto = "\\n\\n".join(textos)
+
+    if not texto:
+        texto = "## NÊMESIS • NOTAS DE ATUALIZAÇÃO\\nConfigure o recebimento de comunicados automáticos."
 
     origem = getattr(botao, "view", None)
     itens = []
@@ -158,11 +153,18 @@ def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.u
             pendentes.extend(list(getattr(item, "children", []) or []))
 
     componentes = [
-        discord.ui.TextDisplay(
-            (texto or "## NÊMESIS • NOTAS DE ATUALIZAÇÃO\nConfigure o recebimento de comunicados automáticos.")[:3900]
-        ),
-        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+        discord.ui.TextDisplay(parte)
+        for parte in dividir_texto_components_v2(texto)
     ]
+    if imagens:
+        componentes.append(discord.ui.MediaGallery(*[
+            discord.MediaGalleryItem(url=url, description=descricao)
+            for url, descricao in imagens
+        ]))
+    componentes.append(
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small)
+    )
+
     seletores = []
     botoes_link = []
     botoes_acao = []
@@ -202,7 +204,7 @@ def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.u
             async def callback(interaction, item=original, clone=novo):
                 item._values = clone._values
                 if hasattr(clone, "_resolved"):
-                    item._resolved = clone._resolved
+                    clone._resolved = clone._resolved
                 await item.callback(interaction)
             novo.callback = callback
             seletores.append(novo)
@@ -245,15 +247,25 @@ def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.u
 
     for seletor in seletores:
         componentes.append(discord.ui.ActionRow(seletor))
-    if botoes_link:
-        componentes.append(discord.ui.ActionRow(*botoes_link[:5]))
+    for inicio in range(0, len(botoes_link), 5):
+        componentes.append(discord.ui.ActionRow(*botoes_link[inicio:inicio + 5]))
     for inicio in range(0, len(botoes_acao), 5):
         componentes.append(discord.ui.ActionRow(*botoes_acao[inicio:inicio + 5]))
-    componentes.extend([
-        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam"),
-    ])
+
+    componentes.append(
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small)
+    )
+    if not texto.rstrip().endswith("-# Nêmesis Systeam"):
+        componentes.append(discord.ui.TextDisplay("-# Nêmesis Systeam"))
+
+    if len(componentes) > 10:
+        raise ValueError(
+            "O cartão de preferências excede o limite de 10 componentes no Container."
+        )
+
     layout = discord.ui.LayoutView(timeout=None)
+    layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
+    return layout
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     return layout
 
