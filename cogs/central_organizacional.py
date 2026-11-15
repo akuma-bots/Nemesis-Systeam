@@ -150,19 +150,19 @@ PAGINAS = {
     "hierarquia": ("𓂀 Hierarquia Nêmesis", "🏛️", _pagina_hierarquia),
     "divisoes": ("Divisões", "⚔️", _pagina_divisoes),
     "staffs": ("Staffs", "♟️", _pagina_staffs),
-    "octogono": ("OCTÓGONO", "⬡", _pagina_octogono),
+    "octogono": ("OCTÓGONO", "🔰", _pagina_octogono),
 }
 
 
 class SeletorHierarquia(discord.ui.Select):
-    def __init__(self):
+    def __init__(self, selecionado: str = "hierarquia"):
         super().__init__(
             placeholder="Selecione uma área da organização",
             min_values=1,
             max_values=1,
             custom_id="nemesis:central_organizacional:seletor:v1",
             options=[
-                discord.SelectOption(label=nome, value=chave, emoji=emoji, default=(chave == "hierarquia"))
+                discord.SelectOption(label=nome, value=chave, emoji=emoji, default=(chave == selecionado))
                 for chave, (nome, emoji, _) in PAGINAS.items()
             ],
         )
@@ -182,7 +182,7 @@ class CentralOrganizacionalView(discord.ui.LayoutView):
     def __init__(self, chave: str = "hierarquia", texto: str | None = None):
         super().__init__(timeout=None)
         nome, emoji, renderizar = PAGINAS[chave]
-        seletor = SeletorHierarquia()
+        seletor = SeletorHierarquia(chave)
         if texto is None:
             texto = (
                 "## 𓂀 NÊMESIS • CENTRAL ORGANIZACIONAL\n"
@@ -250,7 +250,7 @@ class CentralOrganizacional(commands.Cog):
                     if any(MARCADOR in str(getattr(c, "content", "")) for c in antiga.components):
                         mensagem = antiga
                         break
-            view = CentralOrganizacionalView()
+            view = CentralOrganizacionalView(texto=_pagina_hierarquia(guild))
             if mensagem is None:
                 mensagem = await canal.send(view=view, allowed_mentions=discord.AllowedMentions.none())
             else:
