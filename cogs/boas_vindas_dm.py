@@ -123,19 +123,30 @@ class SeletorBoasVindas(discord.ui.Select):
         await interaction.response.edit_medef _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.ui.Button) -> discord.ui.LayoutView:
     """Preserva todo o texto, mídias, seletores e atalhos ao atualizar a preferência por DM."""
     textos = []
+    imagens = []
     pendentes = list(getattr(mensagem, "components", []) or [])
     while pendentes:
         item = pendentes.pop(0)
         conteudo = getattr(item, "content", None)
         if isinstance(conteudo, str) and conteudo:
             textos.append(conteudo)
+        if item.__class__.__name__ in {"MediaGallery", "MediaGalleryComponent"}:
+            for media_item in getattr(item, "items", []) or []:
+                media = getattr(media_item, "media", None)
+                url = getattr(media_item, "url", None) or getattr(media, "url", None)
+                if url and all(url != existente[0] for existente in imagens):
+                    imagens.append((
+                        str(url),
+                        getattr(media_item, "description", None) or "Imagem do comunicado",
+                    ))
         pendentes.extend(list(getattr(item, "children", []) or []))
 
-    imagens = []
     if not textos and mensagem.embeds:
         embed = mensagem.embeds[0]
         texto = texto_embed_components_v2(embed)
-        imagens = imagens_embed_components_v2(embed)
+        for imagem in imagens_embed_components_v2(embed):
+            if all(imagem[0] != existente[0] for existente in imagens):
+                imagens.append(imagem)
     else:
         texto = "\n\n".join(textos)
 
@@ -255,7 +266,8 @@ class SeletorBoasVindas(discord.ui.Select):
     componentes.append(
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small)
     )
-    if not texto.rstrip().endswith("-# Nêmesis Systeam"):
+    ultima_linha = texto.rstrip().splitlines()[-1] if texto.strip() else ""
+    if not ultima_linha.startswith("-#"):
         componentes.append(discord.ui.TextDisplay("-# Nêmesis Systeam"))
 
     if len(componentes) > 10:
