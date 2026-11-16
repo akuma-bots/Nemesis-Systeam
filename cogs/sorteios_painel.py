@@ -209,7 +209,7 @@ def _card_sorteio(sorteio: dict, quantidade: int, view: discord.ui.View):
 class ModalCriarSorteio(discord.ui.Modal, title="Criar sorteio"):
     titulo = discord.ui.TextInput(label="Nome do sorteio", placeholder="Ex.: Sorteio Diário", default="Sorteio NÊMESIS", max_length=100)
     premio = discord.ui.TextInput(label="Prêmio", placeholder="Ex.: recompensa, item ou benefício", max_length=300)
-    descricao = discord.ui.TextInput(label="Descrição", placeholder="Informações e instruções para participar", style=discord.TextStyle.paragraph, required=False, max_length=900)
+    requisitos = discord.ui.TextInput(label="Requisitos para participar", placeholder="Opcional. Ex.: possuir o cargo X, estar no servidor...", style=discord.TextStyle.paragraph, required=False, max_length=900)
     duracao = discord.ui.TextInput(label="Duração em minutos", placeholder="Ex.: 1440 para 24 horas", max_length=6)
     vencedores = discord.ui.TextInput(label="Quantidade de vencedores", default="1", max_length=2)
 
@@ -239,7 +239,7 @@ class ModalCriarSorteio(discord.ui.Modal, title="Criar sorteio"):
             "mensagem_id": None,
             "titulo": str(self.titulo.value or "Sorteio NÊMESIS").strip(),
             "premio": premio,
-            "descricao": str(self.descricao.value or "").strip(),
+            "descricao": "",\n            "requisitos": str(self.requisitos.value or "").strip(),
             "banner": None,
             "fim": agora + minutos * 60,
             "vencedores": vencedores,
