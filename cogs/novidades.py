@@ -93,7 +93,9 @@ async def _enviar_dm_com_retry(
     membro: discord.abc.User,
     *,
     view: discord.ui.LayoutView | None = None,
-    embed: discord.Embed | None =    if view is None and embed is not None:
+    embed: discord.Embed | None = None,
+) -> str:
+    if view is None and embed is not None:
         texto = texto_embed_components_v2(embed) or "## NÊMESIS • Comunicado"
         componentes = [
             discord.ui.TextDisplay(parte)
