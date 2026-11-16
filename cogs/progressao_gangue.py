@@ -803,6 +803,12 @@ class ProgressaoGangue(commands.Cog):
         if membro.bot or membro.id == interaction.guild.owner_id:
             await interaction.response.send_message("Este membro não pode receber uma alteração manual de rank.", ephemeral=True)
             return
+        if not await self._membro_tem_cargo_nemesis(interaction.guild.id, membro.id):
+            await interaction.response.send_message(
+                "Apenas membros com o cargo oficial NÊMESIS podem receber um rank de progressão.",
+                ephemeral=True,
+            )
+            return
         if not membro_pode_gerenciar_membro(interaction.user, membro):
             await interaction.response.send_message(
                 "Você só pode alterar o rank de membros abaixo da sua posição hierárquica.",
