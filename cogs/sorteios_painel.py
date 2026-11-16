@@ -767,14 +767,14 @@ class SorteiosPainel(commands.Cog):
                 logger.warning("Painel administrativo de sorteios não sincronizado: canal oficial ausente ou ambíguo (candidatos=%s).", [c.name for c in guild.text_channels if "sorteio" in unicodedata.normalize("NFKC", c.name).casefold()])
                 return
             canal = canais[0]
-            painel = None
-            async for mensagem in canal.history(limit=100):
+            paineis = []
+            async for mensagem in canal.history(limit=None, oldest_first=True):
                 if mensagem.author == self.bot.user and (
                     any(MARCADOR_PAINEL in (e.footer.text or "") for e in mensagem.embeds if e.footer)
                     or _componentes_contem_marcador(mensagem.components, MARCADOR_PAINEL)
                 ):
-                    painel = mensagem
-                    break
+                    paineis.append(mensagem)
+            painel = paineis[0] if paineis else None
             embed = criar_embed(title="🎁 CENTRAL DE SORTEIOS", description="Área administrativa para criar e configurar sorteios oficiais da NÊMESIS. A criação e as configurações são restritas à liderança.", color=COR_PRIMARIA)
             embed.set_footer(text=MARCADOR_PAINEL)
             view = _card_com_view(
@@ -783,9 +783,16 @@ class SorteiosPainel(commands.Cog):
                 rodape=MARCADOR_PAINEL,
             )
             if painel:
-                if not _componentes_contem_marcador(painel.components, MARCADOR_PAINEL):
-                    await painel.edit(content=None, embeds=[], attachments=[])
-                    await painel.edit(view=view)
+                await painel.edit(content=None, embeds=[], attachments=[], view=view)
+                removidas = 0
+                for duplicada in paineis[1:]:
+                    try:
+                        await duplicada.delete()
+                        removidas += 1
+                    except discord.HTTPException:
+                        logger.exception("Não foi possível remover central de sorteios duplicada (%s).", duplicada.id)
+                if removidas:
+                    logger.warning("Centrais de sorteios duplicadas removidas: %s (canal=%s).", removidas, canal.id)
             else:
                 await canal.send(view=view)
             todos = await _carregar_todos()
