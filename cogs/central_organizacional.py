@@ -95,16 +95,102 @@ def _pagina_divisoes(guild: discord.Guild) -> str:
     linhas.extend(["", "**LIDERANÇA E ORGANIZAÇÃO**", "A liderança de cada divisão será exibida quando os respectivos responsáveis e cargos oficiais estiverem definidos.", "• Cargos gerais da NÊMESIS, Staffs e OCTÓGONO não são repetidos nesta lista.", "", "-# Nenhuma chefia ou permissão é atribuída automaticamente por esta central."])
     return _limitar("\n".join(linhas))
 
+def _cargo_por_nome(guild: discord.Guild, nome: str, cargo_id: int | None = None) -> str:
+    cargo = guild.get_role(cargo_id) if cargo_id else None
+    if cargo is None:
+        cargo = discord.utils.find(lambda item: item.name.casefold() == nome.casefold(), guild.roles)
+    return cargo.mention if cargo else f"⚠️ **{nome}** — cargo ainda não localizado no servidor"
+
+
 def _pagina_staffs(guild: discord.Guild) -> str:
-    cargos = ((1563995880007139424, "Diretor Staff"), (1563995880007139423, "Vice-Diretor Staff"), (1563995880007139422, "Supervisor Staff"))
-    linhas = ["## ♟️ STAFFS", "Núcleo administrativo responsável pela organização, acompanhamento e suporte institucional.", "", "**ESTRUTURA ADMINISTRATIVA**"]
-    linhas.extend(f"• {_cargo(guild, cargo_id, nome)}" for cargo_id, nome in cargos)
-    linhas.extend(["", "**RESPONSABILIDADES**", "• Diretor e Vice-Diretor Staff: apoio à condução administrativa.", "• Supervisor Staff: possui permissões administrativas gerais.", "• A equipe acompanha demandas, orienta membros e encaminha decisões aos responsáveis.", "", "-# Permissões administrativas não concedem automaticamente gestão de missões ou ações de progressão."])
-    return _limitar("\n".join(linhas))
+    cargos = (
+        (1563995880007139424, "Diretor Staff", "Direção administrativa",
+         "Define prioridades da equipe, supervisiona a estrutura Staff e responde pela condução administrativa."),
+        (1563995880007139423, "Vice-Diretor Staff", "Apoio à direção",
+         "Auxilia o Diretor Staff, acompanha as demandas da equipe e mantém a continuidade da gestão."),
+        (1563995880007139422, "Supervisor Staff", "Supervisão administrativa",
+         "Supervisiona a atuação da equipe, acompanha procedimentos e possui permissões administrativas gerais."),
+        (None, "Moderador Senior", "Coordenação da moderação",
+         "Orienta os moderadores, acompanha ocorrências complexas e assegura a aplicação consistente das regras."),
+        (None, "Moderador", "Moderação e ordem",
+         "Atua na prevenção e resolução de conflitos, orienta membros e aplica as medidas previstas nas regras."),
+        (None, "Assistente de Moderação", "Suporte à moderação",
+         "Auxilia a equipe em atendimentos e ocorrências, reúne informações e encaminha situações aos responsáveis."),
+        (None, "Agente de Atendimento", "Atendimento aos membros",
+         "Recebe solicitações, esclarece dúvidas e direciona cada demanda ao setor responsável."),
+        (None, "Estagiário Staff", "Aprendizado e apoio",
+         "Conhece os procedimentos internos, acompanha a equipe e realiza tarefas de apoio sob orientação."),
+    )
+    linhas = [
+        "## ♟️ NÊMESIS • HIERARQUIA STAFF",
+        "Estrutura administrativa responsável pela organização, moderação, atendimento e suporte aos membros.",
+        "",
+        "**CARGOS • FUNÇÕES E RESPONSABILIDADES**",
+        "",
+    ]
+    for numero, (cargo_id, nome, funcao, descricao) in enumerate(cargos, 1):
+        linhas.extend([
+            f"**{numero:02d} • {_cargo_por_nome(guild, nome, cargo_id)}**",
+            f"**Função:** {funcao}.",
+            f"**Descrição:** {descricao}",
+            "",
+            "━━━━━━━━━━━━━━━━━━━━",
+            "",
+        ])
+    linhas.extend([
+        "**DIRETRIZES ADMINISTRATIVAS**",
+        "• Diretor Staff, Vice-Diretor Staff e Supervisor Staff integram a liderança administrativa.",
+        "• O Supervisor Staff também possui permissões administrativas gerais.",
+        "• A atuação da equipe deve respeitar os limites de cada função e os procedimentos da organização.",
+        "• A hierarquia Staff não substitui a autoridade exclusiva do OCTÓGONO sobre a gestão de missões.",
+        "",
+        "-# Esta apresentação descreve atribuições; permissões são definidas separadamente pela configuração do servidor.",
+        "-# NÊMESIS — Authority Beyond Rank.",
+    ])
+    return _limitar("\n".join(linhas), limite=3900)
+
 
 def _pagina_octogono(guild: discord.Guild) -> str:
-    linhas = ["## 🔰 OCTÓGONO", "Núcleo responsável pela gestão exclusiva das missões da NÊMESIS.", "", "**CARGO RESPONSÁVEL**", _cargo(guild, 1563995880007139425, "OCTÓGONO"), "", "**ATRIBUIÇÕES**", "• Gerenciar missões, contribuições e operações especiais.", "• Analisar provas e validar resultados das atividades sob sua responsabilidade.", "• Acompanhar a execução das operações e a aplicação das recompensas.", "• Manter registros e decisões fundamentadas.", "", "**LIMITE DE AUTORIDADE**", "A gestão de missões é exclusiva do OCTÓGONO. As permissões administrativas gerais e as ações de progressão seguem suas próprias regras.", "", "-# Esta página informa atribuições; não concede permissões por si só."]
-    return _limitar("\n".join(linhas))
+    cargos = (
+        ("Æternum", "Direção e deliberação", "Representa a posição de referência do OCTÓGONO, zelando pela orientação estratégica e pela continuidade das decisões do núcleo."),
+        ("Armageddon", "Condução de operações", "Atua na organização das operações e no acompanhamento das missões atribuídas ao OCTÓGONO."),
+        ("Cataclysm", "Planejamento de missões", "Contribui para estruturar objetivos, etapas e critérios de execução das missões."),
+        ("Pandæmonium", "Coordenação de atividades", "Auxilia na organização das atividades e na articulação dos integrantes envolvidos nas operações."),
+        ("Oblivion", "Análise e validação", "Examina provas, registros e resultados, observando os critérios definidos para cada atividade."),
+        ("Abyssus", "Acompanhamento operacional", "Acompanha o andamento das missões, identifica pendências e comunica necessidades de intervenção."),
+        ("Apocalypse", "Controle de resultados", "Auxilia na conferência dos resultados e na consistência dos registros das operações."),
+        ("Perdition", "Suporte estratégico", "Presta apoio às demandas do núcleo e contribui para a execução organizada das responsabilidades do OCTÓGONO."),
+    )
+    linhas = [
+        "## 𓂀 NÊMESIS • HIERARQUIA OCTÓGONO",
+        "Núcleo exclusivo responsável pela gestão de missões e pela supervisão das operações atribuídas ao OCTÓGONO.",
+        "",
+        "**OS OITO CARGOS • FUNÇÕES E RESPONSABILIDADES**",
+        "",
+    ]
+    for numero, (nome, funcao, descricao) in enumerate(cargos, 1):
+        linhas.extend([
+            f"**{numero:02d} • {_cargo_por_nome(guild, nome)}**",
+            f"**Função:** {funcao}.",
+            f"**Descrição:** {descricao}",
+            "",
+            "━━━━━━━━━━━━━━━━━━━━",
+            "",
+        ])
+    linhas.extend([
+        "**ATRIBUIÇÕES DO OCTÓGONO**",
+        "• Gerenciar missões, contribuições e operações especiais.",
+        "• Analisar provas e validar resultados das atividades sob sua responsabilidade.",
+        "• Acompanhar a execução das operações e a aplicação das recompensas.",
+        "• Manter registros e decisões fundamentadas.",
+        "",
+        "**LIMITE DE AUTORIDADE**",
+        "As atribuições específicas acima organizam a atuação interna. Não alteram automaticamente permissões individuais nem a autoridade administrativa geral da Staff.",
+        "",
+        "-# Esta apresentação descreve funções; permissões são definidas separadamente pela configuração do servidor.",
+        "-# NÊMESIS — Authority Beyond Rank.",
+    ])
+    return _limitar("\n".join(linhas), limite=3900)
 
 PAGINAS = {
     "hierarquia": ("Hierarquia Nêmesis", None, _pagina_hierarquia),
