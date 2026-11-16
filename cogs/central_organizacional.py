@@ -47,7 +47,7 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
         (1563995879998754940, "Comandante", 4, "Coordenação operacional", "Organiza atividades, orienta integrantes e acompanha a execução das operações."),
         (1563995879998754939, "Treinador", 5, "Formação de integrantes", "Prepara membros, transmite conhecimentos e acompanha o desenvolvimento técnico."),
         (1563995879998754938, "Veterano", 6, "Orientação e experiência", "Compartilha experiência, orienta integrantes e contribui para manter os padrões da organização."),
-        (1563995879995874937, "Elite", 7, "Excelência e referência", "Representa alto desempenho, consistência e comprometimento com a NÊMESIS."),
+        (1563995879998754937, "Elite", 7, "Excelência e referência", "Representa alto desempenho, consistência e comprometimento com a NÊMESIS."),
         (1563995879990624377, "Especialista", 8, "Domínio técnico", "Aplica conhecimentos específicos e auxilia no aperfeiçoamento das atividades."),
         (1563995879990624376, "Executor", 9, "Execução de diretrizes", "Transforma orientações em ações e cumpre as tarefas sob sua responsabilidade."),
         (1563995879990624375, "Tenente", 10, "Apoio à coordenação", "Acompanha atividades, auxilia na organização dos integrantes e reforça as orientações superiores."),
@@ -67,7 +67,7 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
     ]
     for cargo_id, nome, numero, funcao, descricao in progressao:
         linhas.extend([
-            f"**{numero:02d} • {nome.upper()}**",
+            f"**{numero:02d} • {_cargo(guild, cargo_id, nome)}**",
             f"**Função:** {funcao}.",
             f"**Descrição:** {descricao}",
             "",
@@ -86,11 +86,18 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
     return _limitar("\n".join(linhas), limite=3900)
 
 def _pagina_divisoes(guild: discord.Guild) -> str:
-    divisoes = ("N1 Alpha", "N2 Vanguard", "N3 Elite", "N4 Recon", "N5 Assault", "N6 Guard")
+    divisoes = (
+        (1563995879981981824, "N̷1 - Alpha"),
+        (1563995879981981823, "N̷2 - Vanguard"),
+        (1563995879981981822, "N̷3 - Elite"),
+        (1563995879981981821, "N̷4 - Recon"),
+        (1563995879981981820, "N̷5 - Assault"),
+        (1563995879981981819, "N̷6 - Guard"),
+    )
     linhas = ["## ⚔️ DIVISÕES", "Núcleos próprios dentro da NÊMESIS. A hierarquia interna das divisões permanece nesta área.", "", "**ESTRUTURA DAS DIVISÕES**"]
-    for nome in divisoes:
-        cargo = discord.utils.find(lambda item: item.name.casefold() == nome.casefold(), guild.roles)
-        identificacao = cargo.mention if cargo else f"**{nome}**"
+    for cargo_id, nome in divisoes:
+        cargo = guild.get_role(cargo_id)
+        identificacao = cargo.mention if cargo else f"⚠️ **{nome}** — cargo não localizado"
         linhas.append(f"• {identificacao}")
     linhas.extend(["", "**LIDERANÇA E ORGANIZAÇÃO**", "A liderança de cada divisão será exibida quando os respectivos responsáveis e cargos oficiais estiverem definidos.", "• Cargos gerais da NÊMESIS, Staffs e OCTÓGONO não são repetidos nesta lista.", "", "-# Nenhuma chefia ou permissão é atribuída automaticamente por esta central."])
     return _limitar("\n".join(linhas))
@@ -110,15 +117,15 @@ def _pagina_staffs(guild: discord.Guild) -> str:
          "Auxilia o Diretor Staff, acompanha as demandas da equipe e mantém a continuidade da gestão."),
         (1563995880007139422, "Supervisor Staff", "Supervisão administrativa",
          "Supervisiona a atuação da equipe, acompanha procedimentos e possui permissões administrativas gerais."),
-        (None, "Moderador Senior", "Coordenação da moderação",
+        (1563995880007139421, "Moderador Senior", "Coordenação da moderação",
          "Orienta os moderadores, acompanha ocorrências complexas e assegura a aplicação consistente das regras."),
-        (None, "Moderador", "Moderação e ordem",
+        (1563995880007139420, "Moderador", "Moderação e ordem",
          "Atua na prevenção e resolução de conflitos, orienta membros e aplica as medidas previstas nas regras."),
-        (None, "Assistente de Moderação", "Suporte à moderação",
+        (1563995880007139419, "Assistente de Moderação", "Suporte à moderação",
          "Auxilia a equipe em atendimentos e ocorrências, reúne informações e encaminha situações aos responsáveis."),
-        (None, "Agente de Atendimento", "Atendimento aos membros",
+        (1563995879998754946, "Agente de Atendimento", "Atendimento aos membros",
          "Recebe solicitações, esclarece dúvidas e direciona cada demanda ao setor responsável."),
-        (None, "Estagiário Staff", "Aprendizado e apoio",
+        (1563995879998754945, "Estagiário Staff", "Aprendizado e apoio",
          "Conhece os procedimentos internos, acompanha a equipe e realiza tarefas de apoio sob orientação."),
     )
     linhas = [
@@ -152,14 +159,14 @@ def _pagina_staffs(guild: discord.Guild) -> str:
 
 def _pagina_octogono(guild: discord.Guild) -> str:
     cargos = (
-        ("Æternum", "Direção e deliberação", "Representa a posição de referência do OCTÓGONO, zelando pela orientação estratégica e pela continuidade das decisões do núcleo."),
-        ("Armageddon", "Condução de operações", "Atua na organização das operações e no acompanhamento das missões atribuídas ao OCTÓGONO."),
-        ("Cataclysm", "Planejamento de missões", "Contribui para estruturar objetivos, etapas e critérios de execução das missões."),
-        ("Pandæmonium", "Coordenação de atividades", "Auxilia na organização das atividades e na articulação dos integrantes envolvidos nas operações."),
-        ("Oblivion", "Análise e validação", "Examina provas, registros e resultados, observando os critérios definidos para cada atividade."),
-        ("Abyssus", "Acompanhamento operacional", "Acompanha o andamento das missões, identifica pendências e comunica necessidades de intervenção."),
-        ("Apocalypse", "Controle de resultados", "Auxilia na conferência dos resultados e na consistência dos registros das operações."),
-        ("Perdition", "Suporte estratégico", "Presta apoio às demandas do núcleo e contribui para a execução organizada das responsabilidades do OCTÓGONO."),
+        (1563995880015536193, "Æternum", "Direção e deliberação", "Representa a posição de referência do OCTÓGONO, zelando pela orientação estratégica e pela continuidade das decisões do núcleo."),
+        (1563995880015536192, "Armageddon", "Condução de operações", "Atua na organização das operações e no acompanhamento das missões atribuídas ao OCTÓGONO."),
+        (1563995880015536191, "Cataclysm", "Planejamento de missões", "Contribui para estruturar objetivos, etapas e critérios de execução das missões."),
+        (1563995880015536190, "Pandæmonium", "Coordenação de atividades", "Auxilia na organização das atividades e na articulação dos integrantes envolvidos nas operações."),
+        (1563995880015536189, "Oblivion", "Análise e validação", "Examina provas, registros e resultados, observando os critérios definidos para cada atividade."),
+        (1563995880007139428, "Abyssus", "Acompanhamento operacional", "Acompanha o andamento das missões, identifica pendências e comunica necessidades de intervenção."),
+        (1563995880007139427, "Apocalypse", "Controle de resultados", "Auxilia na conferência dos resultados e na consistência dos registros das operações."),
+        (1563995880007139426, "Perdition", "Suporte estratégico", "Presta apoio às demandas do núcleo e contribui para a execução organizada das responsabilidades do OCTÓGONO."),
     )
     linhas = [
         "## 𓂀 NÊMESIS • HIERARQUIA OCTÓGONO",
@@ -168,9 +175,9 @@ def _pagina_octogono(guild: discord.Guild) -> str:
         "**OS OITO CARGOS • FUNÇÕES E RESPONSABILIDADES**",
         "",
     ]
-    for numero, (nome, funcao, descricao) in enumerate(cargos, 1):
+    for numero, (cargo_id, nome, funcao, descricao) in enumerate(cargos, 1):
         linhas.extend([
-            f"**{numero:02d} • {_cargo_por_nome(guild, nome)}**",
+            f"**{numero:02d} • {_cargo_por_nome(guild, nome, cargo_id)}**",
             f"**Função:** {funcao}.",
             f"**Descrição:** {descricao}",
             "",
