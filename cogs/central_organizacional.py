@@ -41,34 +41,22 @@ def _cargo(guild: discord.Guild, cargo_id: int, nome: str) -> str:
 
 def _pagina_hierarquia(guild: discord.Guild) -> str:
     progressao = (
-        (1563995879998754943, "Capitão Geral", 1,
-         "Direção estratégica da NÊMESIS. Define prioridades, estabelece diretrizes e responde pela condução geral da organização."),
-        (1563995879998754942, "Capitão", 2,
-         "Compartilha a condução estratégica, acompanha as lideranças e assegura a execução das decisões superiores."),
-        (1563995879998754941, "Vice Capitão", 3,
-         "Presta apoio direto ao comando, acompanha demandas internas e assume atribuições de liderança quando necessário."),
-        (1563995879998754940, "Comandante", 4,
-         "Coordena a execução das atividades, orienta integrantes e mantém a organização das operações sob sua responsabilidade."),
-        (1563995879998754939, "Treinador", 5,
-         "Conduz a preparação dos integrantes, transmite conhecimentos e acompanha o desenvolvimento técnico e operacional."),
-        (1563995879998754938, "Veterano", 6,
-         "Oferece orientação com base na experiência, auxilia os demais integrantes e contribui para preservar os padrões da organização."),
-        (1563995879995874937, "Elite", 7,
-         "Representa um nível elevado de desempenho e consistência, servindo como referência de comprometimento e qualidade."),
-        (1563995879990624377, "Especialista", 8,
-         "Aplica conhecimentos específicos, apoia atividades que exigem domínio técnico e contribui para o aperfeiçoamento coletivo."),
-        (1563995879990624376, "Executor", 9,
-         "Transforma orientações em ações, cumpre tarefas designadas e mantém a qualidade das entregas operacionais."),
-        (1563995879990624375, "Tenente", 10,
-         "Apoia a coordenação cotidiana, acompanha a execução das orientações e auxilia na organização dos integrantes."),
-        (1563995879990624374, "Subtenente", 11,
-         "Presta suporte às atividades internas, auxilia na comunicação e demonstra preparo para assumir novas responsabilidades."),
-        (1563995879990624373, "Lutador", 12,
-         "Integra a base ativa da organização. Participa das atividades, desenvolve suas habilidades e consolida sua trajetória na NÊMESIS."),
+        (1563995879998754943, "Capitão Geral", 1, "Direção estratégica", "Define diretrizes, estabelece prioridades e responde pela condução geral da NÊMESIS."),
+        (1563995879998754942, "Capitão", 2, "Comando superior", "Acompanha as lideranças e assegura que as decisões estratégicas sejam executadas."),
+        (1563995879998754941, "Vice Capitão", 3, "Apoio ao comando", "Auxilia diretamente a liderança e assume atribuições de comando quando necessário."),
+        (1563995879998754940, "Comandante", 4, "Coordenação operacional", "Organiza atividades, orienta integrantes e acompanha a execução das operações."),
+        (1563995879998754939, "Treinador", 5, "Formação de integrantes", "Prepara membros, transmite conhecimentos e acompanha o desenvolvimento técnico."),
+        (1563995879998754938, "Veterano", 6, "Orientação e experiência", "Compartilha experiência, orienta integrantes e contribui para manter os padrões da organização."),
+        (1563995879995874937, "Elite", 7, "Excelência e referência", "Representa alto desempenho, consistência e comprometimento com a NÊMESIS."),
+        (1563995879990624377, "Especialista", 8, "Domínio técnico", "Aplica conhecimentos específicos e auxilia no aperfeiçoamento das atividades."),
+        (1563995879990624376, "Executor", 9, "Execução de diretrizes", "Transforma orientações em ações e cumpre as tarefas sob sua responsabilidade."),
+        (1563995879990624375, "Tenente", 10, "Apoio à coordenação", "Acompanha atividades, auxilia na organização dos integrantes e reforça as orientações superiores."),
+        (1563995879990624374, "Subtenente", 11, "Suporte interno", "Apoia a rotina da organização, facilita a comunicação e desenvolve capacidade de liderança."),
+        (1563995879990624373, "Lutador", 12, "Participação e evolução", "Integra a base ativa, participa das atividades e desenvolve sua trajetória na NÊMESIS."),
     )
     linhas = [
         "## 𓂀 NÊMESIS • HIERARQUIA INSTITUCIONAL",
-        "Uma estrutura de progressão que reconhece experiência, desempenho e responsabilidade. Cada patente possui atribuições próprias e contribui para a continuidade da organização.",
+        "Conheça as patentes, suas funções e responsabilidades. Cada posição representa uma etapa de experiência, desempenho e compromisso com a organização.",
         "",
         "**IDENTIDADE ORGANIZACIONAL**",
         _cargo(guild, 1563995879990624372, "NÊMESIS"),
@@ -77,10 +65,10 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
         "**PATENTES • FUNÇÕES E RESPONSABILIDADES**",
         "",
     ]
-    for cargo_id, nome, numero, descricao in progressao:
+    for cargo_id, nome, numero, funcao, descricao in progressao:
         linhas.extend([
             f"**{numero:02d} • {nome.upper()}**",
-            f"**Função:** {descricao.split('.')[0]}.",
+            f"**Função:** {funcao}.",
             f"**Descrição:** {descricao}",
             "",
             "━━━━━━━━━━━━━━━━━━━━",
@@ -88,14 +76,14 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
         ])
     linhas.extend([
         "**AUTORIDADE E CONDUTA**",
-        "• Veterano e patentes superiores estão autorizados a promover, rebaixar e banir, sempre respeitando a posição hierárquica do alvo.",
+        "• Veterano e patentes superiores estão autorizados a promover, rebaixar e banir, respeitando a hierarquia do alvo.",
         "• Ações hierárquicas exigem justificativa e registro.",
-        "• Diretorias Staff e OCTÓGONO possuem áreas próprias e não são níveis desta progressão.",
+        "• Staff e OCTÓGONO possuem hierarquias próprias e não integram esta progressão.",
         "",
         "-# A progressão é vinculada ao XP organizacional. O sistema competitivo permanece independente.",
         "-# NÊMESIS — Authority Beyond Rank.",
     ])
-    return _limitar("\\n".join(linhas), limite=3900)
+    return _limitar("\n".join(linhas), limite=3900)
 
 def _pagina_divisoes(guild: discord.Guild) -> str:
     divisoes = ("N1 Alpha", "N2 Vanguard", "N3 Elite", "N4 Recon", "N5 Assault", "N6 Guard")
