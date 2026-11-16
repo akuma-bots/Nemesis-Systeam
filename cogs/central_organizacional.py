@@ -81,10 +81,10 @@ def _pagina_octogono(guild: discord.Guild) -> str:
     return _limitar("\n".join(linhas))
 
 PAGINAS = {
-    "hierarquia": ("𓂀 Hierarquia Nêmesis", "🏛️", _pagina_hierarquia),
-    "divisoes": ("Divisões", "⚔️", _pagina_divisoes),
-    "staffs": ("Staffs", "♟️", _pagina_staffs),
-    "octogono": ("OCTÓGONO", "🔰", _pagina_octogono),
+    "hierarquia": ("Hierarquia Nêmesis", None, _pagina_hierarquia),
+    "divisoes": ("Divisões", None, _pagina_divisoes),
+    "staffs": ("Hierarquia Staff", None, _pagina_staffs),
+    "octogono": ("Hierarquia Octógono", None, _pagina_octogono),
 }
 
 
@@ -96,8 +96,8 @@ class SeletorHierarquia(discord.ui.Select):
             max_values=1,
             custom_id="nemesis:central_organizacional:seletor:v1",
             options=[
-                discord.SelectOption(label=nome, value=chave, emoji=emoji, default=(chave == selecionado))
-                for chave, (nome, emoji, _) in PAGINAS.items()
+                discord.SelectOption(label=nome, value=chave, default=(chave == selecionado))
+                for chave, (nome, _emoji, _) in PAGINAS.items()
             ],
         )
 
