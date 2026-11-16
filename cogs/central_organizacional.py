@@ -35,116 +35,49 @@ def _limitar(texto: str, limite: int = 3900) -> str:
     return texto[:limite - 24].rsplit("\n", 1)[0] + "\n… conteúdo resumido."
 
 
-def _cargos_hierarquia(guild: discord.Guild) -> list[discord.Role]:
-    ignorar = {guild.default_role.id}
-    return sorted(
-        (cargo for cargo in guild.roles if cargo.id not in ignorar and not cargo.managed),
-        key=lambda cargo: cargo.position,
-        reverse=True,
-    )
-
+def _cargo(guild: discord.Guild, cargo_id: int, nome: str) -> str:
+    cargo = guild.get_role(cargo_id)
+    return cargo.mention if cargo else f"**{nome}**"
 
 def _pagina_hierarquia(guild: discord.Guild) -> str:
-    cargos = _cargos_hierarquia(guild)
-    linhas = [
-        "## 𓂀 HIERARQUIA NÊMESIS",
-        "A estrutura oficial organiza autoridade, responsabilidade e progressão. A posição dos cargos no Discord determina a precedência hierárquica.",
-        "",
-        "**CARGOS E POSIÇÕES**",
-    ]
-    linhas.extend(f"• {cargo.mention}" for cargo in cargos[:45])
-    if len(cargos) > 45:
-        linhas.append(f"• + {len(cargos) - 45} cargos adicionais no servidor.")
-    linhas.extend([
-        "",
-        "**DIRETRIZES DE AUTORIDADE**",
-        "• Cargos acima de Elite podem promover, rebaixar e banir, respeitando a posição do alvo.",
-        "• Supervisor Staff integra a administração, mas não recebe automaticamente poderes de promoção, rebaixamento ou banimento.",
-        "• O OCTÓGONO possui atribuição exclusiva sobre a gestão de missões.",
-        "",
-        "-# Relação de cargos carregada diretamente da estrutura atual do servidor.",
-    ])
-    return _limitar("\n".join(linhas))
-
+    progressao = (
+        (1563995879998754943, "Capitão Geral", 1),
+        (1563995879998754942, "Capitão", 2),
+        (1563995879998754941, "Vice Capitão", 3),
+        (1563995879998754940, "Comandante", 4),
+        (1563995879998754939, "Treinador", 5),
+        (1563995879998754938, "Veterano", 6),
+        (1563995879995874937, "Elite", 7),
+        (1563995879990624377, "Especialista", 8),
+        (1563995879990624376, "Executor", 9),
+        (1563995879990624375, "Tenente", 10),
+        (1563995879990624374, "Subtenente", 11),
+        (1563995879990624373, "Lutador", 12),
+    )
+    linhas = ["## 𓂀 HIERARQUIA NÊMESIS", "Estrutura oficial de cargos e progressão, da maior patente à inicial.", "", "**IDENTIDADE ORGANIZACIONAL**", _cargo(guild, 1563995879990624372, "NÊMESIS"), "", "**PROGRESSÃO DE PATENTES**"]
+    linhas.extend(f"**{numero:02d}.** {_cargo(guild, cargo_id, nome)}" for cargo_id, nome, numero in progressao)
+    linhas.extend(["", "**CRITÉRIOS DE AUTORIDADE**", "• Veterano ou patente superior pode promover, rebaixar e banir, respeitando a hierarquia do alvo.", "• Ações hierárquicas exigem justificativa e registro.", "• Cargos administrativos são apresentados em suas próprias áreas e não se confundem com a progressão.", "", "-# A progressão é vinculada ao XP organizacional; o sistema competitivo permanece independente."])
+    return _limitar("\\n".join(linhas))
 
 def _pagina_divisoes(guild: discord.Guild) -> str:
-    termos = ("divisão", "divisao", "division", "esquadrão", "esquadrao")
-    cargos = [
-        cargo for cargo in _cargos_hierarquia(guild)
-        if any(termo in cargo.name.casefold() for termo in termos)
-    ]
-    linhas = [
-        "## ⚔️ DIVISÕES",
-        "As divisões representam frentes de atuação da NÊMESIS. Cada uma deve seguir suas atribuições oficiais e a orientação de sua liderança.",
-        "",
-        "**DIVISÕES IDENTIFICADAS NO SERVIDOR**",
-    ]
-    if cargos:
-        linhas.extend(f"• {cargo.mention}" for cargo in cargos)
-    else:
-        linhas.append("Ainda não há cargos com identificação explícita de divisão na lista de cargos do Discord.")
-    linhas.extend([
-        "",
-        "**ORGANIZAÇÃO**",
-        "• A liderança da divisão coordena sua equipe e acompanha a participação.",
-        "• Os integrantes executam as atividades e objetivos definidos para sua divisão.",
-        "• Atribuições específicas devem seguir as diretrizes oficiais publicadas pela organização.",
-        "",
-        "-# Esta página não cria divisões nem atribui chefias automaticamente.",
-    ])
-    return _limitar("\n".join(linhas))
-
+    divisoes = ("N1 Alpha", "N2 Vanguard", "N3 Elite", "N4 Recon", "N5 Assault", "N6 Guard")
+    linhas = ["## ⚔️ DIVISÕES", "Núcleos próprios dentro da NÊMESIS. A hierarquia interna das divisões permanece nesta área.", "", "**ESTRUTURA DAS DIVISÕES**"]
+    for nome in divisoes:
+        cargo = discord.utils.find(lambda item: item.name.casefold() == nome.casefold(), guild.roles)
+        linhas.append(f"• {cargo.mention if cargo else f\"**{nome}**\"}")
+    linhas.extend(["", "**LIDERANÇA E ORGANIZAÇÃO**", "A liderança de cada divisão será exibida quando os respectivos responsáveis e cargos oficiais estiverem definidos.", "• Cargos gerais da NÊMESIS, Staffs e OCTÓGONO não são repetidos nesta lista.", "", "-# Nenhuma chefia ou permissão é atribuída automaticamente por esta central."])
+    return _limitar("\\n".join(linhas))
 
 def _pagina_staffs(guild: discord.Guild) -> str:
-    ids = CARGOS_DIRECAO_STAFF_IDS | {CARGO_SUPERVISOR_STAFF_ID}
-    cargos = [
-        cargo for cargo in _cargos_hierarquia(guild)
-        if cargo.id in ids or "staff" in cargo.name.casefold()
-    ]
-    linhas = [
-        "## ♟️ STAFFS",
-        "A equipe Staff apoia a administração, a organização interna e o funcionamento dos serviços da NÊMESIS.",
-        "",
-        "**ESTRUTURA STAFF**",
-    ]
-    linhas.extend(f"• {cargo.mention}" for cargo in cargos)
-    if not cargos:
-        linhas.append("Os cargos Staff não foram localizados no cache do servidor.")
-    linhas.extend([
-        "",
-        "**RESPONSABILIDADES**",
-        "• Direção e Vice-Direção Staff auxiliam na condução administrativa.",
-        "• Supervisores Staff possuem permissões administrativas.",
-        "• A equipe deve orientar membros, acompanhar demandas e encaminhar decisões aos responsáveis.",
-        "• Acesso administrativo não altera as regras específicas de progressão ou gestão de missões.",
-        "",
-        "-# As permissões efetivas continuam definidas pelos sistemas e cargos oficiais.",
-    ])
-    return _limitar("\n".join(linhas))
-
+    cargos = ((1563995880007139424, "Diretor Staff"), (1563995880007139423, "Vice-Diretor Staff"), (1563995880007139422, "Supervisor Staff"))
+    linhas = ["## ♟️ STAFFS", "Núcleo administrativo responsável pela organização, acompanhamento e suporte institucional.", "", "**ESTRUTURA ADMINISTRATIVA**"]
+    linhas.extend(f"• {_cargo(guild, cargo_id, nome)}" for cargo_id, nome in cargos)
+    linhas.extend(["", "**RESPONSABILIDADES**", "• Diretor e Vice-Diretor Staff: apoio à condução administrativa.", "• Supervisor Staff: possui permissões administrativas gerais.", "• A equipe acompanha demandas, orienta membros e encaminha decisões aos responsáveis.", "", "-# Permissões administrativas não concedem automaticamente gestão de missões ou ações de progressão."])
+    return _limitar("\\n".join(linhas))
 
 def _pagina_octogono(guild: discord.Guild) -> str:
-    cargo = guild.get_role(CARGO_OCTOGONO_ID)
-    linhas = [
-        "## ⬡ OCTÓGONO",
-        "Núcleo responsável pela condução e gestão das operações de missões da NÊMESIS.",
-        "",
-        "**CARGO RESPONSÁVEL**",
-        cargo.mention if cargo else "Cargo OCTÓGONO não localizado no cache do servidor.",
-        "",
-        "**ATRIBUIÇÕES**",
-        "• Gerenciar missões, contribuições e operações especiais.",
-        "• Analisar provas e validar resultados das atividades sob sua responsabilidade.",
-        "• Acompanhar a execução das operações e a aplicação correta das recompensas.",
-        "• Manter registros e decisões fundamentadas.",
-        "",
-        "**LIMITE DE AUTORIDADE**",
-        "A gestão de missões é exclusiva do OCTÓGONO. A administração geral e as ações hierárquicas seguem suas próprias permissões.",
-        "",
-        "-# A página informa atribuições; não concede permissões por si só.",
-    ]
-    return _limitar("\n".join(linhas))
-
+    linhas = ["## 🔰 OCTÓGONO", "Núcleo responsável pela gestão exclusiva das missões da NÊMESIS.", "", "**CARGO RESPONSÁVEL**", _cargo(guild, 1563995880007139425, "OCTÓGONO"), "", "**ATRIBUIÇÕES**", "• Gerenciar missões, contribuições e operações especiais.", "• Analisar provas e validar resultados das atividades sob sua responsabilidade.", "• Acompanhar a execução das operações e a aplicação das recompensas.", "• Manter registros e decisões fundamentadas.", "", "**LIMITE DE AUTORIDADE**", "A gestão de missões é exclusiva do OCTÓGONO. As permissões administrativas gerais e as ações de progressão seguem suas próprias regras.", "", "-# Esta página informa atribuições; não concede permissões por si só."]
+    return _limitar("\\n".join(linhas))
 
 PAGINAS = {
     "hierarquia": ("𓂀 Hierarquia Nêmesis", "🏛️", _pagina_hierarquia),
