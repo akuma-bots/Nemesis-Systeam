@@ -120,7 +120,12 @@ class SeletorBoasVindas(discord.ui.Select):
             await interaction.response.send_message("Esta mensagem de boas-vindas foi enviada para outra pessoa.", ephemeral=True)
             return
         chave = self.values[0]
-        await interaction.response.edit_medef _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.ui.Button) -> discord.ui.LayoutView:
+        await interaction.response.edit_message(
+            view=BoasVindasLayoutView(interaction.user, self.autor_id, chave)
+        )
+
+
+def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.ui.Button) -> discord.ui.LayoutView:
     """Preserva todo o texto, mídias, seletores e atalhos ao atualizar a preferência por DM."""
     textos = []
     imagens = []
