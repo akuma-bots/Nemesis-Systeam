@@ -302,6 +302,16 @@ class PainelView(discord.ui.View):
         )
 
 
+def _componentes_contem_marcador(componentes, marcador):
+    pendentes = list(componentes or [])
+    while pendentes:
+        componente = pendentes.pop()
+        if marcador in str(getattr(componente, "content", "") or ""):
+            return True
+        pendentes.extend(list(getattr(componente, "children", []) or []))
+    return False
+
+
 def _texto_painel(embed):
     partes = [f"## {embed.title or 'NÊMESIS / SISTEMA DE REPUTAÇÃO'}"]
     if embed.description:
@@ -452,24 +462,32 @@ class Reputacao(commands.Cog):
         embed.set_thumbnail(url=self.bot.user.display_avatar.url)
         self.bot.add_view(PainelLayoutView(self, _texto_painel(embed)))
         existentes = []
-        async for mensagem in canal.history(limit=None):
-            if mensagem.author.id != self.bot.user.id or not mensagem.embeds:
+        async for mensagem in canal.history(limit=None, oldest_first=True):
+            if mensagem.author.id != self.bot.user.id:
                 continue
-            primeiro = mensagem.embeds[0]
-            titulo = primeiro.title or ""
-            rodape = primeiro.footer.text or "" if primeiro.footer else ""
-            if titulo == "NÊMESIS  /  SISTEMA DE REPUTAÇÃO" or "REPUTAÇÃO INDIVIDUAL" in rodape:
+            componentes_v2 = _componentes_contem_marcador(
+                mensagem.components, "NÊMESIS • REPUTAÇÃO INDIVIDUAL"
+            )
+            embed_legado = False
+            if mensagem.embeds:
+                primeiro = mensagem.embeds[0]
+                titulo = primeiro.title or ""
+                rodape = primeiro.footer.text or "" if primeiro.footer else ""
+                embed_legado = (
+                    titulo == "NÊMESIS  /  SISTEMA DE REPUTAÇÃO"
+                    or "REPUTAÇÃO INDIVIDUAL" in rodape
+                )
+            if componentes_v2 or embed_legado:
                 existentes.append(mensagem)
 
         if existentes:
-            # Preserva a mensagem mais antiga como painel canônico e remove todas as cópias,
-            # mesmo quando ficaram fora das últimas 50 mensagens do canal.
-            canonica = min(existentes, key=lambda mensagem: mensagem.id)
-            await canonica.edit(content=None, embeds=[], attachments=[], view=PainelLayoutView(self, _texto_painel(embed)))
+            canonica = existentes[0]
+            await canonica.edit(
+                content=None, embeds=[], attachments=[],
+                view=PainelLayoutView(self, _texto_painel(embed)),
+            )
             removidas = 0
-            for duplicada in existentes:
-                if duplicada.id == canonica.id:
-                    continue
+            for duplicada in existentes[1:]:
                 try:
                     await duplicada.delete()
                     removidas += 1
