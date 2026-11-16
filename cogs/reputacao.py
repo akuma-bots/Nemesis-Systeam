@@ -429,12 +429,11 @@ class Reputacao(commands.Cog):
             log.error("Canal de reputação não é um canal de texto: %s", CANAL_REPUTACAO_ID)
             return
         self._sincronizado = True
-        self.bot.add_view(PainelLayoutView(self, _texto_painel(embed)))
         dados_pendentes = await ler(GUILD_NEMESIS_ID)
         for protocolo, item in dados_pendentes.get("indicacoes", {}).items():
             if isinstance(item, dict) and item.get("status") == "pendente" and item.get("mensagem_id"):
                 self.bot.add_view(
-                    RevisaoView(self, protocolo),
+                    RevisaoLayoutView(self, protocolo, _texto_revisao(protocolo, self)),
                     message_id=inteiro(item.get("mensagem_id")),
                 )
         embed = criar_embed(
@@ -453,6 +452,7 @@ class Reputacao(commands.Cog):
             cor=COR, rodape="NÊMESIS • AUTHORITY BEYOND RANK • Reputação individual",
         )
         embed.set_thumbnail(url=self.bot.user.display_avatar.url)
+        self.bot.add_view(PainelLayoutView(self, _texto_painel(embed)))
         existentes = []
         async for mensagem in canal.history(limit=None):
             if mensagem.author.id != self.bot.user.id or not mensagem.embeds:
