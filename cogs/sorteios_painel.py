@@ -296,6 +296,33 @@ class ModalRequisitosSorteio(discord.ui.Modal, title="Requisitos opcionais"):
         await interaction.response.send_message(resposta, ephemeral=True)
 
 
+class ModalDescricaoSorteio(discord.ui.Modal, title="Descrição do sorteio"):
+    descricao = discord.ui.TextInput(
+        label="Descrição e instruções",
+        placeholder="Explique o sorteio e como participar",
+        style=discord.TextStyle.paragraph,
+        required=False,
+        max_length=900,
+    )
+
+    def __init__(self, cog, sorteio_id):
+        super().__init__()
+        self.cog = cog
+        self.sorteio_id = sorteio_id
+
+    async def on_submit(self, interaction):
+        if not _eh_lideranca(interaction):
+            await interaction.response.send_message("Acesso restrito à liderança.", ephemeral=True)
+            return
+        sorteio = await self.cog.obter(self.sorteio_id)
+        if not sorteio or not sorteio.get("rascunho"):
+            await interaction.response.send_message("Este rascunho não está mais disponível.", ephemeral=True)
+            return
+        sorteio["descricao"] = str(self.descricao.value or "").strip()
+        await _salvar_item(sorteio)
+        await interaction.response.send_message("Descrição do sorteio atualizada.", ephemeral=True)
+
+
 class ModalBannerSorteio(discord.ui.Modal, title="Imagem do sorteio"):
     url = discord.ui.TextInput(label="URL da imagem", placeholder="https://...", max_length=400)
 
@@ -332,6 +359,19 @@ class ConfigurarSorteioView(discord.ui.View):
             await interaction.response.send_message("Acesso restrito à liderança.", ephemeral=True)
             return
         await interaction.response.send_modal(ModalBannerSorteio(self.cog, self.sorteio_id))
+    @discord.ui.button(label="Editar descrição", style=discord.ButtonStyle.secondary, emoji="📝")
+    async def editar_descricao(self, interaction, button):
+        if not _eh_lideranca(interaction):
+            await interaction.response.send_message("Acesso restrito à liderança.", ephemeral=True)
+            return
+        sorteio = await self.cog.obter(self.sorteio_id)
+        if not sorteio or not sorteio.get("rascunho"):
+            await interaction.response.send_message("Este rascunho não está mais disponível.", ephemeral=True)
+            return
+        modal = ModalDescricaoSorteio(self.cog, self.sorteio_id)
+        modal.descricao.default = str(sorteio.get("descricao") or "")
+        await interaction.response.send_modal(modal)
+
     @discord.ui.button(label="Requisitos opcionais", style=discord.ButtonStyle.primary, emoji="📌")
     async def definir_requisitos(self, interaction, button):
         if not _eh_lideranca(interaction):
