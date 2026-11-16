@@ -152,7 +152,6 @@ class AlvoView(discord.ui.View):
 
 def _layout_reputacao(origem: discord.ui.View, texto: str, rodape: str):
     """Converte os controles do sistema em um cartão Components V2."""
-    layout = discord.ui.LayoutView(timeout=origem.timeout)
     componentes = [
         discord.ui.TextDisplay(texto[:3900]),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
@@ -173,22 +172,21 @@ def _layout_reputacao(origem: discord.ui.View, texto: str, rodape: str):
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
         discord.ui.TextDisplay(f"-# {rodape}"),
     ])
-    layout.add_item(discord.ui.Container(*componentes, accent_colour=COR))
-    return layout
+    return discord.ui.Container(*componentes, accent_colour=COR)
 
 
 class RevisaoLayoutView(discord.ui.LayoutView):
     def __init__(self, cog, protocolo, texto):
         super().__init__(timeout=None)
         origem = RevisaoView(cog, protocolo)
-        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO • Análise da liderança").children[0])
+        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO • Análise da liderança"))
 
 
 class PainelLayoutView(discord.ui.LayoutView):
     def __init__(self, cog, texto):
         super().__init__(timeout=None)
         origem = PainelView(cog)
-        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO INDIVIDUAL").children[0])
+        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO INDIVIDUAL"))
 
 
 class RevisaoView(discord.ui.View):
