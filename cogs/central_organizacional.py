@@ -87,20 +87,46 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
 
 def _pagina_divisoes(guild: discord.Guild) -> str:
     divisoes = (
-        (1563995879981981824, "N̷1 - Alpha"),
-        (1563995879981981823, "N̷2 - Vanguard"),
-        (1563995879981981822, "N̷3 - Elite"),
-        (1563995879981981821, "N̷4 - Recon"),
-        (1563995879981981820, "N̷5 - Assault"),
-        (1563995879981981819, "N̷6 - Guard"),
+        (1563995879981981824, "N̷1 - Alpha", "Coordenação e referência tática",
+         "Atua como núcleo de organização da divisão, ajudando a alinhar estratégias, orientar os integrantes e manter a execução coordenada."),
+        (1563995879981981823, "N̷2 - Vanguard", "Linha de frente e avanço",
+         "Concentra a atuação de avanço, pressão inicial e abertura de espaço para que a equipe execute seus objetivos."),
+        (1563995879981981822, "N̷3 - Elite", "Desempenho e excelência",
+         "Reúne integrantes voltados à alta performance, consistência técnica e execução de atividades de maior exigência."),
+        (1563995879981981821, "N̷4 - Recon", "Reconhecimento e inteligência",
+         "Foca na observação do cenário, coleta de informações relevantes e identificação de oportunidades ou riscos."),
+        (1563995879981981820, "N̷5 - Assault", "Ataque e pressão ofensiva",
+         "Especializa-se em ações ofensivas coordenadas, pressão sobre objetivos e execução de investidas."),
+        (1563995879981981819, "N̷6 - Guard", "Defesa e proteção",
+         "Prioriza a proteção de posições e integrantes, a sustentação da equipe e a contenção de avanços adversários."),
     )
-    linhas = ["## ⚔️ DIVISÕES", "Núcleos próprios dentro da NÊMESIS. A hierarquia interna das divisões permanece nesta área.", "", "**ESTRUTURA DAS DIVISÕES**"]
-    for cargo_id, nome in divisoes:
+    linhas = [
+        "## ⚔️ DIVISÕES",
+        "As divisões são núcleos de atuação da NÊMESIS. Cada uma possui uma identidade e uma finalidade própria dentro das atividades da organização.",
+        "",
+        "**ESTRUTURA • FUNÇÕES E RESPONSABILIDADES**",
+        "",
+    ]
+    for numero, (cargo_id, nome, funcao, descricao) in enumerate(divisoes, 1):
         cargo = guild.get_role(cargo_id)
         identificacao = cargo.mention if cargo else f"⚠️ **{nome}** — cargo não localizado"
-        linhas.append(f"• {identificacao}")
-    linhas.extend(["", "**LIDERANÇA E ORGANIZAÇÃO**", "A liderança de cada divisão será exibida quando os respectivos responsáveis e cargos oficiais estiverem definidos.", "• Cargos gerais da NÊMESIS, Staffs e OCTÓGONO não são repetidos nesta lista.", "", "-# Nenhuma chefia ou permissão é atribuída automaticamente por esta central."])
-    return _limitar("\n".join(linhas))
+        linhas.extend([
+            f"**{numero:02d} • {identificacao}**",
+            f"**Função:** {funcao}.",
+            f"**Descrição:** {descricao}",
+            "",
+            "━━━━━━━━━━━━━━━━━━━━",
+            "",
+        ])
+    linhas.extend([
+        "**LIDERANÇA E ORGANIZAÇÃO**",
+        "A liderança interna de cada divisão será apresentada quando os respectivos responsáveis e cargos oficiais estiverem definidos.",
+        "• As divisões não substituem nem se confundem com as hierarquias NÊMESIS, Staff e OCTÓGONO.",
+        "• Cargos gerais e funções administrativas não são atribuídos por pertencer a uma divisão.",
+        "",
+        "-# As descrições definem a finalidade organizacional de cada núcleo; permissões e chefias são configuradas separadamente.",
+    ])
+    return _limitar("\n".join(linhas), limite=3900)
 
 def _cargo_por_nome(guild: discord.Guild, nome: str, cargo_id: int | None = None) -> str:
     cargo = guild.get_role(cargo_id) if cargo_id else None
