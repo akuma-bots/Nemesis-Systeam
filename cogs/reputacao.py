@@ -317,10 +317,10 @@ def _texto_painel(embed):
     if embed.description:
         partes.append(embed.description)
     for campo in embed.fields:
-        partes.append(f"**{campo.name}**\\n{campo.value}")
+        partes.append(f"**{campo.name}**\n{campo.value}")
     if embed.footer and embed.footer.text:
         partes.append(f"-# {embed.footer.text}")
-    return "\\n\\n".join(partes)
+    return "\n\n".join(partes)
 
 
 def _texto_revisao(protocolo, cog):
@@ -374,9 +374,9 @@ class Reputacao(commands.Cog):
                 cor=COR, rodape="NÊMESIS • REPUTAÇÃO • Registro de mérito",
             )
             mensagem = await canal.send(view=RevisaoLayoutView(self, protocolo, (
-                f"## NÊMESIS / INDICAÇÃO EM ANÁLISE\\n**Protocolo:** {protocolo}\\n"
-                f"**Integrante indicado:** <@{alvo_id}>\\n**Indicação enviada por:** <@{autor_id}>\\n"
-                f"**Categoria:** {categoria}\\n\\n**Justificativa**\\n{discord.utils.escape_markdown(motivo)}\\n\\n"
+                f"## NÊMESIS / INDICAÇÃO EM ANÁLISE\n**Protocolo:** {protocolo}\n"
+                f"**Integrante indicado:** <@{alvo_id}>\n**Indicação enviada por:** <@{autor_id}>\n"
+                f"**Categoria:** {categoria}\n\n**Justificativa**\n{discord.utils.escape_markdown(motivo)}\n\n"
                 "**Estado:** aguardando decisão da liderança. Nenhum ponto foi concedido."
             )))
             def guardar_mensagem(dados):
