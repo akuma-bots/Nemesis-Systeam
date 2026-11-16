@@ -150,6 +150,47 @@ class AlvoView(discord.ui.View):
         )
 
 
+def _layout_reputacao(origem: discord.ui.View, texto: str, rodape: str):
+    """Converte os controles do sistema em um cartão Components V2."""
+    layout = discord.ui.LayoutView(timeout=origem.timeout)
+    componentes = [
+        discord.ui.TextDisplay(texto[:3900]),
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+    ]
+    botoes = []
+    for item in origem.children:
+        if not isinstance(item, discord.ui.Button):
+            continue
+        botao = discord.ui.Button(
+            label=item.label, style=item.style, disabled=item.disabled,
+            custom_id=item.custom_id, url=item.url, emoji=item.emoji,
+        )
+        botao.callback = item.callback
+        botoes.append(botao)
+    for inicio in range(0, len(botoes), 5):
+        componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
+    componentes.extend([
+        discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+        discord.ui.TextDisplay(f"-# {rodape}"),
+    ])
+    layout.add_item(discord.ui.Container(*componentes, accent_colour=COR))
+    return layout
+
+
+class RevisaoLayoutView(discord.ui.LayoutView):
+    def __init__(self, cog, protocolo, texto):
+        super().__init__(timeout=None)
+        origem = RevisaoView(cog, protocolo)
+        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO • Análise da liderança").children[0])
+
+
+class PainelLayoutView(discord.ui.LayoutView):
+    def __init__(self, cog, texto):
+        super().__init__(timeout=None)
+        origem = PainelView(cog)
+        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO INDIVIDUAL").children[0])
+
+
 class RevisaoView(discord.ui.View):
     def __init__(self, cog, protocolo):
         super().__init__(timeout=None)
@@ -171,7 +212,7 @@ class RevisaoView(discord.ui.View):
         for child in self.children:
             child.disabled = True
         try:
-            await interaction.message.edit(view=self)
+            await interaction.message.edit(content=None, embeds=[], attachments=[], view=RevisaoLayoutView(self.cog, self.protocolo, _texto_revisao(self.protocolo, self.cog)))
         except discord.HTTPException:
             pass
 
@@ -263,6 +304,25 @@ class PainelView(discord.ui.View):
         )
 
 
+def _texto_painel(embed):
+    partes = [f"## {embed.title or 'NÊMESIS / SISTEMA DE REPUTAÇÃO'}"]
+    if embed.description:
+        partes.append(embed.description)
+    for campo in embed.fields:
+        partes.append(f"**{campo.name}**\\n{campo.value}")
+    if embed.footer and embed.footer.text:
+        partes.append(f"-# {embed.footer.text}")
+    return "\\n\\n".join(partes)
+
+
+def _texto_revisao(protocolo, cog):
+    return (
+        "## NÊMESIS / INDICAÇÃO EM ANÁLISE\n"
+        f"**Protocolo:** {protocolo}\n"
+        "A decisão da liderança define se o reconhecimento será aprovado e quantos pontos serão concedidos."
+    )
+
+
 class Reputacao(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -305,7 +365,12 @@ class Reputacao(commands.Cog):
                 "**Estado:** aguardando decisão da liderança. Nenhum ponto foi concedido.",
                 cor=COR, rodape="NÊMESIS • REPUTAÇÃO • Registro de mérito",
             )
-            mensagem = await canal.send(embed=embed, view=RevisaoView(self, protocolo))
+            mensagem = await canal.send(view=RevisaoLayoutView(self, protocolo, (
+                f"## NÊMESIS / INDICAÇÃO EM ANÁLISE\\n**Protocolo:** {protocolo}\\n"
+                f"**Integrante indicado:** <@{alvo_id}>\\n**Indicação enviada por:** <@{autor_id}>\\n"
+                f"**Categoria:** {categoria}\\n\\n**Justificativa**\\n{discord.utils.escape_markdown(motivo)}\\n\\n"
+                "**Estado:** aguardando decisão da liderança. Nenhum ponto foi concedido."
+            )))
             def guardar_mensagem(dados):
                 item = dados.setdefault("indicacoes", {}).get(protocolo)
                 if isinstance(item, dict):
@@ -364,7 +429,7 @@ class Reputacao(commands.Cog):
             log.error("Canal de reputação não é um canal de texto: %s", CANAL_REPUTACAO_ID)
             return
         self._sincronizado = True
-        self.bot.add_view(PainelView(self))
+        self.bot.add_view(PainelLayoutView(self, _texto_painel(embed)))
         dados_pendentes = await ler(GUILD_NEMESIS_ID)
         for protocolo, item in dados_pendentes.get("indicacoes", {}).items():
             if isinstance(item, dict) and item.get("status") == "pendente" and item.get("mensagem_id"):
@@ -402,7 +467,7 @@ class Reputacao(commands.Cog):
             # Preserva a mensagem mais antiga como painel canônico e remove todas as cópias,
             # mesmo quando ficaram fora das últimas 50 mensagens do canal.
             canonica = min(existentes, key=lambda mensagem: mensagem.id)
-            await canonica.edit(embed=embed, view=PainelView(self))
+            await canonica.edit(content=None, embeds=[], attachments=[], view=PainelLayoutView(self, _texto_painel(embed)))
             removidas = 0
             for duplicada in existentes:
                 if duplicada.id == canonica.id:
@@ -417,7 +482,7 @@ class Reputacao(commands.Cog):
                 canal.id, canonica.id, removidas,
             )
         else:
-            mensagem = await canal.send(embed=embed, view=PainelView(self))
+            mensagem = await canal.send(view=PainelLayoutView(self, _texto_painel(embed)))
             log.info("Painel de reputação publicado (canal=%s, mensagem=%s).", canal.id, mensagem.id)
 
 
