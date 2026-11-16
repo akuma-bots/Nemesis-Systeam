@@ -389,17 +389,33 @@ class Reputacao(commands.Cog):
         )
         embed.set_thumbnail(url=self.bot.user.display_avatar.url)
         existentes = []
-        async for mensagem in canal.history(limit=50):
-            if mensagem.author.id == self.bot.user.id and mensagem.embeds and mensagem.embeds[0].title == "NÊMESIS  /  SISTEMA DE REPUTAÇÃO":
+        async for mensagem in canal.history(limit=None):
+            if mensagem.author.id != self.bot.user.id or not mensagem.embeds:
+                continue
+            primeiro = mensagem.embeds[0]
+            titulo = primeiro.title or ""
+            rodape = primeiro.footer.text or "" if primeiro.footer else ""
+            if titulo == "NÊMESIS  /  SISTEMA DE REPUTAÇÃO" or "REPUTAÇÃO INDIVIDUAL" in rodape:
                 existentes.append(mensagem)
+
         if existentes:
-            await existentes[0].edit(embed=embed, view=PainelView(self))
-            for duplicada in existentes[1:]:
+            # Preserva a mensagem mais antiga como painel canônico e remove todas as cópias,
+            # mesmo quando ficaram fora das últimas 50 mensagens do canal.
+            canonica = min(existentes, key=lambda mensagem: mensagem.id)
+            await canonica.edit(embed=embed, view=PainelView(self))
+            removidas = 0
+            for duplicada in existentes:
+                if duplicada.id == canonica.id:
+                    continue
                 try:
                     await duplicada.delete()
+                    removidas += 1
                 except discord.HTTPException:
-                    pass
-            log.info("Painel de reputação sincronizado (canal=%s, mensagem=%s).", canal.id, existentes[0].id)
+                    log.exception("Não foi possível remover painel duplicado de reputação (%s).", duplicada.id)
+            log.info(
+                "Painel de reputação deduplicado (canal=%s, mensagem=%s, cópias_removidas=%s).",
+                canal.id, canonica.id, removidas,
+            )
         else:
             mensagem = await canal.send(embed=embed, view=PainelView(self))
             log.info("Painel de reputação publicado (canal=%s, mensagem=%s).", canal.id, mensagem.id)
