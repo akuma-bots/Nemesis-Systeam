@@ -98,6 +98,19 @@ class ProgressaoGangue(commands.Cog):
     async def _salvar_dados(self, dados: dict):
         await salvar(ARQUIVO, dados)
 
+    async def _membro_tem_cargo_nemesis(self, guild_id: int, user_id: int) -> bool:
+        """Confirma a elegibilidade pelo cargo-base oficial, inclusive fora do cache."""
+        guild = self.bot.get_guild(guild_id)
+        if guild is None:
+            return False
+        membro = guild.get_member(user_id)
+        if membro is None:
+            try:
+                membro = await guild.fetch_member(user_id)
+            except (discord.NotFound, discord.Forbidden, discord.HTTPException):
+                return False
+        return any(cargo.id == CARGO_NEMESIS_ID for cargo in membro.roles)
+
     async def _perfil(self, guild_id: int, user_id: int) -> dict:
         """Lê um perfil e persiste apenas quando cria ou corrige dados legados."""
         async with self._lock:
@@ -161,8 +174,16 @@ class ProgressaoGangue(commands.Cog):
         tipo: str = "",
         contar_mensagem: bool = False,
     ) -> tuple[dict, dict, dict, bool]:
-        """Atualiza XP e contadores em uma única seção crítica; deduplica eventos identificados."""
+        """Atualiza XP apenas para integrantes com o cargo-base oficial da NÊMESIS."""
         quantidade = max(0, int(quantidade))
+        if guild_id != GUILD_ID or not await self._membro_tem_cargo_nemesis(guild_id, user_id):
+            perfil_atual = await self._perfil(guild_id, user_id)
+            rank_atual = rank_por_xp(max(0, int(perfil_atual.get("xp", 0) or 0)))
+            log.info(
+                "XP de progressão bloqueado: usuário sem cargo NÊMESIS (guild=%s user=%s tipo=%s).",
+                guild_id, user_id, tipo or "recompensa",
+            )
+            return perfil_atual, rank_atual, rank_atual, False
         async with self._lock:
             dados = await self._dados()
             guild = dados.setdefault(str(guild_id), {})
@@ -204,7 +225,13 @@ class ProgressaoGangue(commands.Cog):
             return dict(perfil), rank_antigo, rank_novo, True
 
     async def _transferir_xp(self, guild_id: int, origem_id: int, destino_id: int, quantidade: int) -> tuple[dict, dict]:
-        """Executa a transferência como uma única operação de leitura/alteração/gravação."""
+        """Transfere XP somente entre membros que possuem o cargo oficial NÊMESIS."""
+        if (
+            guild_id != GUILD_ID
+            or not await self._membro_tem_cargo_nemesis(guild_id, origem_id)
+            or not await self._membro_tem_cargo_nemesis(guild_id, destino_id)
+        ):
+            raise ValueError("A transferência de XP é exclusiva de membros com o cargo oficial NÊMESIS.")
         async with self._lock:
             dados = await self._dados()
             guild = dados.setdefault(str(guild_id), {})
@@ -906,6 +933,12 @@ class ProgressaoGangue(commands.Cog):
     async def gangue_registrar_atividade(self, interaction: discord.Interaction, membro: discord.Member, atividade: app_commands.Choice[str], quantidade: app_commands.Range[int, 1, 5000], motivo: str):
         if interaction.guild is None:
             await interaction.response.send_message("Use este comando dentro do servidor.", ephemeral=True)
+            return
+        if not await self._membro_tem_cargo_nemesis(interaction.guild.id, membro.id):
+            await interaction.response.send_message(
+                "Apenas membros com o cargo oficial NÊMESIS podem receber XP de progressão.",
+                ephemeral=True,
+            )
             return
         if len(motivo.strip()) < 5 or len(motivo) > 300:
             await interaction.response.send_message("Informe um motivo entre 5 e 300 caracteres.", ephemeral=True)
