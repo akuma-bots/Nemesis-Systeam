@@ -305,7 +305,12 @@ class Reputacao(commands.Cog):
                 "**Estado:** aguardando decisão da liderança. Nenhum ponto foi concedido.",
                 cor=COR, rodape="NÊMESIS • REPUTAÇÃO • Registro de mérito",
             )
-            await canal.send(embed=embed, view=RevisaoView(self, protocolo))
+            mensagem = await canal.send(embed=embed, view=RevisaoView(self, protocolo))
+            def guardar_mensagem(dados):
+                item = dados.setdefault("indicacoes", {}).get(protocolo)
+                if isinstance(item, dict):
+                    item["mensagem_id"] = mensagem.id
+            await alterar(guild.id, guardar_mensagem)
         return protocolo
 
     async def decidir(self, guild, protocolo, decisor_id, pontos):
@@ -348,7 +353,6 @@ class Reputacao(commands.Cog):
     async def on_ready(self):
         if self._sincronizado:
             return
-        self._sincronizado = True
         canal = self.bot.get_channel(CANAL_REPUTACAO_ID)
         if canal is None:
             try:
@@ -359,7 +363,15 @@ class Reputacao(commands.Cog):
         if not isinstance(canal, discord.TextChannel):
             log.error("Canal de reputação não é um canal de texto: %s", CANAL_REPUTACAO_ID)
             return
+        self._sincronizado = True
         self.bot.add_view(PainelView(self))
+        dados_pendentes = await ler(GUILD_NEMESIS_ID)
+        for protocolo, item in dados_pendentes.get("indicacoes", {}).items():
+            if isinstance(item, dict) and item.get("status") == "pendente" and item.get("mensagem_id"):
+                self.bot.add_view(
+                    RevisaoView(self, protocolo),
+                    message_id=inteiro(item.get("mensagem_id")),
+                )
         embed = criar_embed(
             "NÊMESIS  /  SISTEMA DE REPUTAÇÃO",
             "A reputação registra o mérito individual, a confiança e a contribuição de cada integrante.\n\n"
