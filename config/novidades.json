@@ -1,11 +1,11 @@
 {
-  "release_id": "20261116-072407",
+  "release_id": "20261116-073542",
   "habilitada": true,
-  "tipo": "Melhorias dos sistemas",
-  "titulo": "Aprimora apresentação institucional da hierarquia NÊMESIS.",
-  "mensagem": "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Aprimora apresentação institucional da hierarquia NÊMESIS.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
+  "tipo": "Correções",
+  "titulo": "Corrige hierarquias com IDs reais dos cargos Discord.",
+  "mensagem": "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Corrige hierarquias com IDs reais dos cargos Discord.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
   "data_atualizacao": "16/11/2026",
-  "hora_atualizacao": "07:24",
+  "hora_atualizacao": "07:35",
   "fuso_horario": "Horário de Brasília (BRT)",
-  "gerado_em": "2026-11-16T07:24:07.503889-03:00"
+  "gerado_em": "2026-11-16T07:35:42.482118-03:00"
 }
