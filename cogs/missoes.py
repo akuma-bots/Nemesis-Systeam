@@ -1963,10 +1963,11 @@ class Missoes(commands.Cog):
             except (discord.Forbidden, discord.HTTPException) as erro:
                 log.warning("Não foi possível buscar o painel de ranking geral: %s", erro)
                 return
-        tipo = str(config.get("ranking_tipo_selecionado") or "missoes")
+        tipo = str(config.get("ranking_tipo_selecionado") or "reputacao")
         tipos_validos = {"reputacao", "ativos", "jogos"}
         if tipo not in tipos_validos:
-            tipo = "missoes"
+            tipo = "reputacao"
+            await set_config(guild.id, ranking_tipo_selecionado=tipo)
         embed = await self._montar_embed_ranking(guild, tipo)
         view = _card_view_missoes(
             RankingPublicoView(self, guild, tipo), embed,
