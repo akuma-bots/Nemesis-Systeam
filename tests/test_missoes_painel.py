@@ -35,6 +35,8 @@ class TestRankingPanelEditLimit(unittest.IsolatedAsyncioTestCase):
         canal.fetch_message = AsyncMock(return_value=mensagem_antiga)
         canal.send = AsyncMock(return_value=mensagem_nova)
         cog = Missoes.__new__(Missoes)
+        cog.bot = Mock()
+        cog._ranking_views_registradas = set()
 
         with (
             patch("cogs.missoes.get_config", new=AsyncMock(return_value={})),
