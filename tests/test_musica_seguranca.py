@@ -113,6 +113,26 @@ class TestSegurancaExtracaoMusical(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(resultado["title"], "Música")
         self.assertEqual(resultado["http_headers"]["User-Agent"], "test")
 
+    async def test_reproduz_link_direto_de_audio_sem_extrator(self):
+        cog = self.criar_cog()
+        url = "https://cdn.example.net/audio/faixa.mp3?token=abc"
+        resultado = await cog._extrair(url)
+
+        self.assertEqual(resultado["url"], url)
+        self.assertEqual(resultado["webpage_url"], url)
+        self.assertEqual(resultado["title"], "faixa")
+        self.assertEqual(resultado["duration"], 0)
+        cog.ytdl.extract_info.assert_not_called()
+
+    async def test_reproduz_link_direto_de_video_sem_extrator(self):
+        cog = self.criar_cog()
+        url = "https://cdn.example.net/videos/show.webm"
+        resultado = await cog._extrair(url)
+
+        self.assertEqual(resultado["url"], url)
+        self.assertEqual(resultado["title"], "show")
+        cog.ytdl.extract_info.assert_not_called()
+
     async def test_rejeita_consulta_excessivamente_longa(self):
         cog = self.criar_cog()
         with self.assertRaisesRegex(ValueError, "300 caracteres"):
