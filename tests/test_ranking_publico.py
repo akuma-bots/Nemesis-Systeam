@@ -12,7 +12,7 @@ class TestRankingPublico(unittest.TestCase):
         seletor = next(item for item in view.children if hasattr(item, "options"))
         valores = {opcao.value for opcao in seletor.options}
 
-        self.assertTrue({"missoes", "competitivo", "reputacao", "ativos"}.issubset(valores))
+        self.assertTrue({"missoes", "competitivo", "reputacao", "jogos", "ativos"}.issubset(valores))
         self.assertTrue(
             {f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS}.issubset(valores)
         )
