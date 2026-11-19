@@ -1097,6 +1097,7 @@ class RankingPublicoView(discord.ui.View):
     def __init__(self, cog, guild: discord.Guild, selecionado: str = "missoes"):
         super().__init__(timeout=None)
         self.cog = cog
+        self.guild = guild
         self.guild_id = guild.id
         opcoes = [
             discord.SelectOption(
@@ -1132,16 +1133,35 @@ class RankingPublicoView(discord.ui.View):
         if tipo not in tipos_validos:
             await interaction.response.send_message("Seleção de ranking inválida.", ephemeral=True)
             return
-        await set_config(self.guild_id, ranking_tipo_selecionado=tipo)
-        embed = await self.cog._montar_embed_ranking(self.guild, tipo)
-        nova_view = RankingPublicoView(self.cog, self.guild, tipo)
-        await interaction.response.edit_message(
-            content=None, embeds=[], attachments=[],
-            view=_card_view_missoes(
-                nova_view, embed,
-                rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
-            ),
-        )
+        # Reconhece a interação antes de consultar o armazenamento e montar o ranking.
+        await interaction.response.defer()
+        try:
+            await set_config(self.guild_id, ranking_tipo_selecionado=tipo)
+            embed = await self.cog._montar_embed_ranking(interaction.guild, tipo)
+            nova_view = RankingPublicoView(self.cog, interaction.guild, tipo)
+            await interaction.edit_original_response(
+                content=None, embeds=[], attachments=[],
+                view=_card_view_missoes(
+                    nova_view, embed,
+                    rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+                ),
+            )
+        except Exception:
+            log.exception(
+                "Falha ao alternar a Central de Rankings (guild=%s, tipo=%s).",
+                self.guild_id,
+                tipo,
+            )
+            try:
+                await interaction.followup.send(
+                    "Não foi possível atualizar o ranking agora. Tente novamente em instantes.",
+                    ephemeral=True,
+                )
+            except discord.HTTPException:
+                log.warning(
+                    "Não foi possível enviar o aviso de falha do ranking (guild=%s).",
+                    self.guild_id,
+                )
 
 
 class Missoes(commands.Cog):
