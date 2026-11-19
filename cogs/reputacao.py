@@ -459,10 +459,12 @@ class Reputacao(commands.Cog):
             autor = guild.get_member(inteiro(item.get("autor_id")))
             alvo = guild.get_member(inteiro(item.get("alvo_id")))
             estado = "APROVADA" if pontos else "REJEITADA"
+            alvo_mention = alvo.mention if alvo else f"<@{inteiro(item.get('alvo_id'))}>"
+            autor_mention = autor.mention if autor else f"<@{inteiro(item.get('autor_id'))}>"
             linhas = [
                 f"**Protocolo:** {protocolo}",
-                f"**Indicado:** {alvo.mention if alvo else f'<@{inteiro(item.get("alvo_id"))}>'}",
-                f"**Indicação enviada por:** {autor.mention if autor else f'<@{inteiro(item.get("autor_id"))}>'}",
+                f"**Indicado:** {alvo_mention}",
+                f"**Indicação enviada por:** {autor_mention}",
                 f"**Decisão da liderança:** {estado}",
                 f"**Pontuação concedida:** +{inteiro(pontos)} ponto(s)" if pontos else "**Pontuação concedida:** Nenhuma",
                 f"**Responsável pela análise:** <@{decisor_id}>",
