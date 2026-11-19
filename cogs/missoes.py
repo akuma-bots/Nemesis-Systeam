@@ -18,7 +18,11 @@ from utils.catalogo_missoes import (
     salvar_mensagem_discord,
     obter_mensagem_discord,
 )
-from utils.guild_config import get_config, octogono_only, membro_tem_octogono
+from utils.guild_config import (
+    get_config, set_config, octogono_only, membro_tem_octogono,
+    CARGO_ACESSO_NEMESIS_ID,
+)
+from utils.storage import carregar
 from utils import ranking_missoes_jogos
 from utils.perfis import (
     get_perfil,
@@ -527,7 +531,8 @@ def _texto_embed_missoes(embed: discord.Embed | None) -> str:
 
 
 def _card_view_missoes(origem: discord.ui.View, embed: discord.Embed | None = None,
-                       titulo: str = "CENTRAL NÊMESIS", descricao: str = "") -> discord.ui.LayoutView:
+                       titulo: str = "CENTRAL NÊMESIS", descricao: str = "",
+                       rodape: str = "NÊMESIS • Gestão de Missões") -> discord.ui.LayoutView:
     """Envolve fluxos privados legados em cartão sem perder os callbacks originais."""
     layout = discord.ui.LayoutView(timeout=origem.timeout)
     texto = _texto_embed_missoes(embed) if embed else f"## {titulo}\n{descricao}".strip()
@@ -577,7 +582,7 @@ def _card_view_missoes(origem: discord.ui.View, embed: discord.Embed | None = No
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Gestão de Missões"),
+        discord.ui.TextDisplay(f"-# {rodape}"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -1086,6 +1091,58 @@ CANAIS_PADRAO = {
 NOMES_CANAIS = {}
 
 
+class RankingPublicoView(discord.ui.View):
+    """Seletor público que alterna entre as classificações oficiais da NÊMESIS."""
+
+    def __init__(self, cog, guild: discord.Guild, selecionado: str = "missoes"):
+        super().__init__(timeout=None)
+        self.cog = cog
+        self.guild_id = guild.id
+        opcoes = [
+            discord.SelectOption(
+                label="XP de missões", value="missoes",
+                description="XP validado em missões, contribuições e operações especiais",
+                default=selecionado == "missoes",
+            ),
+            discord.SelectOption(
+                label="XP competitivo", value="competitivo",
+                description="Classificação da temporada competitiva global",
+                default=selecionado == "competitivo",
+            ),
+            discord.SelectOption(
+                label="Reputação", value="reputacao",
+                description="Mérito e reconhecimentos aprovados pela liderança",
+                default=selecionado == "reputacao",
+            ),
+        ]
+        seletor = discord.ui.Select(
+            placeholder="Selecione qual ranking deseja consultar",
+            custom_id="nemesis:ranking:categoria",
+            min_values=1, max_values=1, options=opcoes,
+        )
+        seletor.callback = self.selecionar
+        self.add_item(seletor)
+
+    async def selecionar(self, interaction: discord.Interaction):
+        if interaction.guild is None or interaction.guild.id != self.guild_id:
+            await interaction.response.send_message("Este ranking pertence à NÊMESIS.", ephemeral=True)
+            return
+        tipo = interaction.data.get("values", [None])[0]
+        if tipo not in {"missoes", "competitivo", "reputacao"}:
+            await interaction.response.send_message("Seleção de ranking inválida.", ephemeral=True)
+            return
+        await set_config(self.guild_id, ranking_tipo_selecionado=tipo)
+        embed = await self.cog._montar_embed_ranking(self.guild, tipo)
+        nova_view = RankingPublicoView(self.cog, self.guild, tipo)
+        await interaction.response.edit_message(
+            content=None, embeds=[], attachments=[],
+            view=_card_view_missoes(
+                nova_view, embed,
+                rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+            ),
+        )
+
+
 class Missoes(commands.Cog):
     """Missões permanentes definidas no GitHub e revisão de provas."""
 
@@ -1093,6 +1150,7 @@ class Missoes(commands.Cog):
         self.bot = bot
         self._sync_lock = asyncio.Lock()
         self._reward_lock = asyncio.Lock()
+        self._ranking_views_registradas = set()
         # O custom_id fixo mantém o botão funcional mesmo após reinícios do bot.
         self.bot.add_view(EnviarProvaMissaoView(self))
         self.bot.add_view(NavegacaoMissoesView(self))
@@ -1650,13 +1708,72 @@ class Missoes(commands.Cog):
         embed.set_footer(text="NÊMESIS • RANKING GERAL • TODOS OS JOGOS • ATUALIZAÇÃO AUTOMÁTICA")
         return embed
 
+    async def _montar_embed_reputacao_ranking(self, guild: discord.Guild) -> discord.Embed:
+        bruto = await carregar("reputacao_individual_nemesis.json", {})
+        dados = bruto.get(str(guild.id), {}) if isinstance(bruto, dict) else {}
+        perfis = dados.get("membros", {}) if isinstance(dados, dict) else {}
+        classificados = []
+        for uid, perfil in perfis.items():
+            if not isinstance(perfil, dict):
+                continue
+            membro = guild.get_member(int(uid)) if str(uid).isdigit() else None
+            if membro is None or not any(role.id == CARGO_ACESSO_NEMESIS_ID for role in membro.roles):
+                continue
+            pontos = int(perfil.get("pontos", 0) or 0)
+            aprovacoes = int(perfil.get("aprovacoes", 0) or 0)
+            if pontos > 0:
+                classificados.append((membro, pontos, aprovacoes))
+        classificados.sort(key=lambda item: (item[1], item[2], item[0].display_name.casefold()), reverse=True)
+        embed = criar_embed(
+            "REPUTAÇÃO • CLASSIFICAÇÃO GERAL",
+            "**QUADRO DE MÉRITO NÊMESIS**\n"
+            "Pontuação formada exclusivamente por reconhecimentos aprovados pela liderança. "
+            "A reputação não substitui XP, não promove cargos e não concede permissões.",
+            cor=0x9F2035, rodape=None,
+        )
+        embed.set_author(name="NÊMESIS  /  RANKING DE REPUTAÇÃO")
+        aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
+        embed.add_field(name="CLASSIFICADOS", value=f"**{len(classificados)}**", inline=True)
+        embed.add_field(name="CRITÉRIO", value="**Pontos aprovados**", inline=True)
+        medalhas = {1: "🥇", 2: "🥈", 3: "🥉"}
+        if not classificados:
+            embed.add_field(
+                name="QUADRO AINDA VAZIO",
+                value="Nenhum integrante possui reputação aprovada. Os reconhecimentos aparecerão aqui após a análise da liderança.",
+                inline=False,
+            )
+        else:
+            for posicao, (membro, pontos, aprovacoes) in enumerate(classificados[:10], start=1):
+                selo = medalhas.get(posicao, f"#{posicao:02d}")
+                embed.add_field(
+                    name=f"{selo}  {membro.display_name[:70]}  ·  {pontos} pontos"[:256],
+                    value=f"{membro.mention}\n**RECONHECIMENTOS APROVADOS**  {aprovacoes}",
+                    inline=False,
+                )
+        embed.set_footer(text="NÊMESIS • REPUTAÇÃO • Atualização ao alternar a categoria")
+        return embed
+
+    async def _montar_embed_ranking(self, guild: discord.Guild, tipo: str) -> discord.Embed:
+        if tipo == "reputacao":
+            return await self._montar_embed_reputacao_ranking(guild)
+        if tipo == "competitivo":
+            cog_ranking = self.bot.get_cog("RankingGeral")
+            if cog_ranking is not None:
+                return await cog_ranking._montar_embed(guild)
+            return criar_embed(
+                "XP COMPETITIVO • NÊMESIS",
+                "O módulo de classificação competitiva está temporariamente indisponível.",
+                cor=0x9F2035,
+            )
+        return await self._montar_painel_ranking(guild)
+
     async def _atualizar_ranking_geral(self, guild: discord.Guild) -> None:
-        """Atualiza o painel único de ranking geral sem seletor por jogo."""
+        """Sincroniza o cartão central com seletor entre as classificações oficiais."""
         config = await get_config(guild.id)
-        canal_id = config.get("canal_ranking_id") or 1545834182406574241
+        canal_id = config.get("canal_ranking_id") or 1563995881508831338
         canal = await self._resolver_canal(guild, int(canal_id))
         if canal is None:
-            log.warning("Canal de ranking atual não encontrado; painel não atualizado.")
+            log.warning("Canal de ranking geral não encontrado (%s); painel não atualizado.", canal_id)
             return
         paineis = await ranking_missoes_jogos.obter_paineis(guild.id)
         mensagem = None
@@ -1668,35 +1785,55 @@ class Missoes(commands.Cog):
             except (discord.Forbidden, discord.HTTPException) as erro:
                 log.warning("Não foi possível buscar o painel de ranking geral: %s", erro)
                 return
-        embed = await self._montar_painel_ranking(guild)
+        tipo = str(config.get("ranking_tipo_selecionado") or "missoes")
+        if tipo not in {"missoes", "competitivo", "reputacao"}:
+            tipo = "missoes"
+        embed = await self._montar_embed_ranking(guild, tipo)
+        view = _card_view_missoes(
+            RankingPublicoView(self, guild, tipo), embed,
+            rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+        )
         try:
             if mensagem is None:
-                mensagem = await canal.send(embed=embed)
+                mensagem = await canal.send(view=view)
                 await ranking_missoes_jogos.salvar_painel(guild.id, "ranking", mensagem.id)
                 try:
-                    await mensagem.pin(reason="Painel de ranking geral NÊMESIS")
+                    await mensagem.pin(reason="Central de Rankings da NÊMESIS")
                 except discord.HTTPException:
-                    pass
+                    log.warning("Não foi possível fixar a Central de Rankings.")
             else:
-                await mensagem.edit(embed=embed, view=None)
+                await mensagem.edit(content=None, embeds=[], attachments=[])
+                await mensagem.edit(view=view)
+            if mensagem.id not in self._ranking_views_registradas:
+                self.bot.add_view(view, message_id=mensagem.id)
+                self._ranking_views_registradas.add(mensagem.id)
+            log.info(
+                "Central de Rankings sincronizada (guild=%s, canal=%s, mensagem=%s, categoria=%s).",
+                guild.id, canal.id, mensagem.id, tipo,
+            )
         except (discord.Forbidden, discord.HTTPException) as erro:
             if getattr(erro, "code", None) == 30046 and mensagem is not None:
                 try:
-                    nova_mensagem = await canal.send(embed=embed)
+                    nova_view = _card_view_missoes(
+                        RankingPublicoView(self, guild, tipo), embed,
+                        rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+                    )
+                    nova_mensagem = await canal.send(view=nova_view)
                     await ranking_missoes_jogos.salvar_painel(guild.id, "ranking", nova_mensagem.id)
+                    self.bot.add_view(nova_view, message_id=nova_mensagem.id)
+                    self._ranking_views_registradas.add(nova_mensagem.id)
+                    try:
+                        await nova_mensagem.pin(reason="Substituição da Central de Rankings da NÊMESIS")
+                    except discord.HTTPException:
+                        pass
+                    try:
+                        await mensagem.delete(reason="Substituição após limite de edições do Discord")
+                    except (discord.Forbidden, discord.HTTPException):
+                        log.warning("O painel antigo de rankings não pôde ser removido.")
                 except Exception:
-                    log.exception("Não foi possível substituir o painel de ranking geral após o limite de edições.")
-                    return
-                try:
-                    await nova_mensagem.pin(reason="Painel de ranking geral NÊMESIS")
-                except discord.HTTPException:
-                    log.warning("Não foi possível fixar o novo painel de ranking geral.")
-                try:
-                    await mensagem.delete(reason="Substituição do painel após limite de edições do Discord")
-                except (discord.Forbidden, discord.HTTPException):
-                    log.warning("O painel antigo de ranking geral não pôde ser removido.")
+                    log.exception("Não foi possível substituir a Central de Rankings após limite de edições.")
             else:
-                log.exception("Falha ao atualizar o painel de ranking geral.")
+                log.exception("Falha ao sincronizar a Central de Rankings.");
 
     # Compatibilidade temporária para chamadas legadas que ainda passam o slug do jogo.
     async def _atualizar_ranking_jogo(self, guild: discord.Guild, jogo: str = "") -> None:
