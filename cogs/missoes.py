@@ -1779,11 +1779,16 @@ class Missoes(commands.Cog):
             if membro.bot or not any(cargo.id == cargo_id for cargo in membro.roles):
                 continue
             dados = await monitoramento_membros.consultar(guild.id, membro.id)
-            mensagens = [
-                item for item in (dados.get("mensagens") or [])
-                if isinstance(item, dict)
-                and float(item.get("timestamp") or 0) >= limite
-            ]
+            mensagens = []
+            for item in (dados.get("mensagens") or []):
+                if not isinstance(item, dict):
+                    continue
+                try:
+                    timestamp = float(item.get("timestamp") or 0)
+                except (TypeError, ValueError, OverflowError):
+                    continue
+                if timestamp >= limite:
+                    mensagens.append(item)
             if not mensagens:
                 continue
             dias_ativos = len({
