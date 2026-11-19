@@ -2013,7 +2013,13 @@ class Missoes(commands.Cog):
                 guild.id, canal.id, mensagem.id, tipo,
             )
         except (discord.Forbidden, discord.HTTPException) as erro:
-            if getattr(erro, "code", None) == 30046 and mensagem is not None:
+            erro_texto = str(erro)
+            limite_edicoes_atingido = (
+                getattr(erro, "code", None) == 30046
+                or "30046" in erro_texto
+                or "Maximum number of edits" in erro_texto
+            )
+            if limite_edicoes_atingido and mensagem is not None:
                 try:
                     nova_view = _card_view_missoes(
                         RankingPublicoView(self, guild, tipo), embed,
