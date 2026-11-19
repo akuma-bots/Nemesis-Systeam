@@ -1,11 +1,11 @@
 {
-  "release_id": "20261116-073542",
+  "release_id": "20261119-122107",
   "habilitada": true,
-  "tipo": "Correções",
-  "titulo": "Corrige hierarquias com IDs reais dos cargos Discord.",
-  "mensagem": "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Corrige hierarquias com IDs reais dos cargos Discord.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
-  "data_atualizacao": "16/11/2026",
-  "hora_atualizacao": "07:35",
+  "tipo": "Melhorias dos sistemas",
+  "titulo": "Remove competitive XP and individual game rankings from public selector.",
+  "mensagem": "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove competitive XP and individual game rankings from public selector.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
+  "data_atualizacao": "19/11/2026",
+  "hora_atualizacao": "12:21",
   "fuso_horario": "Horário de Brasília (BRT)",
-  "gerado_em": "2026-11-16T07:35:42.482118-03:00"
+  "gerado_em": "2026-11-19T12:21:07.212649-03:00"
 }
