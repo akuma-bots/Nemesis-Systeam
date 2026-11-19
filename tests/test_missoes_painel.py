@@ -39,7 +39,10 @@ class TestRankingPanelEditLimit(unittest.IsolatedAsyncioTestCase):
         with (
             patch("cogs.missoes.get_config", new=AsyncMock(return_value={})),
             patch.object(cog, "_resolver_canal", new=AsyncMock(return_value=canal)),
-            patch.object(cog, "_montar_painel_ranking", new=AsyncMock(return_value=Mock())),
+            patch.object(
+                cog, "_montar_painel_ranking",
+                new=AsyncMock(return_value=discord.Embed(title="Ranking de teste")),
+            ),
             patch.object(
                 ranking_missoes_jogos,
                 "obter_paineis",
