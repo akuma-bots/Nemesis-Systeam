@@ -261,7 +261,6 @@ class PainelView(discord.ui.View):
             options=[
                 discord.SelectOption(label="Minha reputação", value="perfil", description="Consultar seu dossiê individual"),
                 discord.SelectOption(label="Indicar integrante", value="indicar", description="Enviar reconhecimento para análise"),
-                discord.SelectOption(label="Ranking", value="ranking", description="Consultar os integrantes mais reconhecidos"),
                 discord.SelectOption(label="Analisar indicações", value="analisar", description="Área restrita à liderança"),
             ],
         )
@@ -287,26 +286,6 @@ class PainelView(discord.ui.View):
                 "Selecione quem deseja indicar.",
                 view=AlvoView(self.cog, interaction.user.id), ephemeral=True
             )
-            return
-        if acao == "ranking":
-            dados = await ler(interaction.guild.id)
-            membros = dados.get("membros", {})
-            lista = []
-            for uid, item in membros.items():
-                membro = interaction.guild.get_member(inteiro(uid))
-                if membro and elegivel(membro):
-                    lista.append((membro, inteiro(item.get("pontos"))))
-            lista.sort(key=lambda item: item[1], reverse=True)
-            linhas = [
-                f"{('🥇','🥈','🥉')[i] if i < 3 else f'#{i+1}'}  {membro.mention} — **{pontos} pontos**"
-                for i, (membro, pontos) in enumerate(lista[:10]) if pontos > 0
-            ]
-            embed = criar_embed(
-                "NÊMESIS  /  QUADRO DE REPUTAÇÃO",
-                "\\n".join(linhas) if linhas else "O ranking ainda não possui pontuações.",
-                cor=COR, rodape="NÊMESIS • MÉRITO INDIVIDUAL • Atualização em tempo real",
-            )
-            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
         if acao == "analisar":
             if not membro_tem_lideranca(interaction.user):
