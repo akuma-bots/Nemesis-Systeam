@@ -12,25 +12,14 @@ class TestRankingPublico(unittest.TestCase):
         seletor = next(item for item in view.children if hasattr(item, "options"))
         valores = {opcao.value for opcao in seletor.options}
 
-        self.assertTrue({"missoes", "competitivo", "reputacao", "jogos", "ativos"}.issubset(valores))
-        self.assertTrue(
-            {f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS}.issubset(valores)
-        )
+        self.assertEqual(valores, {"reputacao", "jogos", "ativos"})
+        self.assertFalse({"missoes", "competitivo"}.intersection(valores))
+        self.assertFalse(any(valor.startswith("jogo:") for valor in valores))
         self.assertEqual(
             next(opcao for opcao in seletor.options if opcao.value == "reputacao").default,
             True,
         )
         self.assertLessEqual(len(seletor.options), 25)
-
-    def test_ranking_por_jogo_tem_opcao_individual_para_cada_jogo_cadastrado(self):
-        guild = SimpleNamespace(id=1563995879981981817)
-        view = RankingPublicoView(None, guild)
-        seletor = next(item for item in view.children if hasattr(item, "options"))
-
-        for slug, dados in ranking_missoes_jogos.JOGOS.items():
-            opcao = next(item for item in seletor.options if item.value == f"jogo:{slug}")
-            self.assertIn(dados["nome"], opcao.label)
-            self.assertIn(dados["nome"], opcao.description)
 
 
 if __name__ == "__main__":
