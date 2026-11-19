@@ -17,15 +17,15 @@ class TestRankingPanelEditLimit(unittest.IsolatedAsyncioTestCase):
         mensagem_antiga = Mock()
         mensagem_antiga.id = 111
         mensagem_antiga.embeds = []
-        mensagem_antiga.edit = AsyncMock(
-            side_effect=discord.HTTPException(
-                response=SimpleNamespace(status=400, reason="Bad Request"),
-                message={
-                    "code": 30046,
-                    "message": "Maximum number of edits to messages has been reached",
-                },
-            )
+        erro_limite = discord.HTTPException(
+            response=SimpleNamespace(status=400, reason="Bad Request"),
+            message={
+                "code": 30046,
+                "message": "Maximum number of edits to messages has been reached",
+            },
         )
+        erro_limite.code = 30046
+        mensagem_antiga.edit = AsyncMock(side_effect=erro_limite)
         mensagem_antiga.delete = AsyncMock()
 
         mensagem_nova = Mock()
