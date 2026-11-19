@@ -1927,8 +1927,9 @@ class Missoes(commands.Cog):
                 except discord.HTTPException:
                     log.warning("Não foi possível fixar a Central de Rankings.")
             else:
-                await mensagem.edit(content=None, embeds=[], attachments=[])
-                await mensagem.edit(view=view)
+                await mensagem.edit(
+                    content=None, embeds=[], attachments=[], view=view
+                )
             if mensagem.id not in self._ranking_views_registradas:
                 self.bot.add_view(view, message_id=mensagem.id)
                 self._ranking_views_registradas.add(mensagem.id)
