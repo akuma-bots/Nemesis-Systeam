@@ -12,6 +12,7 @@ from cogs.progressao_gangue import CARGO_NEMESIS_ID
 from utils.apresentacao import criar_embed
 from utils.guild_config import GUILD_NEMESIS_ID, membro_tem_lideranca
 from utils.storage import atualizar_json, carregar
+from utils.registro_global import registrar as registrar_registro_global
 
 log = logging.getLogger(__name__)
 CANAL_REPUTACAO_ID = 1563995881315897551
@@ -374,6 +375,26 @@ class Reputacao(commands.Cog):
             }
             cooldowns[str(autor_id)] = agora
         await alterar(guild.id, aplicar)
+        try:
+            autor_nome = autor.display_name
+            alvo_nome = alvo.display_name
+            registro = criar_embed(
+                "INDICAÇÃO DE REPUTAÇÃO • RECEBIDA",
+                f"**Protocolo:** {protocolo}\\n"
+                f"**Indicado:** {alvo.mention} ({alvo_nome})\\n"
+                f"**Indicação enviada por:** {autor.mention} ({autor_nome})\\n"
+                f"**Critério:** {categoria}\\n"
+                f"**Estado:** Pendente de análise\\n"
+                f"**Data:** <t:{agora}:F>\\n\\n"
+                f"**Justificativa**\\n{discord.utils.escape_markdown(motivo.strip())}",
+                cor=COR, rodape="NÊMESIS • AUDITORIA DE REPUTAÇÃO • INDICAÇÃO",
+            )
+            await registrar_registro_global(
+                guild, "reputacao", "Indicação de reputação recebida",
+                embed=registro,
+            )
+        except Exception:
+            log.exception("Falha ao registrar indicação %s no Fórum de Registros.", protocolo)
         canal = guild.get_channel(CANAL_REPUTACAO_ID)
         if isinstance(canal, discord.TextChannel):
             embed = criar_embed(
@@ -432,6 +453,34 @@ class Reputacao(commands.Cog):
                 perfil["historico"] = historico[-1000:]
             indicacoes[protocolo] = item
         await alterar(guild.id, aplicar)
+        try:
+            dados_atualizados = await ler(guild.id)
+            item = dados_atualizados.get("indicacoes", {}).get(protocolo, {})
+            autor = guild.get_member(inteiro(item.get("autor_id")))
+            alvo = guild.get_member(inteiro(item.get("alvo_id")))
+            estado = "APROVADA" if pontos else "REJEITADA"
+            linhas = [
+                f"**Protocolo:** {protocolo}",
+                f"**Indicado:** {alvo.mention if alvo else f'<@{inteiro(item.get("alvo_id"))}>'}",
+                f"**Indicação enviada por:** {autor.mention if autor else f'<@{inteiro(item.get("autor_id"))}>'}",
+                f"**Decisão da liderança:** {estado}",
+                f"**Pontuação concedida:** +{inteiro(pontos)} ponto(s)" if pontos else "**Pontuação concedida:** Nenhuma",
+                f"**Responsável pela análise:** <@{decisor_id}>",
+                f"**Data da decisão:** <t:{agora}:F>",
+                f"**Critério:** {item.get('categoria', 'Não informado')}",
+                f"**Justificativa original:** {discord.utils.escape_markdown(str(item.get('motivo') or 'Não informada'))}",
+            ]
+            registro = criar_embed(
+                "ANÁLISE DE REPUTAÇÃO • " + estado,
+                "\\n".join(linhas),
+                cor=COR, rodape="NÊMESIS • AUDITORIA DE REPUTAÇÃO • DECISÃO DA LIDERANÇA",
+            )
+            await registrar_registro_global(
+                guild, "reputacao", "Decisão de reputação",
+                embed=registro,
+            )
+        except Exception:
+            log.exception("Falha ao registrar decisão da indicação %s no Fórum de Registros.", protocolo)
 
     @commands.Cog.listener()
     async def on_ready(self):
