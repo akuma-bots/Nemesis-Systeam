@@ -1284,14 +1284,32 @@ class Musica(commands.Cog):
         )
         if "://" in consulta and not consulta.startswith(("http://", "https://")):
             raise ValueError("O link precisa usar HTTP/HTTPS.")
+        url_direta = False
+        nome_arquivo_direto = ""
         if consulta.startswith(("http://", "https://")):
             parsed = urlparse(consulta)
             host = (parsed.hostname or "").lower()
             extensoes_audio = (".mp3", ".m4a", ".aac", ".ogg", ".opus", ".wav", ".flac", ".m3u", ".pls")
+            extensoes_video = (".mp4", ".m4v", ".webm", ".mkv", ".mov", ".avi", ".mpeg", ".mpg")
+            extensoes_midia = extensoes_audio + extensoes_video
             host_conhecido = any(host == dominio or host.endswith("." + dominio) for dominio in permitidos)
-            url_direta = parsed.path.lower().endswith(extensoes_audio)
+            url_direta = parsed.path.lower().endswith(extensoes_midia)
+            nome_arquivo_direto = os.path.basename(parsed.path).strip() or "Arquivo de mídia"
             if parsed.scheme.lower() not in {"http", "https"} or not (host_conhecido or url_direta):
                 raise ValueError("Provedor não permitido: este link ainda não é de uma fonte musical compatível.")
+
+        # Links diretos para arquivos de áudio/vídeo já são fontes FFmpeg.
+        # Não devem passar pelo extrator de páginas do yt-dlp, que pode
+        # rejeitar URLs genéricas mesmo quando o arquivo é reproduzível.
+        if url_direta:
+            titulo = nome_arquivo_direto.rsplit(".", 1)[0][:256] or "Arquivo de mídia"
+            return {
+                "url": consulta,
+                "title": titulo,
+                "webpage_url": consulta[:2048],
+                "duration": 0,
+                "http_headers": {},
+            }
 
         def extrair():
             spotify = "open.spotify.com/" in consulta.lower()
