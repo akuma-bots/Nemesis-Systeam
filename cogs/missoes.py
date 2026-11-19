@@ -1115,6 +1115,11 @@ class RankingPublicoView(discord.ui.View):
                 default=selecionado == "reputacao",
             ),
             discord.SelectOption(
+                label="Jogos", value="jogos",
+                description="Pontuação consolidada entre todos os jogos cadastrados",
+                default=selecionado == "jogos",
+            ),
+            discord.SelectOption(
                 label="Atividade", value="ativos",
                 description="Mensagens registradas nos últimos 30 dias",
                 default=selecionado == "ativos",
@@ -1142,7 +1147,7 @@ class RankingPublicoView(discord.ui.View):
             await interaction.response.send_message("Este ranking pertence à NÊMESIS.", ephemeral=True)
             return
         tipo = interaction.data.get("values", [None])[0]
-        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos"}
+        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos", "jogos"}
         tipos_validos.update(f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS)
         if tipo not in tipos_validos:
             await interaction.response.send_message("Seleção de ranking inválida.", ephemeral=True)
@@ -1830,6 +1835,74 @@ class Missoes(commands.Cog):
         embed.set_footer(text="NÊMESIS • ATIVIDADE • Janela móvel de 30 dias")
         return embed
 
+    async def _montar_embed_jogos_ranking(self, guild: discord.Guild) -> discord.Embed:
+        """Consolida os pontos dos jogos cadastrados, sem misturar XP de missões."""
+        registro = await ranking_missoes_jogos.obter_dados(guild.id)
+        jogos = registro.get("jogos", {}) if isinstance(registro, dict) else {}
+        acumulado = {}
+        for slug, dados_jogo in ranking_missoes_jogos.JOGOS.items():
+            dados = jogos.get(slug, {}) if isinstance(jogos, dict) else {}
+            pontuacoes = dados.get("pontuacao", {}) if isinstance(dados, dict) else {}
+            if not isinstance(pontuacoes, dict):
+                continue
+            for uid, perfil in pontuacoes.items():
+                if not isinstance(perfil, dict):
+                    continue
+                try:
+                    pontos = max(0, int(perfil.get("pontos", 0) or 0))
+                except (TypeError, ValueError, OverflowError):
+                    continue
+                if pontos <= 0:
+                    continue
+                item = acumulado.setdefault(str(uid), {"pontos": 0, "jogos": {}})
+                item["pontos"] += pontos
+                item["jogos"][slug] = pontos
+
+        classificados = []
+        for uid, dados in acumulado.items():
+            membro = guild.get_member(int(uid)) if uid.isdigit() else None
+            if membro is None or membro.bot or not any(
+                cargo.id == CARGO_ACESSO_NEMESIS_ID for cargo in membro.roles
+            ):
+                continue
+            classificados.append((membro, dados["pontos"], dados["jogos"]))
+        classificados.sort(
+            key=lambda item: (item[1], item[0].display_name.casefold()),
+            reverse=True,
+        )
+        embed = criar_embed(
+            "JOGOS • CLASSIFICAÇÃO GERAL NÊMESIS",
+            "**DESEMPENHO CONSOLIDADO NOS JOGOS**\n"
+            "Soma apenas os pontos registrados nos jogos cadastrados. O XP de missões e o ranking competitivo permanecem separados.",
+            cor=0x9F2035, rodape=None,
+        )
+        embed.set_author(name="NÊMESIS  /  RANKING DE JOGOS")
+        aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
+        embed.add_field(name="JOGOS INCLUÍDOS", value=f"**{len(ranking_missoes_jogos.JOGOS)}**", inline=True)
+        embed.add_field(name="CLASSIFICADOS", value=f"**{len(classificados)}**", inline=True)
+        embed.add_field(name="CRITÉRIO", value="**Pontos somados por jogo**", inline=True)
+        medalhas = {1: "🥇", 2: "🥈", 3: "🥉"}
+        if not classificados:
+            embed.add_field(
+                name="QUADRO AINDA VAZIO",
+                value="Nenhum integrante elegível possui pontuação nos jogos cadastrados.",
+                inline=False,
+            )
+        else:
+            for posicao, (membro, total, por_jogo) in enumerate(classificados[:10], start=1):
+                selo = medalhas.get(posicao, f"#{posicao:02d}")
+                detalhes = [
+                    f"{ranking_missoes_jogos.JOGOS[slug]['nome']}: {pontos:,}".replace(",", ".")
+                    for slug, pontos in por_jogo.items()
+                ]
+                embed.add_field(
+                    name=f"{selo}  {membro.display_name[:70]}  ·  {total:,} pontos".replace(",", ".")[:256],
+                    value=f"{membro.mention}\n" + (" · ".join(detalhes) or "Sem detalhamento por jogo"),
+                    inline=False,
+                )
+        embed.set_footer(text="NÊMESIS • JOGOS • Pontuação consolidada entre os jogos cadastrados")
+        return embed
+
     async def _montar_embed_jogo_ranking(self, guild: discord.Guild, jogo: str) -> discord.Embed:
         dados_jogo = ranking_missoes_jogos.JOGOS[jogo]
         linhas = await ranking_missoes_jogos.obter_ranking(guild.id, jogo, limite=100)
@@ -1884,6 +1957,8 @@ class Missoes(commands.Cog):
             )
         if tipo == "ativos":
             return await self._montar_embed_atividade_ranking(guild)
+        if tipo == "jogos":
+            return await self._montar_embed_jogos_ranking(guild)
         if tipo.startswith("jogo:"):
             jogo = tipo.split(":", 1)[1]
             if jogo in ranking_missoes_jogos.JOGOS:
@@ -1909,7 +1984,7 @@ class Missoes(commands.Cog):
                 log.warning("Não foi possível buscar o painel de ranking geral: %s", erro)
                 return
         tipo = str(config.get("ranking_tipo_selecionado") or "missoes")
-        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos"}
+        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos", "jogos"}
         tipos_validos.update(f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS)
         if tipo not in tipos_validos:
             tipo = "missoes"
