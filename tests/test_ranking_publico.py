@@ -9,6 +9,8 @@ class TestRankingPublico(unittest.TestCase):
     def test_seletor_reune_rankings_gerais_atividade_e_jogos(self):
         guild = SimpleNamespace(id=1563995879981981817)
         view = RankingPublicoView(None, guild, selecionado="reputacao")
+        self.assertIs(view.guild, guild)
+        self.assertEqual(view.guild_id, guild.id)
         seletor = next(item for item in view.children if hasattr(item, "options"))
         valores = {opcao.value for opcao in seletor.options}
 
