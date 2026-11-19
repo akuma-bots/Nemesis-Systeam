@@ -23,7 +23,7 @@ from utils.guild_config import (
     CARGO_ACESSO_NEMESIS_ID,
 )
 from utils.storage import carregar
-from utils import ranking_missoes_jogos
+from utils import ranking_missoes_jogos, monitoramento_membros
 from utils.perfis import (
     get_perfil,
     atualizar_perfil,
@@ -1100,7 +1100,7 @@ class RankingPublicoView(discord.ui.View):
         self.guild_id = guild.id
         opcoes = [
             discord.SelectOption(
-                label="XP de missões", value="missoes",
+                label="XP de atividades", value="missoes",
                 description="XP validado em missões, contribuições e operações especiais",
                 default=selecionado == "missoes",
             ),
@@ -1114,6 +1114,20 @@ class RankingPublicoView(discord.ui.View):
                 description="Mérito e reconhecimentos aprovados pela liderança",
                 default=selecionado == "reputacao",
             ),
+            discord.SelectOption(
+                label="Atividade", value="ativos",
+                description="Mensagens registradas nos últimos 30 dias",
+                default=selecionado == "ativos",
+            ),
+            *[
+                discord.SelectOption(
+                    label=f"Jogos · {dados['nome']}",
+                    value=f"jogo:{slug}",
+                    description=f"Pontuação individual em {dados['nome']}",
+                    default=selecionado == f"jogo:{slug}",
+                )
+                for slug, dados in ranking_missoes_jogos.JOGOS.items()
+            ],
         ]
         seletor = discord.ui.Select(
             placeholder="Selecione qual ranking deseja consultar",
@@ -1128,7 +1142,9 @@ class RankingPublicoView(discord.ui.View):
             await interaction.response.send_message("Este ranking pertence à NÊMESIS.", ephemeral=True)
             return
         tipo = interaction.data.get("values", [None])[0]
-        if tipo not in {"missoes", "competitivo", "reputacao"}:
+        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos"}
+        tipos_validos.update(f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS)
+        if tipo not in tipos_validos:
             await interaction.response.send_message("Seleção de ranking inválida.", ephemeral=True)
             return
         await set_config(self.guild_id, ranking_tipo_selecionado=tipo)
@@ -1753,6 +1769,102 @@ class Missoes(commands.Cog):
         embed.set_footer(text="NÊMESIS • REPUTAÇÃO • Atualização ao alternar a categoria")
         return embed
 
+    async def _montar_embed_atividade_ranking(self, guild: discord.Guild) -> discord.Embed:
+        """Classifica atividade por mensagens registradas nos últimos 30 dias."""
+        agora = __import__("time").time()
+        limite = agora - 30 * 24 * 60 * 60
+        cargo_id = CARGO_ACESSO_NEMESIS_ID
+        classificados = []
+        for membro in guild.members:
+            if membro.bot or not any(cargo.id == cargo_id for cargo in membro.roles):
+                continue
+            dados = await monitoramento_membros.consultar(guild.id, membro.id)
+            mensagens = [
+                item for item in (dados.get("mensagens") or [])
+                if isinstance(item, dict)
+                and float(item.get("timestamp") or 0) >= limite
+            ]
+            if not mensagens:
+                continue
+            dias_ativos = len({
+                int(float(item.get("timestamp") or 0) // 86400)
+                for item in mensagens
+            })
+            classificados.append((membro, len(mensagens), dias_ativos))
+        classificados.sort(
+            key=lambda item: (item[1], item[2], item[0].display_name.casefold()),
+            reverse=True,
+        )
+        embed = criar_embed(
+            "ATIVIDADE • CLASSIFICAÇÃO NÊMESIS",
+            "**INTEGRANTES MAIS ATIVOS**\n"
+            "Classificação baseada nas mensagens registradas pelo sistema nos últimos 30 dias. "
+            "Mensagens apagadas continuam contando como participação; presença online e tempo em voz não são pontuados.",
+            cor=0x9F2035, rodape=None,
+        )
+        embed.set_author(name="NÊMESIS  /  RANKING DE ATIVIDADE")
+        aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
+        embed.add_field(name="PERÍODO", value="**Últimos 30 dias**", inline=True)
+        embed.add_field(name="CLASSIFICADOS", value=f"**{len(classificados)}**", inline=True)
+        embed.add_field(name="CRITÉRIO", value="**Mensagens + dias ativos**", inline=True)
+        medalhas = {1: "🥇", 2: "🥈", 3: "🥉"}
+        if not classificados:
+            embed.add_field(
+                name="DADOS INSUFICIENTES",
+                value="Ainda não há mensagens registradas no período para integrantes com o cargo oficial NÊMESIS.",
+                inline=False,
+            )
+        else:
+            for posicao, (membro, quantidade, dias_ativos) in enumerate(classificados[:10], start=1):
+                selo = medalhas.get(posicao, f"#{posicao:02d}")
+                embed.add_field(
+                    name=f"{selo}  {membro.display_name[:70]}  ·  {quantidade} mensagens"[:256],
+                    value=f"{membro.mention}\n**DIAS ATIVOS**  {dias_ativos}/30",
+                    inline=False,
+                )
+        embed.set_footer(text="NÊMESIS • ATIVIDADE • Janela móvel de 30 dias")
+        return embed
+
+    async def _montar_embed_jogo_ranking(self, guild: discord.Guild, jogo: str) -> discord.Embed:
+        dados_jogo = ranking_missoes_jogos.JOGOS[jogo]
+        linhas = await ranking_missoes_jogos.obter_ranking(guild.id, jogo, limite=100)
+        elegiveis = []
+        for uid, nome, pontos in linhas:
+            membro = guild.get_member(int(uid)) if str(uid).isdigit() else None
+            if membro is None or membro.bot or not any(
+                cargo.id == CARGO_ACESSO_NEMESIS_ID for cargo in membro.roles
+            ):
+                continue
+            elegiveis.append((membro, pontos))
+        embed = criar_embed(
+            f"RANKING {dados_jogo['nome'].upper()} · NÊMESIS",
+            f"**CLASSIFICAÇÃO INDIVIDUAL · {dados_jogo['nome'].upper()}**\n"
+            "Pontuação validada exclusivamente para este jogo. Os pontos não são somados aos outros jogos.",
+            cor=0x9F2035, rodape=None,
+        )
+        embed.set_author(name=f"NÊMESIS  /  RANKING {dados_jogo['nome'].upper()}")
+        aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
+        embed.add_field(name="JOGO", value=f"**{dados_jogo['nome']}**", inline=True)
+        embed.add_field(name="CLASSIFICADOS", value=f"**{len(elegiveis)}**", inline=True)
+        embed.add_field(name="CRITÉRIO", value="**Pontos do jogo**", inline=True)
+        medalhas = {1: "🥇", 2: "🥈", 3: "🥉"}
+        if not elegiveis:
+            embed.add_field(
+                name="QUADRO AINDA VAZIO",
+                value="Nenhum integrante elegível possui pontuação registrada neste jogo.",
+                inline=False,
+            )
+        else:
+            for posicao, (membro, pontos) in enumerate(elegiveis[:10], start=1):
+                selo = medalhas.get(posicao, f"#{posicao:02d}")
+                embed.add_field(
+                    name=f"{selo}  {membro.display_name[:70]}  ·  {pontos:,} pontos".replace(",", ".")[:256],
+                    value=membro.mention,
+                    inline=False,
+                )
+        embed.set_footer(text=f"NÊMESIS • {dados_jogo['nome'].upper()} • Atualização ao alternar a categoria")
+        return embed
+
     async def _montar_embed_ranking(self, guild: discord.Guild, tipo: str) -> discord.Embed:
         if tipo == "reputacao":
             return await self._montar_embed_reputacao_ranking(guild)
@@ -1765,6 +1877,12 @@ class Missoes(commands.Cog):
                 "O módulo de classificação competitiva está temporariamente indisponível.",
                 cor=0x9F2035,
             )
+        if tipo == "ativos":
+            return await self._montar_embed_atividade_ranking(guild)
+        if tipo.startswith("jogo:"):
+            jogo = tipo.split(":", 1)[1]
+            if jogo in ranking_missoes_jogos.JOGOS:
+                return await self._montar_embed_jogo_ranking(guild, jogo)
         return await self._montar_painel_ranking(guild)
 
     async def _atualizar_ranking_geral(self, guild: discord.Guild) -> None:
@@ -1786,7 +1904,9 @@ class Missoes(commands.Cog):
                 log.warning("Não foi possível buscar o painel de ranking geral: %s", erro)
                 return
         tipo = str(config.get("ranking_tipo_selecionado") or "missoes")
-        if tipo not in {"missoes", "competitivo", "reputacao"}:
+        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos"}
+        tipos_validos.update(f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS)
+        if tipo not in tipos_validos:
             tipo = "missoes"
         embed = await self._montar_embed_ranking(guild, tipo)
         view = _card_view_missoes(
