@@ -476,7 +476,7 @@ async def _executar_migracao_destrutiva(forum: discord.ForumChannel) -> int | No
                 "concluida": True,
                 "forum_id": forum.id,
                 "topicos_excluidos": apagados,
-                "estrutura": "registro-global-nemesis-12-areas",
+                "estrutura": "registro-global-nemesis-13-areas",
             },
         )
         _LOG.warning(
@@ -487,7 +487,7 @@ async def _executar_migracao_destrutiva(forum: discord.ForumChannel) -> int | No
 
 
 async def garantir_topicos(guild: discord.Guild) -> dict[str, int]:
-    """Executa a migração destrutiva única e provisiona as 12 áreas oficiais."""
+    """Executa a migração destrutiva única e provisiona as áreas oficiais."""
     if guild.id != GUILD_NEMESIS_ID:
         return {}
     canal = guild.get_channel(CANAL_REGISTRO_GLOBAL_ID)
