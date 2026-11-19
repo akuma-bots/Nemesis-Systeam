@@ -156,18 +156,25 @@ def _layout_reputacao(origem: discord.ui.View, texto: str, rodape: str):
         discord.ui.TextDisplay(texto[:3900]),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
     ]
-    botoes = []
     for item in origem.children:
-        if not isinstance(item, discord.ui.Button):
-            continue
-        botao = discord.ui.Button(
-            label=item.label, style=item.style, disabled=item.disabled,
-            custom_id=item.custom_id, url=item.url, emoji=item.emoji,
-        )
-        botao.callback = item.callback
-        botoes.append(botao)
-    for inicio in range(0, len(botoes), 5):
-        componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
+        if isinstance(item, discord.ui.Select):
+            seletor = discord.ui.Select(
+                placeholder=item.placeholder,
+                options=item.options,
+                custom_id=item.custom_id,
+                min_values=item.min_values,
+                max_values=item.max_values,
+                disabled=item.disabled,
+            )
+            seletor.callback = item.callback
+            componentes.append(discord.ui.ActionRow(seletor))
+        elif isinstance(item, discord.ui.Button):
+            botao = discord.ui.Button(
+                label=item.label, style=item.style, disabled=item.disabled,
+                custom_id=item.custom_id, url=item.url, emoji=item.emoji,
+            )
+            botao.callback = item.callback
+            componentes.append(discord.ui.ActionRow(botao))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
         discord.ui.TextDisplay(f"-# {rodape}"),
@@ -193,11 +200,26 @@ class RevisaoView(discord.ui.View):
     def __init__(self, cog, protocolo):
         super().__init__(timeout=None)
         self.cog, self.protocolo = cog, protocolo
+        self.add_item(discord.ui.Select(
+            placeholder="Selecione a decisão da liderança",
+            custom_id="nemesis:reputacao:revisao",
+            min_values=1, max_values=1,
+            options=[
+                discord.SelectOption(label="Aprovar · +1 ponto", value="1", description="Reconhecimento básico"),
+                discord.SelectOption(label="Aprovar · +2 pontos", value="2", description="Reconhecimento relevante"),
+                discord.SelectOption(label="Aprovar · +3 pontos", value="3", description="Reconhecimento expressivo"),
+                discord.SelectOption(label="Aprovar · +5 pontos", value="5", description="Mérito excepcional"),
+                discord.SelectOption(label="Rejeitar indicação", value="rejeitar", description="Não conceder reputação"),
+            ],
+        ))
+        self.children[0].callback = self.selecionar
 
-    async def decidir(self, interaction, pontos):
+    async def selecionar(self, interaction):
         if not membro_tem_lideranca(interaction.user):
             await interaction.response.send_message("Apenas a liderança pode analisar indicações.", ephemeral=True)
             return
+        valor = self.children[0].values[0]
+        pontos = None if valor == "rejeitar" else int(valor)
         try:
             await self.cog.decidir(interaction.guild, self.protocolo, interaction.user.id, pontos)
         except ValueError as erro:
@@ -207,99 +229,93 @@ class RevisaoView(discord.ui.View):
             f"Indicação {self.protocolo}: " + (f"aprovada com +{pontos} pontos." if pontos else "rejeitada."),
             ephemeral=True,
         )
-        for child in self.children:
-            child.disabled = True
         try:
-            await interaction.message.edit(content=None, embeds=[], attachments=[], view=RevisaoLayoutView(self.cog, self.protocolo, _texto_revisao(self.protocolo, self.cog)))
+            await interaction.message.edit(
+                content=None, embeds=[], attachments=[],
+                view=RevisaoLayoutView(
+                    self.cog, self.protocolo,
+                    _texto_revisao(self.protocolo, self.cog, pontos, "aprovada" if pontos else "rejeitada"),
+                ),
+            )
         except discord.HTTPException:
-            pass
-
-    @discord.ui.button(label="+1", style=discord.ButtonStyle.secondary, custom_id="nemesis:reputacao:1")
-    async def um(self, interaction, button):
-        await self.decidir(interaction, 1)
-
-    @discord.ui.button(label="+2", style=discord.ButtonStyle.secondary, custom_id="nemesis:reputacao:2")
-    async def dois(self, interaction, button):
-        await self.decidir(interaction, 2)
-
-    @discord.ui.button(label="+3", style=discord.ButtonStyle.primary, custom_id="nemesis:reputacao:3")
-    async def tres(self, interaction, button):
-        await self.decidir(interaction, 3)
-
-    @discord.ui.button(label="+5", style=discord.ButtonStyle.success, custom_id="nemesis:reputacao:5")
-    async def cinco(self, interaction, button):
-        await self.decidir(interaction, 5)
-
-    @discord.ui.button(label="Rejeitar", style=discord.ButtonStyle.danger, custom_id="nemesis:reputacao:rejeitar")
-    async def rejeitar(self, interaction, button):
-        await self.decidir(interaction, None)
+            log.exception("Não foi possível atualizar o cartão da indicação %s.", self.protocolo)
 
 
 class PainelView(discord.ui.View):
     def __init__(self, cog):
         super().__init__(timeout=None)
         self.cog = cog
-
-    @discord.ui.button(label="Minha reputação", style=discord.ButtonStyle.primary, custom_id="nemesis:reputacao:perfil")
-    async def perfil(self, interaction, button):
-        if not elegivel(interaction.user):
-            await interaction.response.send_message("Recurso exclusivo de integrantes com o cargo NÊMESIS.", ephemeral=True)
-            return
-        dados = await ler(interaction.guild.id)
-        membro = dados.get("membros", {}).get(str(interaction.user.id), {})
-        await interaction.response.send_message(embed=perfil_embed(interaction.guild, interaction.user, membro), ephemeral=True)
-
-    @discord.ui.button(label="Indicar membro", style=discord.ButtonStyle.success, custom_id="nemesis:reputacao:indicar")
-    async def indicar(self, interaction, button):
-        if not elegivel(interaction.user):
-            await interaction.response.send_message("Somente integrantes com o cargo NÊMESIS podem indicar membros.", ephemeral=True)
-            return
-        await interaction.response.send_message(
-            "Selecione quem deseja indicar.", view=AlvoView(self.cog, interaction.user.id), ephemeral=True
+        seletor = discord.ui.Select(
+            placeholder="Escolha uma opção de reputação",
+            custom_id="nemesis:reputacao:acoes",
+            min_values=1, max_values=1,
+            options=[
+                discord.SelectOption(label="Minha reputação", value="perfil", description="Consultar seu dossiê individual"),
+                discord.SelectOption(label="Indicar integrante", value="indicar", description="Enviar reconhecimento para análise"),
+                discord.SelectOption(label="Ranking", value="ranking", description="Consultar os integrantes mais reconhecidos"),
+                discord.SelectOption(label="Analisar indicações", value="analisar", description="Área restrita à liderança"),
+            ],
         )
+        seletor.callback = self.selecionar
+        self.add_item(seletor)
 
-    @discord.ui.button(label="Ranking", style=discord.ButtonStyle.secondary, custom_id="nemesis:reputacao:ranking")
-    async def ranking(self, interaction, button):
-        if not elegivel(interaction.user):
-            await interaction.response.send_message("Ranking exclusivo de integrantes NÊMESIS.", ephemeral=True)
+    async def selecionar(self, interaction):
+        acao = self.children[0].values[0]
+        if acao in ("perfil", "indicar", "ranking") and not elegivel(interaction.user):
+            await interaction.response.send_message(
+                "Este recurso é exclusivo de integrantes com o cargo oficial NÊMESIS.", ephemeral=True
+            )
             return
-        dados = await ler(interaction.guild.id)
-        membros = dados.get("membros", {})
-        lista = []
-        for uid, item in membros.items():
-            membro = interaction.guild.get_member(inteiro(uid))
-            if membro and elegivel(membro):
-                lista.append((membro, inteiro(item.get("pontos"))))
-        lista.sort(key=lambda item: item[1], reverse=True)
-        linhas = [
-            f"{('🥇','🥈','🥉')[i] if i < 3 else f'#{i+1}'}  {membro.mention} — **{pontos} pontos**"
-            for i, (membro, pontos) in enumerate(lista[:10]) if pontos > 0
-        ]
-        embed = criar_embed(
-            "NÊMESIS  /  QUADRO DE REPUTAÇÃO",
-            "\n".join(linhas) if linhas else "O ranking ainda não possui pontuações.",
-            cor=COR, rodape="NÊMESIS • MÉRITO INDIVIDUAL • Atualização em tempo real",
-        )
-        await interaction.response.send_message(embed=embed, ephemeral=True)
-
-    @discord.ui.button(label="Analisar indicações", style=discord.ButtonStyle.danger, custom_id="nemesis:reputacao:analisar")
-    async def analisar(self, interaction, button):
-        if not membro_tem_lideranca(interaction.user):
-            await interaction.response.send_message("Área restrita à liderança.", ephemeral=True)
+        if acao == "perfil":
+            dados = await ler(interaction.guild.id)
+            membro = dados.get("membros", {}).get(str(interaction.user.id), {})
+            await interaction.response.send_message(
+                embed=perfil_embed(interaction.guild, interaction.user, membro), ephemeral=True
+            )
             return
-        dados = await ler(interaction.guild.id)
-        pendentes = [
-            item for item in dados.get("indicacoes", {}).values()
-            if isinstance(item, dict) and item.get("status") == "pendente"
-        ]
-        pendentes.sort(key=lambda item: inteiro(item.get("criado_em")))
-        if not pendentes:
-            await interaction.response.send_message("Não existem indicações pendentes.", ephemeral=True)
+        if acao == "indicar":
+            await interaction.response.send_message(
+                "Selecione quem deseja indicar.",
+                view=AlvoView(self.cog, interaction.user.id), ephemeral=True
+            )
             return
-        await interaction.response.send_message(
-            f"Há **{len(pendentes)}** indicações pendentes. Consulte as publicações de análise neste canal.",
-            ephemeral=True,
-        )
+        if acao == "ranking":
+            dados = await ler(interaction.guild.id)
+            membros = dados.get("membros", {})
+            lista = []
+            for uid, item in membros.items():
+                membro = interaction.guild.get_member(inteiro(uid))
+                if membro and elegivel(membro):
+                    lista.append((membro, inteiro(item.get("pontos"))))
+            lista.sort(key=lambda item: item[1], reverse=True)
+            linhas = [
+                f"{('🥇','🥈','🥉')[i] if i < 3 else f'#{i+1}'}  {membro.mention} — **{pontos} pontos**"
+                for i, (membro, pontos) in enumerate(lista[:10]) if pontos > 0
+            ]
+            embed = criar_embed(
+                "NÊMESIS  /  QUADRO DE REPUTAÇÃO",
+                "\\n".join(linhas) if linhas else "O ranking ainda não possui pontuações.",
+                cor=COR, rodape="NÊMESIS • MÉRITO INDIVIDUAL • Atualização em tempo real",
+            )
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
+        if acao == "analisar":
+            if not membro_tem_lideranca(interaction.user):
+                await interaction.response.send_message("Área restrita à liderança.", ephemeral=True)
+                return
+            dados = await ler(interaction.guild.id)
+            pendentes = [
+                item for item in dados.get("indicacoes", {}).values()
+                if isinstance(item, dict) and item.get("status") == "pendente"
+            ]
+            pendentes.sort(key=lambda item: inteiro(item.get("criado_em")))
+            if not pendentes:
+                await interaction.response.send_message("Não existem indicações pendentes.", ephemeral=True)
+                return
+            await interaction.response.send_message(
+                f"Há **{len(pendentes)}** indicações pendentes. Consulte as publicações de análise neste canal.",
+                ephemeral=True,
+            )
 
 
 def _componentes_contem_marcador(componentes, marcador):
@@ -323,11 +339,18 @@ def _texto_painel(embed):
     return "\n\n".join(partes)
 
 
-def _texto_revisao(protocolo, cog):
+def _texto_revisao(protocolo, cog, pontos=None, status="pendente"):
+    if status == "pendente":
+        detalhe = "A liderança deve selecionar a pontuação ou rejeitar a indicação no menu abaixo."
+    elif status == "aprovada":
+        detalhe = f"Indicação aprovada. Pontuação concedida: **+{pontos} pontos**."
+    else:
+        detalhe = "Indicação rejeitada. Nenhum ponto foi concedido."
     return (
         "## NÊMESIS / INDICAÇÃO EM ANÁLISE\n"
         f"**Protocolo:** {protocolo}\n"
-        "A decisão da liderança define se o reconhecimento será aprovado e quantos pontos serão concedidos."
+        f"**Estado:** {status.capitalize()}\n"
+        f"{detalhe}"
     )
 
 
@@ -436,7 +459,6 @@ class Reputacao(commands.Cog):
         if not isinstance(canal, discord.TextChannel):
             log.error("Canal de reputação não é um canal de texto: %s", CANAL_REPUTACAO_ID)
             return
-        self._sincronizado = True
         dados_pendentes = await ler(GUILD_NEMESIS_ID)
         for protocolo, item in dados_pendentes.get("indicacoes", {}).items():
             if isinstance(item, dict) and item.get("status") == "pendente" and item.get("mensagem_id"):
@@ -500,6 +522,8 @@ class Reputacao(commands.Cog):
         else:
             mensagem = await canal.send(view=PainelLayoutView(self, _texto_painel(embed)))
             log.info("Painel de reputação publicado (canal=%s, mensagem=%s).", canal.id, mensagem.id)
+        self._sincronizado = True
+        log.info("Sincronização do sistema de reputação concluída.")
 
 
 async def setup(bot):
