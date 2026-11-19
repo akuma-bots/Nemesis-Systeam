@@ -36,6 +36,7 @@ CATEGORIAS = {
     "seguranca": ("🛡️・Muralha de Segurança", "AutoMod, Anti-Raid, filtros, incidentes, bloqueios e falhas de proteção."),
     "missoes": ("🎯・Operações e Missões", "Missões, operações, formulários, relatórios, atribuições, provas, validações, conclusões e recompensas."),
     "competitivo": ("🏆・Arena Competitiva", "Desafios, PvP, guerras, placares, participantes e resultados."),
+    "reputacao": ("⭐・Registros de Reputação", "Indicações de reconhecimento, justificativas, integrantes envolvidos, decisões da liderança e pontuação concedida ou rejeitada."),
     "eventos": ("🎉・Eventos e Celebrações", "Agenda, inscrições, atividades coletivas, sorteios, vencedores e entrega de prêmios."),
     "atendimento": ("🎫・Central de Atendimento", "Tickets, responsáveis, encerramentos, avaliações e transcrições."),
     "mensagens": ("💬・Comunicação Geral", "Registros técnicos de anexos e comunicação. O conteúdo de mensagens editadas e excluídas permanece somente na consulta privada de atividade."),
@@ -53,6 +54,7 @@ CORES_CATEGORIAS = {
     "seguranca": 0x681323,
     "missoes": 0x8F172C,
     "competitivo": 0xA01D35,
+    "reputacao": 0x8B1E2D,
     "eventos": 0xAD233A,
     "atendimento": 0xA62139,
     "mensagens": 0x8B1E2D,
@@ -63,7 +65,7 @@ CORES_CATEGORIAS = {
 
 EMOJIS_CATEGORIAS = {
     "administracao": "👑", "historico_membros": "👥", "moderacao": "⚖️",
-    "seguranca": "🛡️", "missoes": "🎯", "competitivo": "🏆",
+    "seguranca": "🛡️", "missoes": "🎯", "competitivo": "🏆", "reputacao": "⭐",
     "eventos": "🎉", "atendimento": "🎫", "mensagens": "💬",
     "parcerias": "🤝", "integracoes": "⚙️", "sugestoes": "📋",
 }
@@ -82,6 +84,7 @@ ALIASES_CATEGORIAS = {
     "formularios": "missoes",
     "membros": "administracao",
     "progressao": "competitivo",
+    "reputacao": "reputacao",
     "relatorios": "missoes",
     "roblox": "integracoes",
     "sistemas": "integracoes",
