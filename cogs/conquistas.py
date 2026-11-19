@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 import discord
@@ -61,12 +62,16 @@ class Conquistas(commands.Cog):
         self.bot = bot
 
     async def _estatisticas(self, guild: discord.Guild, user_id: int) -> dict:
-        dados = await carregar(ARQUIVO_PROGRESSAO, {})
+        # As três leituras são independentes; executá-las em paralelo reduz
+        # o tempo de espera no Upstash sem alterar os dados consultados.
+        dados, competitivo, revisoes = await asyncio.gather(
+            carregar(ARQUIVO_PROGRESSAO, {}),
+            get_perfil(guild.id, user_id),
+            listar_revisoes(guild.id),
+        )
         guild_data = dados.get(str(guild.id), {}) if isinstance(dados, dict) else {}
         membros = guild_data.get("membros", {}) if isinstance(guild_data, dict) else {}
         progressao = membros.get(str(user_id), {}) if isinstance(membros, dict) else {}
-        competitivo = await get_perfil(guild.id, user_id)
-        revisoes = await listar_revisoes(guild.id)
         return montar_estatisticas(progressao, competitivo, revisoes, user_id)
 
     async def _processar(self, guild: discord.Guild, membro: discord.Member, anunciar: bool = True) -> list[dict]:
@@ -106,20 +111,26 @@ class Conquistas(commands.Cog):
                     f"**Raridade:** {conquista['raridade']}\n"
                     f"**Recompensa:** +{conquista['recompensa_xp']} XP"
                 )
-                await registrar_global(
-                    guild,
-                    "conquistas",
-                    "Conquista desbloqueada",
-                    detalhe,
-                    cor=COR_NEMESIS,
-                )
-                await registrar_global(
-                    guild,
-                    "historico_membros",
-                    "Conquista pessoal desbloqueada",
-                    detalhe,
-                    cor=COR_NEMESIS,
-                )
+                for categoria, titulo in (
+                    ("conquistas", "Conquista desbloqueada"),
+                    ("historico_membros", "Conquista pessoal desbloqueada"),
+                ):
+                    try:
+                        await registrar_global(
+                            guild,
+                            categoria,
+                            titulo,
+                            detalhe,
+                            cor=COR_NEMESIS,
+                        )
+                    except Exception:
+                        # A indisponibilidade do registro secundário não pode
+                        # cancelar a consulta nem ocultar a conquista do membro.
+                        log.exception(
+                            "Falha ao registrar conquista no histórico (categoria=%s, membro=%s).",
+                            categoria,
+                            membro.id,
+                        )
 
             canal = guild.get_channel(CANAL_CONQUISTAS_ID)
             if isinstance(canal, discord.TextChannel):
