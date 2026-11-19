@@ -1188,6 +1188,21 @@ class Musica(commands.Cog):
     async def _extrair_varios(self, consulta: str) -> list[dict[str, Any]]:
         """Resolve faixas individuais ou playlists de provedores compatíveis."""
         consulta = str(consulta or "").strip()
+        # Links de pesquisa do Google/YouTube são consultas, não páginas de áudio.
+        # Converte a URL para o texto pesquisado antes de chamar os provedores musicais.
+        if consulta.startswith(("http://", "https://")):
+            parsed_busca = urlparse(consulta)
+            host_busca = (parsed_busca.hostname or "").lower()
+            if host_busca in {"google.com", "www.google.com", "google.com.br", "www.google.com.br"} and parsed_busca.path.rstrip("/") in {"", "/search"}:
+                from urllib.parse import parse_qs
+                termo = parse_qs(parsed_busca.query).get("q", [""])[0].strip()
+                if termo:
+                    consulta = termo
+            elif host_busca in {"youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com"} and parsed_busca.path == "/results":
+                from urllib.parse import parse_qs
+                termo = parse_qs(parsed_busca.query).get("search_query", [""])[0].strip()
+                if termo:
+                    consulta = termo
         if "open.spotify.com/" in consulta.lower():
             async with self._extrair_lock:
                 metadados = await asyncio.to_thread(_spotify_itens, consulta)
