@@ -1100,16 +1100,6 @@ class RankingPublicoView(discord.ui.View):
         self.guild_id = guild.id
         opcoes = [
             discord.SelectOption(
-                label="XP de atividades", value="missoes",
-                description="XP validado em missões, contribuições e operações especiais",
-                default=selecionado == "missoes",
-            ),
-            discord.SelectOption(
-                label="XP competitivo", value="competitivo",
-                description="Classificação da temporada competitiva global",
-                default=selecionado == "competitivo",
-            ),
-            discord.SelectOption(
                 label="Reputação", value="reputacao",
                 description="Mérito e reconhecimentos aprovados pela liderança",
                 default=selecionado == "reputacao",
@@ -1124,15 +1114,6 @@ class RankingPublicoView(discord.ui.View):
                 description="Mensagens registradas nos últimos 30 dias",
                 default=selecionado == "ativos",
             ),
-            *[
-                discord.SelectOption(
-                    label=f"Jogos · {dados['nome']}",
-                    value=f"jogo:{slug}",
-                    description=f"Pontuação individual em {dados['nome']}",
-                    default=selecionado == f"jogo:{slug}",
-                )
-                for slug, dados in ranking_missoes_jogos.JOGOS.items()
-            ],
         ]
         seletor = discord.ui.Select(
             placeholder="Selecione qual ranking deseja consultar",
@@ -1147,8 +1128,7 @@ class RankingPublicoView(discord.ui.View):
             await interaction.response.send_message("Este ranking pertence à NÊMESIS.", ephemeral=True)
             return
         tipo = interaction.data.get("values", [None])[0]
-        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos", "jogos"}
-        tipos_validos.update(f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS)
+        tipos_validos = {"reputacao", "ativos", "jogos"}
         if tipo not in tipos_validos:
             await interaction.response.send_message("Seleção de ranking inválida.", ephemeral=True)
             return
@@ -1984,8 +1964,7 @@ class Missoes(commands.Cog):
                 log.warning("Não foi possível buscar o painel de ranking geral: %s", erro)
                 return
         tipo = str(config.get("ranking_tipo_selecionado") or "missoes")
-        tipos_validos = {"missoes", "competitivo", "reputacao", "ativos", "jogos"}
-        tipos_validos.update(f"jogo:{slug}" for slug in ranking_missoes_jogos.JOGOS)
+        tipos_validos = {"reputacao", "ativos", "jogos"}
         if tipo not in tipos_validos:
             tipo = "missoes"
         embed = await self._montar_embed_ranking(guild, tipo)
