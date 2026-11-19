@@ -183,10 +183,18 @@ def _layout_reputacao(origem: discord.ui.View, texto: str, rodape: str):
 
 
 class RevisaoLayoutView(discord.ui.LayoutView):
-    def __init__(self, cog, protocolo, texto):
+    def __init__(self, cog, protocolo, texto, finalizada=False):
         super().__init__(timeout=None)
-        origem = RevisaoView(cog, protocolo)
-        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO • Análise da liderança"))
+        if finalizada:
+            self.add_item(discord.ui.Container(
+                discord.ui.TextDisplay(texto[:3900]),
+                discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
+                discord.ui.TextDisplay("-# NÊMESIS • REPUTAÇÃO • Análise concluída"),
+                accent_colour=COR,
+            ))
+        else:
+            origem = RevisaoView(cog, protocolo)
+            self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO • Análise da liderança"))
 
 
 class PainelLayoutView(discord.ui.LayoutView):
@@ -218,7 +226,7 @@ class RevisaoView(discord.ui.View):
         if not membro_tem_lideranca(interaction.user):
             await interaction.response.send_message("Apenas a liderança pode analisar indicações.", ephemeral=True)
             return
-        valor = self.children[0].values[0]
+        valor = interaction.data.get("values", [None])[0]
         pontos = None if valor == "rejeitar" else int(valor)
         try:
             await self.cog.decidir(interaction.guild, self.protocolo, interaction.user.id, pontos)
@@ -235,6 +243,7 @@ class RevisaoView(discord.ui.View):
                 view=RevisaoLayoutView(
                     self.cog, self.protocolo,
                     _texto_revisao(self.protocolo, self.cog, pontos, "aprovada" if pontos else "rejeitada"),
+                    finalizada=True,
                 ),
             )
         except discord.HTTPException:
@@ -260,7 +269,7 @@ class PainelView(discord.ui.View):
         self.add_item(seletor)
 
     async def selecionar(self, interaction):
-        acao = self.children[0].values[0]
+        acao = interaction.data.get("values", [None])[0]
         if acao in ("perfil", "indicar", "ranking") and not elegivel(interaction.user):
             await interaction.response.send_message(
                 "Este recurso é exclusivo de integrantes com o cargo oficial NÊMESIS.", ephemeral=True
