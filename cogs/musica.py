@@ -692,6 +692,56 @@ class ModalPesquisaMusica(discord.ui.Modal):
         await self.cog.adicionar_consulta(interaction, self.consulta.value)
 
 
+class MusicSearchSelect(discord.ui.Select):
+    def __init__(self, view: "MusicSearchView"):
+        self.search_view = view
+        opcoes = []
+        for indice, item in enumerate(view.results[:25]):
+            titulo = str(item.get("title") or "Áudio sem título")
+            descricao = f"{view.cog._tempo(item.get('duration', 0))} · {item.get('source', 'Música')}"
+            opcoes.append(discord.SelectOption(
+                label=titulo[:100],
+                value=str(indice),
+                description=descricao[:100],
+            ))
+        super().__init__(
+            placeholder="Escolha a versão que deseja reproduzir",
+            min_values=1,
+            max_values=1,
+            options=opcoes,
+        )
+
+    async def callback(self, interaction: discord.Interaction):
+        view = self.search_view
+        if interaction.guild_id != view.guild_id or interaction.user.id != view.user_id:
+            await interaction.response.send_message("Esta pesquisa pertence a outra pessoa ou servidor.", ephemeral=True)
+            return
+        await interaction.response.defer(ephemeral=True, thinking=True)
+        try:
+            indice = int(self.values[0])
+            item = dict(view.results[indice])
+        except (ValueError, IndexError):
+            await interaction.followup.send("Esse resultado não está mais disponível. Faça uma nova pesquisa.", ephemeral=True)
+            return
+        await view.cog._adicionar_faixas(interaction, [item])
+        for componente in view.children:
+            componente.disabled = True
+        try:
+            await interaction.edit_original_response(view=view)
+        except discord.HTTPException:
+            LOG.debug("Não foi possível desativar o seletor de pesquisa já concluído.", exc_info=True)
+
+
+class MusicSearchView(discord.ui.View):
+    def __init__(self, cog: "Musica", guild_id: int, user_id: int, results: list[dict]):
+        super().__init__(timeout=180)
+        self.cog = cog
+        self.guild_id = guild_id
+        self.user_id = user_id
+        self.results = results[:25]
+        self.add_item(MusicSearchSelect(self))
+
+
 class ModalVolumeMusica(discord.ui.Modal):
     def __init__(self, cog: "Musica", guild_id: int):
         super().__init__(title="Ajustar volume")
@@ -1113,77 +1163,164 @@ class Musica(commands.Cog):
         LOG.info("Painel musical sincronizado no canal %s (mensagem=%s).", canal.id, mensagem.id)
 
     async def adicionar_consulta(self, interaction: discord.Interaction, consulta: str):
+        """Pesquisa sem enfileirar automaticamente: o membro escolhe o resultado."""
         if interaction.guild is None:
             await interaction.response.send_message("Use o painel dentro da NÊMESIS.", ephemeral=True)
             return
         if not interaction.response.is_done():
             await interaction.response.defer(ephemeral=True, thinking=True)
+
         gid = interaction.guild.id
+        consulta = str(consulta or "").strip()
         if len(self.filas.get(gid, [])) >= MAX_QUEUE:
             await interaction.followup.send(f"A fila atingiu o limite de {MAX_QUEUE} músicas.", ephemeral=True)
             return
-        voz = await self._conectar(interaction)
-        if voz is None:
+
+        try:
+            resultados = await self._pesquisar_resultados(consulta)
+        except Exception as erro:
+            LOG.info("Pesquisa musical não encontrou resultados: %s", erro, exc_info=True)
+            await interaction.followup.send(
+                f"Não consegui pesquisar essa música: {str(erro)[:180]}",
+                ephemeral=True,
+            )
             return
+
+        if resultados:
+            view = MusicSearchView(self, gid, interaction.user.id, resultados)
+            linhas = [
+                f"**{i}.** {discord.utils.escape_markdown(item['title'])} · "
+                f"{self._tempo(item.get('duration', 0))}"
+                for i, item in enumerate(resultados[:10], start=1)
+            ]
+            await interaction.followup.send(
+                embed=self._embed_musica(
+                    "🔎 Escolha uma música",
+                    "Selecione no menu a versão que deseja adicionar à fila. "
+                    "Nenhuma faixa será adicionada antes da sua escolha.\\n\\n" + "\\n".join(linhas),
+                ),
+                view=view,
+                ephemeral=True,
+            )
+            return
+
+        # Links de faixa, arquivos diretos e playlists preservam seu fluxo específico.
         try:
             itens = await self._extrair_varios(consulta)
         except Exception as erro:
-            LOG.info("Não foi possível pesquisar áudio: %s", erro)
+            LOG.info("Não foi possível carregar fonte musical: %s", erro, exc_info=True)
             await interaction.followup.send(
                 f"Não consegui carregar essa fonte musical: {str(erro)[:220]}",
                 ephemeral=True,
             )
             return
+
         fila = self.filas.setdefault(gid, [])
         disponivel = MAX_QUEUE - len(fila)
-        if disponivel <= 0:
-            await interaction.followup.send(f"A fila atingiu o limite de {MAX_QUEUE} músicas.", ephemeral=True)
+        if len(itens) > disponivel:
+            await interaction.followup.send(
+                f"A fila tem espaço para mais {disponivel} faixa(s); a playlist contém {len(itens)}.",
+                ephemeral=True,
+            )
             return
-        itens = itens[:disponivel]
+        await interaction.followup.send(
+            f"Playlist/fonte reconhecida: **{len(itens)}** faixa(s). Preparando a conexão...",
+            ephemeral=True,
+        )
+        await self._adicionar_faixas(interaction, itens)
+
+    async def _pesquisar_resultados(self, consulta: str) -> list[dict[str, Any]]:
+        """Retorna opções de busca do YouTube/SoundCloud sem escolher por conta própria."""
+        from urllib.parse import parse_qs
+
+        texto = str(consulta or "").strip()
+        if not texto:
+            raise ValueError("Informe o nome da música ou um link.")
+        if texto.startswith(("http://", "https://")):
+            parsed = urlparse(texto)
+            host = (parsed.hostname or "").lower()
+            if host in {"google.com", "www.google.com", "google.com.br", "www.google.com.br"}:
+                texto = parse_qs(parsed.query).get("q", [""])[0].strip()
+            elif host in {"youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com"} and parsed.path.rstrip("/") == "/results":
+                texto = parse_qs(parsed.query).get("search_query", [""])[0].strip()
+            else:
+                return []
+        if not texto:
+            return []
+
+        def pesquisar():
+            encontrados = []
+            vistos = set()
+            for prefixo, provedor in (("ytsearch10:", "YouTube"), ("scsearch10:", "SoundCloud")):
+                try:
+                    dados = self.ytdl.extract_info(f"{prefixo}{texto}", download=False)
+                    entradas = dados.get("entries") if isinstance(dados, dict) else None
+                    for entrada in entradas or []:
+                        if not isinstance(entrada, dict) or not entrada.get("url"):
+                            continue
+                        pagina = str(entrada.get("webpage_url") or entrada.get("original_url") or "").strip()
+                        fluxo = str(entrada.get("url") or "").strip()
+                        if not pagina.startswith(("http://", "https://")) or not fluxo.startswith(("http://", "https://")):
+                            continue
+                        chave = pagina.split("?", 1)[0].casefold()
+                        if chave in vistos:
+                            continue
+                        vistos.add(chave)
+                        try:
+                            duracao = max(0, int(entrada.get("duration") or 0))
+                        except (TypeError, ValueError, OverflowError):
+                            duracao = 0
+                        encontrados.append({
+                            "url": fluxo,
+                            "title": str(entrada.get("title") or "Áudio sem título")[:256],
+                            "webpage_url": pagina[:2048],
+                            "duration": duracao,
+                            "http_headers": entrada.get("http_headers") if isinstance(entrada.get("http_headers"), dict) else {},
+                            "source": provedor,
+                        })
+                except Exception as erro:
+                    LOG.warning("Busca de música falhou no provedor %s (%s).", provedor, type(erro).__name__)
+            return encontrados[:20]
+
+        async with self._extrair_lock:
+            resultados = await asyncio.to_thread(pesquisar)
+        if not resultados:
+            raise ValueError("Não encontrei resultados reproduzíveis no YouTube ou SoundCloud.")
+        return resultados
+
+    async def _adicionar_faixas(self, interaction: discord.Interaction, itens: list[dict]):
+        """Conecta e enfileira apenas as faixas explicitamente escolhidas."""
+        if interaction.guild is None:
+            return
+        gid = interaction.guild.id
+        fila = self.filas.setdefault(gid, [])
+        disponivel = MAX_QUEUE - len(fila)
+        if not itens or len(itens) > disponivel:
+            await interaction.followup.send(
+                f"A fila comporta mais {max(0, disponivel)} faixa(s).",
+                ephemeral=True,
+            )
+            return
+        voz = await self._conectar(interaction)
+        if voz is None:
+            return
         for item in itens:
             item["voice_channel_id"] = voz.channel.id
             item["requested_by"] = interaction.user.id
         fila.extend(itens)
         primeira = itens[0]
         posicao = len(fila) - len(itens) + 1
-        estado = "Adicionada à fila" if voz.is_playing() or voz.is_paused() else "Preparando reprodução"
-        quantidade = f" • {len(itens)} faixa(s)" if len(itens) > 1 else ""
-        confirmacao = self._embed_musica(
-            f"♫ {estado}",
-            f"**[{discord.utils.escape_markdown(primeira['title'])}]({primeira['webpage_url']})**{quantidade}\n"
-            f"Duração: {self._tempo(primeira['duration'])} • Posição inicial: {posicao}",
-        )
-
-        # A fila e o player não podem depender da entrega da resposta ephemeral.
-        # Se o endpoint de webhook do Discord estiver limitado pela Cloudflare,
-        # a música ainda deve começar e a confirmação pode ir ao chat da call.
         await self._garantir_reprodutor(interaction.guild)
-        try:
-            await interaction.followup.send(embed=confirmacao, ephemeral=True)
-        except discord.HTTPException as erro:
-            LOG.warning(
-                "Falha ao confirmar pesquisa musical pela interação (guild=%s, status=%s).",
-                gid, getattr(erro, "status", None), exc_info=True,
-            )
-            try:
-                permissoes_chat = voz.channel.permissions_for(interaction.guild.me)
-                if permissoes_chat.send_messages:
-                    await voz.channel.send(
-                        content=f"{interaction.user.mention} • Música adicionada à reprodução.",
-                        embed=confirmacao,
-                        allowed_mentions=discord.AllowedMentions.none(),
-                    )
-                else:
-                    LOG.warning(
-                        "Sem permissão para enviar confirmação no chat da call (canal=%s).",
-                        voz.channel.id,
-                    )
-            except discord.HTTPException:
-                LOG.exception(
-                    "Também falhou a confirmação no chat da call (guild=%s, canal=%s).",
-                    gid, voz.channel.id,
-                )
-
+        await interaction.followup.send(
+            embed=self._embed_musica(
+                "♫ Música adicionada" if len(itens) == 1 else "♫ Playlist adicionada",
+                f"**[{discord.utils.escape_markdown(primeira['title'])}]({primeira['webpage_url']})**"
+                f"\\nDuração: {self._tempo(primeira.get('duration', 0))}"
+                f" • Posição inicial: {posicao}"
+                + (f"\\nE mais **{len(itens) - 1}** faixa(s) da playlist." if len(itens) > 1 else ""),
+            ),
+            ephemeral=True,
+        )
 
     async def _extrair_varios(self, consulta: str) -> list[dict[str, Any]]:
         """Resolve faixas individuais ou playlists de provedores compatíveis."""
