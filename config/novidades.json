@@ -1,11 +1,11 @@
 {
-  "release_id": "20261119-122107",
+  "release_id": "20261121-144948",
   "habilitada": true,
   "tipo": "Melhorias dos sistemas",
-  "titulo": "Remove competitive XP and individual game rankings from public selector.",
-  "mensagem": "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove competitive XP and individual game rankings from public selector.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
-  "data_atualizacao": "19/11/2026",
-  "hora_atualizacao": "12:21",
+  "titulo": "Remove unsupported music system.",
+  "mensagem": "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove unsupported music system.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
+  "data_atualizacao": "21/11/2026",
+  "hora_atualizacao": "14:49",
   "fuso_horario": "Horário de Brasília (BRT)",
-  "gerado_em": "2026-11-19T12:21:07.212649-03:00"
+  "gerado_em": "2026-11-21T14:49:48.869194-03:00"
 }
