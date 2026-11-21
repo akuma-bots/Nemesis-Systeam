@@ -86,30 +86,27 @@ def _configurar_cookies_youtube() -> str | None:
 YOUTUBE_COOKIEFILE = _configurar_cookies_youtube()
 
 
-def _configurar_cache_soundcloud() -> str:
-    """Prepara o cache do yt-dlp e injeta Client ID público opcional do SoundCloud."""
+def _configurar_cache_soundcloud() -> tuple[str, str | None]:
+    """Prepara o cache do yt-dlp e valida um Client ID opcional do SoundCloud."""
     caminho = "/tmp/nemesis-ytdlp-cache"
-    os.makedirs(os.path.join(caminho, "soundcloud"), mode=0o700, exist_ok=True)
+    os.makedirs(caminho, mode=0o700, exist_ok=True)
     client_id = os.getenv("SOUNDCLOUD_CLIENT_ID", "").strip()
     if client_id:
         import re
         if not re.fullmatch(r"[A-Za-z0-9]{32}", client_id):
             LOG.error("SoundCloud: SOUNDCLOUD_CLIENT_ID inválido; esperado identificador público de 32 caracteres.")
+            client_id = None
         else:
-            versao = getattr(yt_dlp.version, "__version__", "2026.10.26")
-            arquivo = os.path.join(caminho, "soundcloud", "client_id.json")
-            temporario = arquivo + ".tmp"
-            with open(temporario, "w", encoding="utf-8") as destino:
-                json.dump({"yt-dlp_version": versao, "data": client_id}, destino)
-            os.chmod(temporario, 0o600)
-            os.replace(temporario, arquivo)
-            LOG.info("SoundCloud: Client ID fornecido por variável privada foi carregado no cache do yt-dlp.")
+            LOG.info("SoundCloud: Client ID válido detectado; será registrado pelo cache oficial do yt-dlp.")
     else:
-        LOG.info("SoundCloud: SOUNDCLOUD_CLIENT_ID não configurado; extração automática pode falhar se a página estiver protegida por AWS WAF.")
-    return caminho
+        LOG.info(
+            "SoundCloud: sem Client ID configurado; o yt-dlp tentará obter um automaticamente. "
+            "Se o site bloquear a página inicial, a busca poderá ficar indisponível."
+        )
+    return caminho, client_id
 
 
-YTDLP_CACHE_DIR = _configurar_cache_soundcloud()
+YTDLP_CACHE_DIR, SOUNDCLOUD_CLIENT_ID = _configurar_cache_soundcloud()
 
 YDL_OPCOES = {
     "format": "bestaudio/best",
@@ -1102,6 +1099,14 @@ class Musica(commands.Cog):
         self._painel_view_registrada = False
         self._estado_lock = asyncio.Lock()
         self.ytdl = yt_dlp.YoutubeDL(YDL_OPCOES)
+        # Usa a API pública de cache do yt-dlp. O formato interno do cache é
+        # versionado pelo próprio downloader; não gravamos arquivos manuais.
+        if SOUNDCLOUD_CLIENT_ID:
+            try:
+                self.ytdl.cache.store("soundcloud", "client_id", SOUNDCLOUD_CLIENT_ID)
+                LOG.info("SoundCloud: Client ID registrado no cache nativo do yt-dlp.")
+            except Exception as erro:
+                LOG.warning("SoundCloud: não foi possível registrar Client ID no cache (%s).", type(erro).__name__)
         self._extrair_lock = asyncio.Lock()
         # Prefere FFmpeg do sistema (Render instala via apt.txt); o binário
         # empacotado pelo imageio-ffmpeg fica como fallback.
