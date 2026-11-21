@@ -95,7 +95,7 @@ YDL_OPCOES = {
     "extractor_retries": 1,
     "socket_timeout": 15,
     # Tenta clientes públicos alternativos quando o cliente web padrão é bloqueado.
-    "extractor_args": {"youtube": {"player_client": ["web", "android", "ios"]}},
+    "extractor_args": {"youtube": {"player_client": ["web_safari", "web", "android", "ios"]}},
 }
 if YOUTUBE_COOKIEFILE:
     YDL_OPCOES["cookiefile"] = YOUTUBE_COOKIEFILE
@@ -1081,6 +1081,11 @@ class Musica(commands.Cog):
         self.ffmpeg = shutil.which("ffmpeg") or imageio_ffmpeg.get_ffmpeg_exe()
         opus_ok = _garantir_opus()
         LOG.info("Reprodução de música usando FFmpeg: %s", self.ffmpeg)
+        LOG.info(
+            "Runtime JavaScript do yt-dlp: %s; versão yt-dlp: %s.",
+            shutil.which("deno") or shutil.which("node") or "ausente",
+            getattr(yt_dlp.version, "__version__", "desconhecida"),
+        )
         if not opus_ok:
             LOG.error("Áudio desativado: instale o pacote de sistema libopus0.")
 
@@ -1390,9 +1395,29 @@ class Musica(commands.Cog):
                     resultado = []
                     for faixa in metadados[:MAX_QUEUE]:
                         busca = f"{faixa['title']} {faixa.get('artist', '')}".strip()
-                        dados = self.ytdl.extract_info(f"ytsearch1:{busca}", download=False)
-                        entradas = dados.get("entries") if isinstance(dados, dict) else None
-                        entrada = next((item for item in entradas or [] if isinstance(item, dict)), None)
+                        provedores = [("ytsearch1:", "YouTube"), ("scsearch1:", "SoundCloud")]
+                        if _youtube_em_cooldown():
+                            provedores = [item for item in provedores if item[1] != "YouTube"]
+                        entrada = None
+                        fonte = None
+                        for prefixo, provedor in provedores:
+                            try:
+                                dados = self.ytdl.extract_info(f"{prefixo}{busca}", download=False)
+                                entradas = dados.get("entries") if isinstance(dados, dict) else None
+                                entrada = next(
+                                    (item for item in entradas or [] if isinstance(item, dict) and item.get("url")),
+                                    None,
+                                )
+                                if entrada:
+                                    fonte = provedor
+                                    break
+                            except Exception as erro:
+                                if provedor == "YouTube":
+                                    _registrar_bloqueio_youtube(erro)
+                                LOG.warning(
+                                    "Resolução Spotify falhou no provedor %s (%s).",
+                                    provedor, type(erro).__name__,
+                                )
                         if not entrada:
                             continue
                         url = str(entrada.get("url") or "").strip()
@@ -1405,7 +1430,7 @@ class Musica(commands.Cog):
                             "webpage_url": pagina,
                             "duration": faixa["duration"] or int(entrada.get("duration") or 0),
                             "http_headers": entrada.get("http_headers") or {},
-                            "source": "Spotify",
+                            "source": fonte or "Spotify",
                         })
                     return resultado
                 itens = await asyncio.to_thread(resolver_spotify)
