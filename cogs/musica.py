@@ -1538,6 +1538,44 @@ class Musica(commands.Cog):
         async with self._extrair_lock:
             return await asyncio.to_thread(extrair)
 
+    async def _fallback_soundcloud(self, titulo: str) -> dict[str, Any] | None:
+        """Procura uma fonte alternativa quando o CDN principal devolve erro de acesso."""
+        termo = " ".join(str(titulo or "").split()).strip()
+        if not termo:
+            return None
+
+        def pesquisar():
+            dados = self.ytdl.extract_info(f"scsearch5:{termo}", download=False)
+            entradas = dados.get("entries") if isinstance(dados, dict) else None
+            for entrada in entradas or []:
+                if not isinstance(entrada, dict):
+                    continue
+                fluxo = str(entrada.get("url") or "").strip()
+                pagina = str(entrada.get("webpage_url") or "").strip()
+                if not fluxo.startswith(("http://", "https://")) or not pagina.startswith(("http://", "https://")):
+                    continue
+                try:
+                    duracao = max(0, int(entrada.get("duration") or 0))
+                except (TypeError, ValueError, OverflowError):
+                    duracao = 0
+                return {
+                    "url": fluxo,
+                    "title": str(entrada.get("title") or termo)[:256],
+                    "webpage_url": pagina[:2048],
+                    "duration": duracao,
+                    "http_headers": entrada.get("http_headers") if isinstance(entrada.get("http_headers"), dict) else {},
+                    "source": "SoundCloud",
+                    "_fallback_attempted": True,
+                }
+            return None
+
+        try:
+            async with self._extrair_lock:
+                return await asyncio.to_thread(pesquisar)
+        except Exception:
+            LOG.warning("Fonte alternativa SoundCloud indisponível para '%s'.", termo, exc_info=True)
+            return None
+
     @staticmethod
     def _tempo(segundos: int) -> str:
         if segundos <= 0:
@@ -1577,6 +1615,7 @@ class Musica(commands.Cog):
                 self.agora[gid] = item
                 loop = asyncio.get_running_loop()
                 terminou = asyncio.Event()
+                erro_audio = {"valor": None}
 
                 conexao = None
                 envio_original = None
@@ -1584,6 +1623,7 @@ class Musica(commands.Cog):
 
                 def ao_terminar(erro):
                     if erro:
+                        erro_audio["valor"] = erro
                         LOG.error("Erro de reprodução no servidor %s: %s", gid, erro)
                         canal_id = getattr(voz.channel, "id", 0)
                         canal = voz.channel
@@ -1732,6 +1772,30 @@ class Musica(commands.Cog):
                         except (discord.Forbidden, discord.HTTPException):
                             LOG.warning("Não foi possível publicar os controles no chat do canal de voz %s.", canal_chat_voz.id, exc_info=True)
                     await terminou.wait()
+                    if erro_audio["valor"] is not None:
+                        host_fonte = (urlparse(str(item.get("webpage_url") or "")).hostname or "").lower()
+                        youtube = host_fonte in {"youtube.com", "www.youtube.com", "m.youtube.com", "music.youtube.com", "youtu.be", "www.youtu.be"}
+                        if youtube and not item.get("_fallback_attempted") and gid not in self.skip_requested:
+                            alternativa = await self._fallback_soundcloud(item.get("title", ""))
+                            if alternativa:
+                                alternativa["voice_channel_id"] = item.get("voice_channel_id", getattr(voz.channel, "id", 0))
+                                alternativa["requested_by"] = item.get("requested_by")
+                                LOG.warning(
+                                    "Fonte principal falhou; tentando alternativa SoundCloud (guild=%s, faixa=%s).",
+                                    gid, item.get("title"),
+                                )
+                                self.filas.setdefault(gid, []).insert(0, alternativa)
+                                continue
+                        canal_falha = voz.channel
+                        if canal_falha:
+                            try:
+                                await canal_falha.send(
+                                    "⚠️ O provedor recusou o fluxo de áudio (possível bloqueio/Cloudflare) "
+                                    "e não foi possível iniciar uma fonte alternativa. Tente outra versão."
+                                )
+                            except (discord.Forbidden, discord.HTTPException):
+                                pass
+                        continue
                     historico = self.historico.setdefault(gid, [])
                     historico.append({
                         "title": item.get("title", "Música"),
