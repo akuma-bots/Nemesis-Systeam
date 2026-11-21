@@ -51,6 +51,8 @@ def _registrar_bloqueio_youtube(erro: Exception) -> None:
         or "confirm you’re not a bot" in mensagem
         or "confirm you're not a bot" in mensagem
         or "http error 429" in mensagem
+        or "http error 403" in mensagem
+        or "403: forbidden" in mensagem
     ):
         _YOUTUBE_ANTIBOT_ATE = time.monotonic() + _YOUTUBE_ANTIBOT_COOLDOWN
         LOG.warning(
@@ -715,7 +717,17 @@ class ModalPesquisaMusica(discord.ui.Modal):
         if interaction.guild_id != self.guild_id:
             await interaction.response.send_message("Este painel pertence à NÊMESIS.", ephemeral=True)
             return
-        await self.cog.adicionar_consulta(interaction, self.consulta.value)
+        try:
+            await self.cog.adicionar_consulta(interaction, self.consulta.value)
+        except discord.HTTPException as erro:
+            LOG.error(
+                "Discord recusou a resposta do modal musical (status=%s, codigo=%s). "
+                "A interação já foi reconhecida; não repetir a chamada em rajada.",
+                getattr(erro, "status", None),
+                getattr(erro, "code", None),
+            )
+        except Exception:
+            LOG.exception("Falha inesperada ao processar o modal de pesquisa musical.")
 
 
 class MusicSearchSelect(discord.ui.Select):
@@ -1640,14 +1652,39 @@ class Musica(commands.Cog):
                     atualizado = await self._extrair(item["webpage_url"])
                     item["url"] = atualizado["url"]
                     item["http_headers"] = atualizado.get("http_headers") or {}
-                except Exception:
-                    LOG.exception("Não foi possível atualizar o fluxo de áudio.")
-                    canal_texto = voz.channel
-                    if canal_texto:
-                        await canal_texto.send(
-                            f"Não consegui abrir **{discord.utils.escape_markdown(item['title'])}**. Pulando para a próxima música."
+                except Exception as erro_atualizacao:
+                    LOG.warning(
+                        "Falha ao renovar o fluxo da faixa '%s' (%s); verificando fonte alternativa.",
+                        item.get("title"), type(erro_atualizacao).__name__, exc_info=True,
+                    )
+                    host_fonte = (urlparse(str(item.get("webpage_url") or "")).hostname or "").lower()
+                    youtube = host_fonte in {
+                        "youtube.com", "www.youtube.com", "m.youtube.com",
+                        "music.youtube.com", "youtu.be", "www.youtu.be",
+                    }
+                    alternativa = None
+                    if youtube and not item.get("_fallback_attempted"):
+                        alternativa = await self._fallback_soundcloud(item.get("title", ""))
+                    if alternativa:
+                        alternativa["voice_channel_id"] = item.get("voice_channel_id", getattr(voz.channel, "id", 0))
+                        alternativa["requested_by"] = item.get("requested_by")
+                        item.update(alternativa)
+                        LOG.warning(
+                            "Renovação do YouTube falhou; faixa redirecionada para SoundCloud "
+                            "(guild=%s, faixa=%s).",
+                            gid, item.get("title"),
                         )
-                    continue
+                    else:
+                        canal_texto = voz.channel
+                        if canal_texto:
+                            try:
+                                await canal_texto.send(
+                                    f"Não consegui abrir **{discord.utils.escape_markdown(item['title'])}** "
+                                    "nem localizar uma fonte alternativa. Pulando para a próxima música."
+                                )
+                            except discord.HTTPException:
+                                LOG.warning("Não foi possível avisar sobre a faixa indisponível.", exc_info=True)
+                        continue
                 self.agora[gid] = item
                 loop = asyncio.get_running_loop()
                 terminou = asyncio.Event()
