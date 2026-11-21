@@ -33,6 +33,32 @@ MAX_QUEUE = 100
 VOLUME_PADRAO = 0.5
 ARQUIVO_ESTADO_MUSICA = "estado_musica.json"
 
+# O YouTube pode bloquear temporariamente IPs de hospedagem com verificação anti-bot.
+# Durante o cooldown, não repetimos chamadas que já falharam: priorizamos SoundCloud.
+_YOUTUBE_ANTIBOT_ATE = 0.0
+_YOUTUBE_ANTIBOT_COOLDOWN = 600
+
+
+def _youtube_em_cooldown() -> bool:
+    return time.monotonic() < _YOUTUBE_ANTIBOT_ATE
+
+
+def _registrar_bloqueio_youtube(erro: Exception) -> None:
+    global _YOUTUBE_ANTIBOT_ATE
+    mensagem = str(erro).casefold()
+    if (
+        "sign in to confirm" in mensagem
+        or "confirm you’re not a bot" in mensagem
+        or "confirm you're not a bot" in mensagem
+        or "http error 429" in mensagem
+    ):
+        _YOUTUBE_ANTIBOT_ATE = time.monotonic() + _YOUTUBE_ANTIBOT_COOLDOWN
+        LOG.warning(
+            "YouTube aplicou verificação anti-bot; consultas ao provedor pausadas por %s segundos. "
+            "SoundCloud continuará disponível como alternativa.",
+            _YOUTUBE_ANTIBOT_COOLDOWN,
+        )
+
 
 def _configurar_cookies_youtube() -> str | None:
     """Carrega cookies Netscape fornecidos por variável privada do ambiente."""
@@ -64,7 +90,7 @@ YDL_OPCOES = {
     "no_warnings": True,
     "default_search": "ytsearch",
     "source_address": "0.0.0.0",
-    "extractor_retries": 2,
+    "extractor_retries": 1,
     "socket_timeout": 15,
     # Tenta clientes públicos alternativos quando o cliente web padrão é bloqueado.
     "extractor_args": {"youtube": {"player_client": ["web", "android", "ios"]}},
@@ -1251,7 +1277,10 @@ class Musica(commands.Cog):
         def pesquisar():
             encontrados = []
             vistos = set()
-            for prefixo, provedor in (("ytsearch10:", "YouTube"), ("scsearch10:", "SoundCloud")):
+            provedores = [("ytsearch10:", "YouTube"), ("scsearch10:", "SoundCloud")]
+            if _youtube_em_cooldown():
+                provedores = [item for item in provedores if item[1] != "YouTube"]
+            for prefixo, provedor in provedores:
                 try:
                     dados = self.ytdl.extract_info(f"{prefixo}{texto}", download=False)
                     entradas = dados.get("entries") if isinstance(dados, dict) else None
@@ -1279,6 +1308,8 @@ class Musica(commands.Cog):
                             "source": provedor,
                         })
                 except Exception as erro:
+                    if provedor == "YouTube":
+                        _registrar_bloqueio_youtube(erro)
                     LOG.warning("Busca de música falhou no provedor %s (%s).", provedor, type(erro).__name__)
             return encontrados[:20]
 
@@ -1479,7 +1510,10 @@ class Musica(commands.Cog):
                 falhas = []
                 # A busca tenta YouTube e SoundCloud; falhas de bloqueio, resposta
                 # vazia ou ausência de fluxo não encerram a resolução prematuramente.
-                for prefixo, provedor in (("ytsearch1:", "YouTube"), ("scsearch1:", "SoundCloud")):
+                provedores = [("ytsearch1:", "YouTube"), ("scsearch1:", "SoundCloud")]
+                if _youtube_em_cooldown():
+                    provedores = [item for item in provedores if item[1] != "YouTube"]
+                for prefixo, provedor in provedores:
                     try:
                         tentativa = self.ytdl.extract_info(f"{prefixo}{busca}", download=False)
                         entradas = tentativa.get("entries") if isinstance(tentativa, dict) else None
@@ -1494,6 +1528,8 @@ class Musica(commands.Cog):
                         falhas.append(f"{provedor}: nenhum fluxo retornado")
                     except Exception as erro:
                         falhas.append(f"{provedor}: {type(erro).__name__}")
+                        if provedor == "YouTube":
+                            _registrar_bloqueio_youtube(erro)
                         LOG.warning("Busca musical falhou no provedor %s: %s", provedor, erro)
                 if dados is None:
                     raise ValueError(
