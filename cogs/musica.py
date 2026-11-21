@@ -57,7 +57,7 @@ def _registrar_bloqueio_youtube(erro: Exception) -> None:
         _YOUTUBE_ANTIBOT_ATE = time.monotonic() + _YOUTUBE_ANTIBOT_COOLDOWN
         LOG.warning(
             "YouTube aplicou verificação anti-bot; consultas ao provedor pausadas por %s segundos. "
-            "SoundCloud continuará disponível como alternativa.",
+            "O sistema tentará as fontes alternativas configuradas.",
             _YOUTUBE_ANTIBOT_COOLDOWN,
         )
 
@@ -85,6 +85,32 @@ def _configurar_cookies_youtube() -> str | None:
 
 YOUTUBE_COOKIEFILE = _configurar_cookies_youtube()
 
+
+def _configurar_cache_soundcloud() -> str:
+    """Prepara o cache do yt-dlp e injeta Client ID público opcional do SoundCloud."""
+    caminho = "/tmp/nemesis-ytdlp-cache"
+    os.makedirs(os.path.join(caminho, "soundcloud"), mode=0o700, exist_ok=True)
+    client_id = os.getenv("SOUNDCLOUD_CLIENT_ID", "").strip()
+    if client_id:
+        import re
+        if not re.fullmatch(r"[A-Za-z0-9]{32}", client_id):
+            LOG.error("SoundCloud: SOUNDCLOUD_CLIENT_ID inválido; esperado identificador público de 32 caracteres.")
+        else:
+            versao = getattr(yt_dlp.version, "__version__", "2026.10.26")
+            arquivo = os.path.join(caminho, "soundcloud", "client_id.json")
+            temporario = arquivo + ".tmp"
+            with open(temporario, "w", encoding="utf-8") as destino:
+                json.dump({"yt-dlp_version": versao, "data": client_id}, destino)
+            os.chmod(temporario, 0o600)
+            os.replace(temporario, arquivo)
+            LOG.info("SoundCloud: Client ID fornecido por variável privada foi carregado no cache do yt-dlp.")
+    else:
+        LOG.info("SoundCloud: SOUNDCLOUD_CLIENT_ID não configurado; extração automática pode falhar se a página estiver protegida por AWS WAF.")
+    return caminho
+
+
+YTDLP_CACHE_DIR = _configurar_cache_soundcloud()
+
 YDL_OPCOES = {
     "format": "bestaudio/best",
     "noplaylist": True,
@@ -94,6 +120,7 @@ YDL_OPCOES = {
     "source_address": "0.0.0.0",
     "extractor_retries": 1,
     "socket_timeout": 15,
+    "cachedir": YTDLP_CACHE_DIR,
     # Tenta clientes públicos alternativos quando o cliente web padrão é bloqueado.
     "extractor_args": {"youtube": {"player_client": ["web_safari", "web", "android", "ios"]}},
 }
