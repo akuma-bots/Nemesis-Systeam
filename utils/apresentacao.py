@@ -1,4 +1,4 @@
-"""Sistema visual unificado da NÊMESIS para embeds do Discord.
+"""Sistema visual unificado da Chaos Org para embeds do Discord.
 
 A camada aplica identidade visual visível a todas as embeds que usam criar_embed,
 sem substituir a informação específica, os campos ou as ações de cada sistema.
@@ -7,15 +7,15 @@ from __future__ import annotations
 
 import discord
 
-COR_PRIMARIA = 0x8B1E2D  # Carmesim escuro NÊMESIS
+COR_PRIMARIA = 0x8B1E2D  # Carmesim escuro Chaos Org
 COR_SUCESSO = 0x2D9D78
 COR_AVISO = 0xD69E2E
 COR_ERRO = 0x7F1D2D
 COR_NEUTRA = 0x111014
-MARCA = "NÊMESIS"
-AUTOR_PADRAO = "NÊMESIS • CENTRAL DE SISTEMAS"
-RODAPE_PADRAO = "NÊMESIS • SISTEMAS INTEGRADOS"
-ASSINATURA_SISTEMA = "Nêmesis Systeam"
+MARCA = "Chaos Org"
+AUTOR_PADRAO = "Chaos Org • CENTRAL DE SISTEMAS"
+RODAPE_PADRAO = "Chaos Org • SISTEMAS INTEGRADOS"
+ASSINATURA_SISTEMA = "Chaos Org Systeam"
 
 
 def criar_embed(
@@ -26,7 +26,7 @@ def criar_embed(
     rodape: str | None = RODAPE_PADRAO,
     **kwargs,
 ) -> discord.Embed:
-    """Cria uma embed com cabeçalho, título e assinatura visual da NÊMESIS."""
+    """Cria uma embed com cabeçalho, título e assinatura visual da Chaos Org."""
     if cor is not None:
         kwargs["color"] = cor
     elif "color" not in kwargs and "colour" not in kwargs:

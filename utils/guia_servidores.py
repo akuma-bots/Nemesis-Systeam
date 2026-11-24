@@ -9,14 +9,14 @@ CANAL_GUIA_SERVIDOR_ID = 1563995880833421509
 CARGO_VISITANTES_ID = 1563995879990624371
 NOME_CARGO_VISITANTES = "Visitantes"
 TAG_ORG_NEMESIS = "NΞM"
-RODAPE_GUIA = "NÊMESIS • GUIA OFICIAL DO SERVIDOR"
+RODAPE_GUIA = "Chaos Org • GUIA OFICIAL DO SERVIDOR"
 
 # Somente áreas oficiais de orientação geral. Áreas privadas não são
 # cadastradas aqui; o acesso a cada destino também é validado no clique.
 CANAIS_GUIA_SERVIDORES = (
     ("Regras", 1563995880833421508, "📜", "Leia as normas, limites e responsabilidades de todos os integrantes."),
     ("Anúncios", 1564076387797569577, "📢", "Acompanhe comunicados oficiais, mudanças e avisos da organização."),
-    ("Como funciona", 1563995880833421509, "🧭", "Entenda a NÊMESIS, seus objetivos e o caminho para começar."),
+    ("Como funciona", 1563995880833421509, "🧭", "Entenda a Chaos Org, seus objetivos e o caminho para começar."),
     ("Divisões", 1563995880833421511, "⚔️", "Conheça a estrutura de divisões e suas frentes de atuação."),
     ("Sistemas", 1563995880833421512, "⚙️", "Consulte orientações de uso dos recursos e ferramentas do servidor."),
     ("Agenda", 1563995880623841337, "🗓️", "Veja a programação de atividades, eventos e compromissos."),
@@ -32,14 +32,14 @@ DESCRICOES_CANAIS_GUIA = {canal_id: descricao for _, canal_id, _, descricao in C
 
 
 def criar_embed_guia_servidor() -> discord.Embed:
-    """Apresentação institucional e roteiro inicial da NÊMESIS."""
+    """Apresentação institucional e roteiro inicial da Chaos Org."""
     embed = discord.Embed(
-        title="✦ NÊMESIS — GUIA OFICIAL DO SERVIDOR",
+        title="✦ Chaos Org — GUIA OFICIAL DO SERVIDOR",
         description=(
             "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮\n"
             "       **THE ART OF POWER & STRATEGY**\n"
             "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
-            "A **NÊMESIS** é uma organização construída em torno de competição, "
+            "A **Chaos Org** é uma organização construída em torno de competição, "
             "evolução, estratégia e comunidade. Este espaço reúne integrantes "
             "que desejam participar de uma estrutura organizada, desenvolver "
             "suas capacidades e construir resultados em conjunto.\n\n"
@@ -50,7 +50,7 @@ def criar_embed_guia_servidor() -> discord.Embed:
     embed.add_field(
         name="◈ NOSSA IDENTIDADE",
         value=(
-            "A NÊMESIS valoriza compromisso, respeito, disciplina, iniciativa "
+            "A Chaos Org valoriza compromisso, respeito, disciplina, iniciativa "
             "e espírito competitivo. Cada integrante deve compreender seu papel, "
             "respeitar a organização e contribuir de forma positiva."
         ),
@@ -112,7 +112,7 @@ def criar_embed_guia_servidor() -> discord.Embed:
 
 
 class GuiaCanaisSelect(discord.ui.Select):
-    """Menu para navegar pelos canais gerais da NÊMESIS."""
+    """Menu para navegar pelos canais gerais da Chaos Org."""
 
     def __init__(self):
         opcoes = [
@@ -144,7 +144,7 @@ class GuiaCanaisSelect(discord.ui.Select):
                     guild = None
         if guild is None or guild.id != GUILD_NEMESIS_ID:
             await interaction.response.send_message(
-                "Não consegui acessar a NÊMESIS agora. Abra o servidor e tente novamente.",
+                "Não consegui acessar a Chaos Org agora. Abra o servidor e tente novamente.",
                 ephemeral=interaction.guild is not None,
             )
             return
@@ -157,7 +157,7 @@ class GuiaCanaisSelect(discord.ui.Select):
                 membro = None
         if membro is None:
             await interaction.response.send_message(
-                "Esta navegação está disponível apenas para integrantes da NÊMESIS.",
+                "Esta navegação está disponível apenas para integrantes da Chaos Org.",
                 ephemeral=interaction.guild is not None,
             )
             return
@@ -214,7 +214,7 @@ class GuiaCanaisSelect(discord.ui.Select):
             value=f"[**Abrir {nome} no Discord**]({url})",
             inline=False,
         )
-        resposta.set_footer(text="NÊMESIS • Orientação do servidor")
+        resposta.set_footer(text="Chaos Org • Orientação do servidor")
         await interaction.response.send_message(
             embed=resposta,
             ephemeral=interaction.guild is not None,
@@ -270,7 +270,7 @@ class GuiaServidoresView(discord.ui.LayoutView):
             discord.ui.TextDisplay("### ◈ NAVEGAÇÃO DO SERVIDOR"),
             discord.ui.ActionRow(seletor),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
             accent_colour=0x9F1239,
         ))
 
@@ -278,7 +278,7 @@ async def publicar_guia_servidor(bot) -> bool:
     """Cria o guia no canal oficial ou atualiza a mensagem existente, sem duplicar."""
     guild = bot.get_guild(GUILD_NEMESIS_ID)
     if guild is None:
-        logger.warning("Servidor NÊMESIS indisponível; publicação do guia adiada.")
+        logger.warning("Servidor Chaos Org indisponível; publicação do guia adiada.")
         return False
 
     canal = guild.get_channel(CANAL_GUIA_SERVIDOR_ID)
@@ -290,12 +290,12 @@ async def publicar_guia_servidor(bot) -> bool:
             return False
 
     if not isinstance(canal, discord.TextChannel) or canal.guild.id != GUILD_NEMESIS_ID:
-        logger.error("O destino configurado para o guia não é um canal de texto da NÊMESIS.")
+        logger.error("O destino configurado para o guia não é um canal de texto da Chaos Org.")
         return False
 
     bot_member = guild.me or guild.get_member(bot.user.id)
     if bot_member is None:
-        logger.error("Não foi possível resolver o membro do Shinku na NÊMESIS.")
+        logger.error("Não foi possível resolver o membro do Shinku na Chaos Org.")
         return False
     permissoes_bot = canal.permissions_for(bot_member)
     if not (permissoes_bot.view_channel and permissoes_bot.send_messages and permissoes_bot.read_message_history):
@@ -314,15 +314,15 @@ async def publicar_guia_servidor(bot) -> bool:
                     view=GuiaServidoresView(),
                     allowed_mentions=discord.AllowedMentions.none(),
                 )
-                logger.info("Guia oficial da NÊMESIS atualizado (message=%s).", mensagem.id)
+                logger.info("Guia oficial da Chaos Org atualizado (message=%s).", mensagem.id)
                 return True
 
         await canal.send(
             view=GuiaServidoresView(),
             allowed_mentions=discord.AllowedMentions.none(),
         )
-        logger.info("Guia oficial da NÊMESIS publicado (channel=%s).", canal.id)
+        logger.info("Guia oficial da Chaos Org publicado (channel=%s).", canal.id)
         return True
     except (discord.Forbidden, discord.HTTPException):
-        logger.exception("Falha ao publicar/atualizar o guia oficial da NÊMESIS.")
+        logger.exception("Falha ao publicar/atualizar o guia oficial da Chaos Org.")
         return False

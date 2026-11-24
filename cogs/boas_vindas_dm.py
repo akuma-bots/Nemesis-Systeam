@@ -42,7 +42,7 @@ def _embed_inicio(membro: discord.abc.User) -> discord.Embed:
         title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ BEM-VINDO À ORGANIZAÇÃO",
         description=(
             f"Salve, **{discord.utils.escape_markdown(membro.display_name)}**. "
-            "Sua entrada na NÊMESIS foi registrada.\n\n"
+            "Sua entrada na Chaos Org foi registrada.\n\n"
             "Somos uma organização voltada a jogos de luta, competitividade e interação "
             "entre jogadores. Respeite as regras, acompanhe os anúncios e procure a equipe "
             "pelos canais oficiais quando precisar de suporte."
@@ -55,17 +55,17 @@ def _embed_inicio(membro: discord.abc.User) -> discord.Embed:
         "01. Leia as regras e os comunicados oficiais.\n"
         "02. Ao entrar, você recebe automaticamente o cargo Visitantes.\n"
         "03. Explore os canais pelo seletor de navegação abaixo.\n"
-        "04. Abra #Sistemas e consulte o guia Começando na NÊMESIS.\n"
+        "04. Abra #Sistemas e consulte o guia Começando na Chaos Org.\n"
         "05. Consulte os painéis oficiais para acessar os sistemas liberados ao seu cargo."
     ), inline=False)
     embed.add_field(name="◈ GUIA DE NAVEGAÇÃO", value="O seletor abaixo reúne as áreas essenciais em um único menu. Comece por Regras, Como funciona, Divisões e Sistemas; depois explore missões, progressão e atividades.", inline=False)
-    embed.add_field(name="CONVITE DO SERVIDOR", value=f"[Entrar na NÊMESIS]({CONVITE_NEMESIS})", inline=False)
+    embed.add_field(name="CONVITE DO SERVIDOR", value=f"[Entrar na Chaos Org]({CONVITE_NEMESIS})", inline=False)
     embed.add_field(name="CÓDIGOS DOS JOGOS", value=(
         "Use o menu abaixo para abrir as abas de Shigaku, Gakuran ou Fistborn. "
         "Os códigos podem expirar sem aviso; consulte a fonte indicada em cada aba."
     ), inline=False)
     embed.set_thumbnail(url=membro.display_avatar.url)
-    embed.set_footer(text="NÊMESIS • TAG DA ORG: NΞM • Integração oficial")
+    embed.set_footer(text="Chaos Org • TAG DA ORG: NΞM • Integração oficial")
     return embed
 
 
@@ -73,7 +73,7 @@ def _embed_codigos(chave: str) -> discord.Embed:
     catalogo = carregar_catalogo_codigos()
     jogo = catalogo.get("jogos", {}).get(chave)
     if not jogo:
-        return criar_embed(title="NÊMESIS ━ CÓDIGOS", description="O catálogo deste jogo está temporariamente indisponível.", color=COR_PRIMARIA)
+        return criar_embed(title="Chaos Org ━ CÓDIGOS", description="O catálogo deste jogo está temporariamente indisponível.", color=COR_PRIMARIA)
     linhas = []
     for item in jogo.get("codigos", []):
         codigo = str(item.get("codigo", "")).strip()
@@ -100,7 +100,7 @@ def _embed_codigos(chave: str) -> discord.Embed:
     fonte = jogo.get("fonte")
     if fonte:
         embed.add_field(name="FONTE PARA CONFERIR ATUALIZAÇÕES", value=f"[Abrir lista de referência]({fonte})", inline=False)
-    embed.set_footer(text=f"NÊMESIS • Códigos {jogo['nome']} • Consulte a fonte para mudanças recentes")
+    embed.set_footer(text=f"Chaos Org • Códigos {jogo['nome']} • Consulte a fonte para mudanças recentes")
     return embed
 
 
@@ -108,7 +108,7 @@ class SeletorBoasVindas(discord.ui.Select):
     def __init__(self, autor_id: int, selecionado: str = "inicio"):
         self.autor_id = autor_id
         opcoes = [
-            discord.SelectOption(label="Boas-vindas e tutorial", value="inicio", description="Conheça a NÊMESIS e veja como começar", default=selecionado == "inicio"),
+            discord.SelectOption(label="Boas-vindas e tutorial", value="inicio", description="Conheça a Chaos Org e veja como começar", default=selecionado == "inicio"),
             discord.SelectOption(label="Shigaku", value="shigaku", description="Códigos, requisitos e resgate", default=selecionado == "shigaku"),
             discord.SelectOption(label="Gakuran", value="gakuran", description="Códigos, requisitos e resgate", default=selecionado == "gakuran"),
             discord.SelectOption(label="Fistborn", value="fistborn", description="Códigos, requisitos e resgate", default=selecionado == "fistborn"),
@@ -156,7 +156,7 @@ def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.u
         texto = "\n\n".join(textos)
 
     if not texto:
-        texto = "## NÊMESIS • NOTAS DE ATUALIZAÇÃO\nConfigure o recebimento de comunicados automáticos."
+        texto = "## Chaos Org • NOTAS DE ATUALIZAÇÃO\nConfigure o recebimento de comunicados automáticos."
 
     origem = getattr(botao, "view", None)
     itens = []
@@ -273,7 +273,7 @@ def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.u
     )
     ultima_linha = texto.rstrip().splitlines()[-1] if texto.strip() else ""
     if not ultima_linha.startswith("-#"):
-        componentes.append(discord.ui.TextDisplay("-# Nêmesis Systeam"))
+        componentes.append(discord.ui.TextDisplay("-# Chaos Org Systeam"))
 
     if len(componentes) > 10:
         raise ValueError(
@@ -340,7 +340,7 @@ class BoasVindasLayoutView(discord.ui.LayoutView):
     def __init__(self, membro: discord.abc.User, autor_id: int, selecionado: str = "inicio"):
         super().__init__(timeout=900)
         embed = _embed_inicio(membro) if selecionado == "inicio" else _embed_codigos(selecionado)
-        texto = texto_embed_components_v2(embed) or "## INTEGRAÇÃO NÊMESIS"
+        texto = texto_embed_components_v2(embed) or "## INTEGRAÇÃO Chaos Org"
         componentes = [
             discord.ui.TextDisplay(parte)
             for parte in dividir_texto_components_v2(texto)
@@ -363,13 +363,13 @@ class BoasVindasLayoutView(discord.ui.LayoutView):
             discord.ui.ActionRow(seletor),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(avisos),
-            discord.ui.TextDisplay("-# NÊMESIS • INTEGRAÇÃO OFICIAL • NΞM"),
+            discord.ui.TextDisplay("-# Chaos Org • INTEGRAÇÃO OFICIAL • NΞM"),
             accent_colour=0x9F1239,
         ))
 
 
 class BoasVindasDM(commands.Cog):
-    """Envia boas-vindas por DM quando uma pessoa entra no servidor da NÊMESIS."""
+    """Envia boas-vindas por DM quando uma pessoa entra no servidor da Chaos Org."""
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 

@@ -35,7 +35,7 @@ def _valor(valor, unidade: str) -> str:
 
 
 class Recordes(commands.Cog):
-    """Arquivo de recordes e anúncios automáticos da NÊMESIS."""
+    """Arquivo de recordes e anúncios automáticos da Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -63,7 +63,7 @@ class Recordes(commands.Cog):
         await registrar_global(
             guild,
             "conquistas",
-            "Novo recorde da NÊMESIS",
+            "Novo recorde da Chaos Org",
             detalhe,
             cor=COR_PRIMARIA,
         )
@@ -91,7 +91,7 @@ class Recordes(commands.Cog):
             f"**Competidor:** <@{user_id}>\n"
             f"**Marca registrada:** {_valor(valor, unidade)}",
             cor=COR_PRIMARIA,
-            rodape="NÊMESIS • Arquivo oficial de recordes",
+            rodape="Chaos Org • Arquivo oficial de recordes",
             timestamp=True,
         )
         membro = guild.get_member(user_id)
@@ -125,7 +125,7 @@ class Recordes(commands.Cog):
     ):
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Use este comando dentro da NÊMESIS.",
+                "Use este comando dentro da Chaos Org.",
                 ephemeral=True,
             )
             return
@@ -136,19 +136,19 @@ class Recordes(commands.Cog):
             f"Canal oficial atualizado para {canal.mention}.\n\n"
             "Novas marcas reconhecidas pelos sistemas serão anunciadas aqui.",
             cor=COR_PRIMARIA,
-            rodape="NÊMESIS • Configuração concluída",
+            rodape="Chaos Org • Configuração concluída",
             timestamp=True,
         )
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(
         name="recordes",
-        description="Consulta o arquivo atual de recordes competitivos da NÊMESIS.",
+        description="Consulta o arquivo atual de recordes competitivos da Chaos Org.",
     )
     async def recordes_listar(self, interaction: discord.Interaction):
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Use este comando dentro da NÊMESIS.",
+                "Use este comando dentro da Chaos Org.",
                 ephemeral=True,
             )
             return
@@ -158,7 +158,7 @@ class Recordes(commands.Cog):
             "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — ARQUIVO DE RECORDES ・✦",
             "Marcas competitivas atualmente registradas no servidor.",
             cor=COR_PRIMARIA,
-            rodape="NÊMESIS • Estatísticas oficiais",
+            rodape="Chaos Org • Estatísticas oficiais",
             timestamp=True,
         )
         if not todos:

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 GUILD_NEMESIS_ID = int(os.getenv("NEMESIS_GUILD_ID", "1563995879981981817"))
 CANAL_TUTORIAIS_ID = 1563995880833421512
 ARQUIVO_CENTRAL_TUTORIAIS = "central_tutoriais.json"
-MARCADOR_CENTRAL_TUTORIAIS = "NÊMESIS • CENTRAL DE TUTORIAIS • V4"
+MARCADOR_CENTRAL_TUTORIAIS = "Chaos Org • CENTRAL DE TUTORIAIS • V4"
 
 
 def _componentes_contem_marcador(componentes, marcador: str) -> bool:
@@ -30,7 +30,7 @@ TUTORIAIS = {
         "titulo": "Dados e histórico de atividade",
         "descricao": "Entenda quais dados de atividade são registrados para segurança e moderação.",
         "passos": [
-            "O Shinku registra mensagens enviadas nos canais e tópicos da NÊMESIS que o bot consegue acessar, incluindo o conteúdo atual, edições e exclusões.",
+            "O Shinku registra mensagens enviadas nos canais e tópicos da Chaos Org que o bot consegue acessar, incluindo o conteúdo atual, edições e exclusões.",
             "O histórico de mensagens mantém até 500 mensagens por membro, por no máximo 30 dias. São preservadas até duas versões anteriores de uma mensagem editada.",
             "O monitoramento também registra eventos do servidor, como entrada e saída, mudanças de apelido, timeout, banimento e movimentações em canais de voz.",
             "A consulta individual é privada e restrita à liderança autorizada. Os dados são usados para segurança, auditoria e moderação da comunidade.",
@@ -55,11 +55,11 @@ TUTORIAIS = {
         "comandos": "Canal Músicas · Central Musical · Botões de reprodução",
     },
     "inicio": {
-        "titulo": "Começando na NÊMESIS",
+        "titulo": "Começando na Chaos Org",
         "descricao": "Guia de integração para novos integrantes: identidade, cargo inicial, canais e primeiros passos.",
         "passos": [
             "Ao entrar no servidor, o Shinku atribui automaticamente o cargo Visitantes. Se ele não aparecer, aguarde alguns segundos e procure a equipe pelo canal de Atendimento.",
-            "A TAG oficial da organização é NΞM. Ela identifica a NÊMESIS e deve ser preservada conforme as orientações da liderança.",
+            "A TAG oficial da organização é NΞM. Ela identifica a Chaos Org e deve ser preservada conforme as orientações da liderança.",
             "Leia o canal Regras (categoria Informações) e acompanhe os comunicados em Anúncios antes de participar das atividades.",
             "Abra Como funciona para entender a proposta da organização e Divisões para conhecer a estrutura das equipes.",
             "Consulte #Sistemas: o painel Central de Tutoriais possui um seletor para abrir o guia de cada sistema sem precisar de comando.",
@@ -87,7 +87,7 @@ TUTORIAIS = {
     },
     "contribuicoes": {
         "titulo": "Contribuições",
-        "descricao": "Atividades que ajudam a manter e desenvolver a NÊMESIS.",
+        "descricao": "Atividades que ajudam a manter e desenvolver a Chaos Org.",
         "passos": [
             "Confira no canal oficial quais ações são aceitas como contribuição.",
             "Leia a recompensa em XP, os limites e os requisitos antes de participar.",
@@ -159,7 +159,7 @@ TUTORIAIS = {
     },
     "progressao": {
         "titulo": "Progressão e XP",
-        "descricao": "Como evoluir nos ranks oficiais da NÊMESIS.",
+        "descricao": "Como evoluir nos ranks oficiais da Chaos Org.",
         "passos": [
             "O XP de progressão da gangue é separado do XP competitivo; cada sistema mantém seu próprio histórico.",
             "Mensagens válidas concedem XP com intervalo de segurança entre registros. Spam não acelera a progressão.",
@@ -217,7 +217,7 @@ TUTORIAIS = {
             "Informe o nome da gangue, representante, objetivo da aliança e contato oficial.",
             "Aguarde a avaliação da liderança; enviar uma proposta não significa aprovação.",
             "Defina regras de cooperação, comunicação, eventos e resolução de conflitos antes de anunciar a aliança.",
-            "Não fale em nome da NÊMESIS nem prometa apoio sem autorização da liderança.",
+            "Não fale em nome da Chaos Org nem prometa apoio sem autorização da liderança.",
         ],
         "comandos": "Central de Tutoriais no canal #Sistemas · formulário oficial de aliança",
     },
@@ -324,7 +324,7 @@ TUTORIAIS = {
     },
     "lideranca": {
         "titulo": "Liderança e staff",
-        "descricao": "Boas práticas para operar os sistemas da NÊMESIS.",
+        "descricao": "Boas práticas para operar os sistemas da Chaos Org.",
         "passos": [
             "Use apenas comandos compatíveis com seu cargo e sua responsabilidade.",
             "Registre mudanças importantes, punições, decisões e correções com justificativa.",
@@ -341,9 +341,9 @@ def _embed_indice(guild: discord.Guild | None = None, bot: commands.Bot | None =
     """Capa enxuta: o conteúdo didático só aparece após escolher um guia."""
     quebra = chr(10)
     embed = criar_embed(
-        title="✦・ NÊMESIS — TUTORIAIS ・✦",
+        title="✦・ Chaos Org — TUTORIAIS ・✦",
         description=(
-            "**Central de orientação da NÊMESIS.**" + quebra
+            "**Central de orientação da Chaos Org.**" + quebra
             + "Escolha um assunto no seletor abaixo para abrir o guia correspondente."
             + quebra * 2
             + "A consulta é privada e não altera esta mensagem."
@@ -380,7 +380,7 @@ def _dividir_texto_componentes(texto: str, limite: int = 3900) -> list[str]:
     return partes or [""]
 
 
-def _texto_embed_tutorial(embed: discord.Embed, titulo_padrao: str = "GUIA NÊMESIS") -> str:
+def _texto_embed_tutorial(embed: discord.Embed, titulo_padrao: str = "GUIA Chaos Org") -> str:
     """Converte o conteúdo do guia em texto preservando a ordem e todos os campos."""
     linhas = [f"## {embed.title or titulo_padrao}"]
     if embed.description:
@@ -418,7 +418,7 @@ def _embed_tutorial(chave: str, guild: discord.Guild | None = None, bot: command
         value=str(tutorial.get("comandos") or "Consulte os canais oficiais e a central /help.")[:1024],
         inline=False,
     )
-    embed.set_footer(text="NÊMESIS • Biblioteca oficial • Consulte o menu para trocar de guia")
+    embed.set_footer(text="Chaos Org • Biblioteca oficial • Consulte o menu para trocar de guia")
     if guild is not None:
         aplicar_identidade_servidor(embed, guild, bot)
     return embed
@@ -550,7 +550,7 @@ class TutorialDetalheLayoutView(discord.ui.LayoutView):
             discord.ui.ActionRow(seletor),
             discord.ui.ActionRow(voltar),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# NÊMESIS • BIBLIOTECA DE SISTEMAS"),
+            discord.ui.TextDisplay("-# Chaos Org • BIBLIOTECA DE SISTEMAS"),
         ])
         self.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
 
@@ -571,7 +571,7 @@ class TutorialIndiceLayoutView(discord.ui.LayoutView):
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(seletor),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# NÊMESIS • BIBLIOTECA DE SISTEMAS"),
+            discord.ui.TextDisplay("-# Chaos Org • BIBLIOTECA DE SISTEMAS"),
         ])
         self.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
 
@@ -641,7 +641,7 @@ class TutorialDetalheIndiceView(discord.ui.View):
         return True
 
 class Tutorial(commands.Cog):
-    """Mantém a central pública e persistente de tutoriais da NÊMESIS."""
+    """Mantém a central pública e persistente de tutoriais da Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -661,13 +661,13 @@ class Tutorial(commands.Cog):
         try:
             guild = self.bot.get_guild(GUILD_NEMESIS_ID)
             if guild is None:
-                logger.warning("Servidor da NÊMESIS ainda não está disponível para publicar a central de tutoriais.")
+                logger.warning("Servidor da Chaos Org ainda não está disponível para publicar a central de tutoriais.")
                 return
             canal = guild.get_channel(CANAL_TUTORIAIS_ID)
             if canal is None:
                 canal = await self.bot.fetch_channel(CANAL_TUTORIAIS_ID)
             if not isinstance(canal, discord.TextChannel) or canal.guild.id != GUILD_NEMESIS_ID:
-                logger.error("Canal de tutoriais inválido; esperado o canal #Sistemas da NÊMESIS.")
+                logger.error("Canal de tutoriais inválido; esperado o canal #Sistemas da Chaos Org.")
                 return
             permissoes = canal.permissions_for(guild.me)
             if not (permissoes.view_channel and permissoes.send_messages and permissoes.embed_links and permissoes.read_message_history):
@@ -695,7 +695,7 @@ class Tutorial(commands.Cog):
                 if mensagem is not None and antiga.id == mensagem.id:
                     continue
                 legado = any(
-                    embed.footer and embed.footer.text.startswith("NÊMESIS • GUIA OFICIAL •")
+                    embed.footer and embed.footer.text.startswith("Chaos Org • GUIA OFICIAL •")
                     for embed in antiga.embeds
                 )
                 if legado:

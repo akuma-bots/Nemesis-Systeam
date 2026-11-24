@@ -99,7 +99,7 @@ def _card_ajuda(origem: discord.ui.View, embed: discord.Embed) -> discord.ui.Lay
             botoes.append(novo)
     for inicio in range(0, len(botoes), 5):
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
-    componentes.append(discord.ui.TextDisplay("-# NÊMESIS • Central de Orientação"))
+    componentes.append(discord.ui.TextDisplay("-# Chaos Org • Central de Orientação"))
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
     if callable(verificacao):
@@ -216,7 +216,7 @@ class Ajuda(commands.Cog):
         agrupado = {}
 
 
-        # Os comandos da NÊMESIS são registrados no escopo do servidor,
+        # Os comandos da Chaos Org são registrados no escopo do servidor,
         # não no escopo global. Consultar get_commands() sem guild retornava
         # uma árvore vazia e fazia o /help afirmar que não havia comandos.
         comandos = _iterar_comandos(
@@ -356,7 +356,7 @@ class Ajuda(commands.Cog):
             embed = criar_embed(
                 "N̷ÊMESIS ━ CENTRAL DE COMANDOS",
                 texto,
-                rodape=f"NÊMESIS • Página {numero}/{total}",
+                rodape=f"Chaos Org • Página {numero}/{total}",
             )
 
             embeds.append(
@@ -371,7 +371,7 @@ class Ajuda(commands.Cog):
         name="help",
         description=(
             "Exibe os comandos disponíveis "
-            "da NÊMESIS."
+            "da Chaos Org."
         ),
     )
     async def help_cmd(

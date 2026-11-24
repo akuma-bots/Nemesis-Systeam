@@ -1,6 +1,6 @@
-# NÊMESIS — Bot oficial
+# Chaos Org — Bot oficial
 
-Bot oficial da NÊMESIS, desenvolvido em Python com `discord.py`. O projeto reúne operações da gangue, atendimento, moderação, missões, revisão de provas, confrontos PvP, guerras, progressão, sorteios com armazenamento próprio, sem integração com o dashboard.
+Bot oficial da Chaos Org, desenvolvido em Python com `discord.py`. O projeto reúne operações da gangue, atendimento, moderação, missões, revisão de provas, confrontos PvP, guerras, progressão, sorteios com armazenamento próprio, sem integração com o dashboard.
 
 O bot é exclusivo do servidor configurado por `NEMESIS_GUILD_ID`. Não é um modelo multi-servidor.
 
@@ -32,7 +32,7 @@ A matriz oficial de cargos, permissões administrativas e ações de promoção/
 
 ## Armazenamento
 
-- O bot usa chaves privadas com prefixo `nemesis_bot:` no Upstash para isolar os dados operacionais da NÊMESIS.
+- O bot usa chaves privadas com prefixo `nemesis_bot:` no Upstash para isolar os dados operacionais da Chaos Org.
 - Registros antigos sem prefixo podem ser importados uma única vez para preservar dados existentes. Depois da migração, o bot opera com seu próprio namespace.
 - Se o Upstash não estiver configurado, o bot usa arquivos JSON locais; em hospedagem com disco efêmero, esses arquivos podem não sobreviver a reinícios/deploys.
 
@@ -62,7 +62,7 @@ Configure as seguintes variáveis de ambiente. Não coloque credenciais no códi
 | Variável | Obrigatória | Finalidade |
 |---|---|---|
 | `DISCORD_TOKEN` | Sim | Token privado do bot. |
-| `NEMESIS_GUILD_ID` | Sim | ID numérico do servidor oficial da NÊMESIS. |
+| `NEMESIS_GUILD_ID` | Sim | ID numérico do servidor oficial da Chaos Org. |
 | `UPSTASH_REDIS_REST_URL` | Sim em produção | URL REST do banco compartilhado. |
 | `UPSTASH_REDIS_REST_TOKEN` | Sim em produção | Token privado do armazenamento privado do bot. |
 | `PORT` | Não | Porta HTTP de health check; usa 8080 como padrão fora de plataformas que definem a porta. |
@@ -112,7 +112,7 @@ O workflow é uma primeira barreira de qualidade; não substitui testes funciona
 ## Tutoriais e avisos automáticos
 
 - A central pública de tutoriais é mantida automaticamente no canal `#Sistemas`; o seletor abre cada guia em uma consulta privada. Não existe comando de tutorial.
-- O guia **Começando na NÊMESIS** explica a TAG `NΞM`, o cargo automático `Visitantes`, os canais essenciais, a progressão e o fluxo de atendimento.
+- O guia **Começando na Chaos Org** explica a TAG `NΞM`, o cargo automático `Visitantes`, os canais essenciais, a progressão e o fluxo de atendimento.
 - As notas automáticas são entregues por DM aos membros inscritos que mantêm a preferência ativa. O envio é sequencial, registra a reserva de cada destinatário no Upstash antes da tentativa e não repete automaticamente resultados incertos para evitar mensagens duplicadas. O comando `/notas-atualizacao` é somente leitura e não dispara comunicados.
 - Ao publicar uma nova versão com novidades para anunciar, atualize `config/novidades.json`: altere `release_id` para um identificador novo e revise `titulo`, `tipo` e `mensagem`. O bot registra o ID da mensagem publicada no canal para evitar duplicações após reiniciar.
 - Para vincular o Roblox, o membro usa `/roblox-vincular`, adiciona temporariamente o código à descrição do perfil Roblox e confirma com `/roblox-confirmar`. A mesma conta Roblox não pode ser vinculada a dois membros diferentes.

@@ -22,7 +22,7 @@ logging.basicConfig(
 
 
 # ============================================================
-# NÊMESIS — CONFIGURAÇÃO
+# Chaos Org — CONFIGURAÇÃO
 # ============================================================
 
 CAMINHO_ENV = Path(__file__).resolve().parent / ".env"
@@ -46,7 +46,7 @@ if not TOKEN:
 if not NEMESIS_GUILD_ID:
     raise RuntimeError(
         "NEMESIS_GUILD_ID não configurado. "
-        "O bot é exclusivo da NÊMESIS."
+        "O bot é exclusivo da Chaos Org."
     )
 
 
@@ -54,7 +54,7 @@ try:
     NEMESIS_GUILD_ID = int(NEMESIS_GUILD_ID)
 except ValueError as erro:
     raise RuntimeError(
-        "NEMESIS_GUILD_ID precisa ser um ID numérico do servidor da NÊMESIS."
+        "NEMESIS_GUILD_ID precisa ser um ID numérico do servidor da Chaos Org."
     ) from erro
 
 
@@ -70,7 +70,7 @@ intents.presences = True
 
 
 class NemesisBot(commands.Bot):
-    """Registra todos os comandos de Cogs diretamente no servidor da NÊMESIS.
+    """Registra todos os comandos de Cogs diretamente no servidor da Chaos Org.
 
     Comandos globais têm um limite de 100 por aplicação. Como este bot é
     exclusivo de um servidor, o escopo de servidor evita esse limite global.
@@ -109,7 +109,7 @@ bot = NemesisBot(
 
 # Controle central de acesso: membros reconhecidos e liderança autorizada.
 async def verificar_acesso_slash(interaction: discord.Interaction) -> bool:
-    # O bot é exclusivo da NÊMESIS; permissões genéricas do Discord não liberam acesso.
+    # O bot é exclusivo da Chaos Org; permissões genéricas do Discord não liberam acesso.
     return membro_tem_acesso_nemesis(interaction.user)
 
 
@@ -142,7 +142,7 @@ async def tratar_erro_comando(
     elif isinstance(erro, app_commands.CheckFailure):
         resposta = embed_erro(
             "ACESSO RESTRITO",
-            "É necessário possuir o cargo oficial autorizado da NÊMESIS para utilizar os comandos do bot.",
+            "É necessário possuir o cargo oficial autorizado da Chaos Org para utilizar os comandos do bot.",
         )
     else:
         resposta = embed_erro(
@@ -309,7 +309,7 @@ def _salvar_cache_comandos(
 async def on_ready():
 
     print(
-        f"NÊMESIS conectada como {bot.user}"
+        f"Chaos Org conectada como {bot.user}"
     )
 
     servidor = bot.get_guild(
@@ -318,7 +318,7 @@ async def on_ready():
 
     if servidor is None:
         print(
-            "ERRO: o servidor da NÊMESIS "
+            "ERRO: o servidor da Chaos Org "
             f"({NEMESIS_GUILD_ID}) não foi encontrado."
         )
     else:
@@ -390,11 +390,11 @@ async def on_ready():
 
         if precisa_sincronizar:
             try:
-                # Os comandos já foram registrados no escopo da NÊMESIS
+                # Os comandos já foram registrados no escopo da Chaos Org
                 # por NemesisBot.add_cog; não copie comandos globais para cá.
                 sincronizados = await bot.tree.sync(guild=servidor)
                 logging.info(
-                    "%s comandos sincronizados na NÊMESIS.",
+                    "%s comandos sincronizados na Chaos Org.",
                     len(sincronizados),
                 )
                 cache["assinatura"] = assinatura_atual
@@ -402,9 +402,9 @@ async def on_ready():
             except Exception:
                 # Não grava a nova assinatura em caso de falha: a próxima
                 # conexão repetirá a sincronização em vez de marcar sucesso.
-                logging.exception("Erro ao sincronizar comandos da NÊMESIS.")
+                logging.exception("Erro ao sincronizar comandos da Chaos Org.")
         else:
-            logging.info("Comandos da NÊMESIS já estão atualizados; sync ignorado.")
+            logging.info("Comandos da Chaos Org já estão atualizados; sync ignorado.")
 
         _salvar_cache_comandos(cache)
 
@@ -464,7 +464,7 @@ async def iniciar_servidor_web():
 
 
     print(
-        f"Health check da NÊMESIS "
+        f"Health check da Chaos Org "
         f"escutando na porta {porta}."
     )
 
