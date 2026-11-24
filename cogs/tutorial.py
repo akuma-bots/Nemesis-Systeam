@@ -40,20 +40,6 @@ TUTORIAIS = {
         ],
         "comandos": "Arquivo de Membros • Consulta privada pela liderança autorizada",
     },
-    "musica": {
-        "titulo": "Sistema de música",
-        "descricao": "Como acessar a central musical e controlar a reprodução pelos cartões do sistema.",
-        "passos": [
-            "Entre primeiro no canal de voz em que quer ouvir música.",
-            "Abra o painel Central Musical no canal Músicas e selecione Buscar para informar o nome ou link da faixa.",
-            "Conecte-se a um canal de voz antes de iniciar a busca. A Systeam entrará na sua call e começará a reprodução.",
-            "Use os botões Fila e Tocando agora para consultar a reprodução atual.",
-            "Use os botões de reprodução para pausar, continuar, avançar e ajustar o volume.",
-            "Use o controle Encerrar para limpar a reprodução e desconectar a Systeam da call.",
-            "Se o bot não entrar, confirme que ele tem as permissões Conectar, Falar e Ver canal; a hospedagem também precisa ter as dependências de voz instaladas.",
-        ],
-        "comandos": "Canal Músicas · Central Musical · Botões de reprodução",
-    },
     "inicio": {
         "titulo": "Começando na Chaos Org",
         "descricao": "Guia de integração para novos integrantes: identidade, cargo inicial, canais e primeiros passos.",
