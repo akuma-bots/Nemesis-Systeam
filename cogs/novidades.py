@@ -104,7 +104,7 @@ async def _enviar_dm_com_retry(
         imagens = imagens_embed_components_v2(embed)
         if imagens:
             componentes.append(discord.ui.MediaGallery(*[
-                discord.MediaGalleryItem(url=url, description=descricao)
+                discord.MediaGalleryItem(media=url, description=descricao)
                 for url, descricao in imagens
             ]))
         view = discord.ui.LayoutView(timeout=None)

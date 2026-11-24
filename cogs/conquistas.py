@@ -42,7 +42,6 @@ def montar_estatisticas(progressao: dict, competitivo: dict, revisoes: list, use
         "xp": _inteiro(progressao.get("xp")),
         "mensagens": _inteiro(progressao.get("mensagens")),
         "missoes": aprovadas,
-        "guerras": _inteiro(progressao.get("guerras")),
         "vitorias": _inteiro(competitivo.get("vitorias")),
         "mvps": _inteiro(competitivo.get("mvps")),
         "maior_sequencia": _inteiro(competitivo.get("maior_sequencia")),

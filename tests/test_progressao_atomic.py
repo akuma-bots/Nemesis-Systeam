@@ -2,7 +2,7 @@ import copy
 import unittest
 from unittest.mock import AsyncMock, Mock
 
-from cogs.progressao_gangue import ProgressaoGangue
+from cogs.progressao_gangue import ProgressaoGangue, GUILD_ID
 
 
 class TestProgressaoAtomica(unittest.IsolatedAsyncioTestCase):
@@ -22,13 +22,13 @@ class TestProgressaoAtomica(unittest.IsolatedAsyncioTestCase):
 
     async def test_recompensa_com_mesmo_evento_so_aplica_uma_vez(self):
         primeiro = await self.cog._registrar_xp_atomico(
-            123, 456, 75, evento_id="revisao:abc", tipo="missao",
+            GUILD_ID, 456, 75, evento_id="revisao:abc", tipo="missao",
         )
         segundo = await self.cog._registrar_xp_atomico(
-            123, 456, 75, evento_id="revisao:abc", tipo="missao",
+            GUILD_ID, 456, 75, evento_id="revisao:abc", tipo="missao",
         )
 
-        perfil = self.dados["123"]["membros"]["456"]
+        perfil = self.dados[str(GUILD_ID)]["membros"]["456"]
         self.assertTrue(primeiro[3])
         self.assertFalse(segundo[3])
         self.assertEqual(perfil["xp"], 75)
@@ -39,11 +39,11 @@ class TestProgressaoAtomica(unittest.IsolatedAsyncioTestCase):
         import asyncio
 
         resultados = await asyncio.gather(*[
-            self.cog._registrar_xp_atomico(123, 456, 5, contar_mensagem=True)
+            self.cog._registrar_xp_atomico(GUILD_ID, 456, 5, contar_mensagem=True)
             for _ in range(30)
         ])
 
-        perfil = self.dados["123"]["membros"]["456"]
+        perfil = self.dados[str(GUILD_ID)]["membros"]["456"]
         self.assertEqual(perfil["xp"], 150)
         self.assertEqual(perfil["mensagens"], 30)
         self.assertEqual(sum(1 for resultado in resultados if resultado[3]), 30)
@@ -125,7 +125,7 @@ class TestProgressaoAtomica(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(perfil["xp"], 0)
         self.assertEqual(perfil["historico_ranks"], [])
         self.assertEqual(perfil["rank_no"], 12)
-        self.assertIsInstance(self.dados["123"]["membros"]["456"], dict)
+        self.assertIsInstance(self.dados[str(GUILD_ID)]["membros"]["456"], dict)
 
 
 if __name__ == "__main__":
