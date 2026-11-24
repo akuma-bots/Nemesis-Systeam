@@ -169,7 +169,7 @@ class TestSistemaSugestoes(unittest.TestCase):
         texto_renderizado = "".join(textos)
         self.assertGreater(len(textos), 1)
         self.assertTrue(texto_renderizado.startswith("## Sugestão extensa" + chr(10) * 2 + descricao))
-        self.assertTrue(texto_renderizado.endswith("-# NÊMESIS • SUGESTÕES • V2"))
+        self.assertTrue(texto_renderizado.endswith("-# Chaos Org • SUGESTÕES • V2"))
         self.assertIn("PASSO-119", texto_renderizado)
         self.assertTrue(all(len(texto) <= 4000 for texto in textos))
         self.assertTrue(any(
@@ -368,7 +368,7 @@ class TestOperacoesAssincronasSugestoes(unittest.IsolatedAsyncioTestCase):
         ]
         mensagem = SimpleNamespace(
             components=[SimpleNamespace(
-                content="-# NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2",
+                content="-# Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2",
                 children=[SimpleNamespace(custom_id=item) for item in ids_atuais],
             )],
             edit=AsyncMock(),
