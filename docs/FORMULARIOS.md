@@ -1,4 +1,4 @@
-# Gestão de formulários — Shinku / Chaos Org
+# Gestão de formulários — Systeam / Chaos Org
 
 ## Acesso administrativo
 

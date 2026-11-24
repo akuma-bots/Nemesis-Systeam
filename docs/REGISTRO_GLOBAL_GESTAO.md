@@ -25,7 +25,7 @@ Não existe mais uma área independente de histórico de cargos. Toda alteraçã
 
 ## Migração única da estrutura
 
-- Na próxima inicialização após a implantação, o Shinku excluirá permanentemente todos os tópicos antigos deste Fórum, incluindo as mensagens dentro deles, conforme autorização expressa do responsável.
+- Na próxima inicialização após a implantação, o Systeam excluirá permanentemente todos os tópicos antigos deste Fórum, incluindo as mensagens dentro deles, conforme autorização expressa do responsável.
 - A exclusão é limitada ao Fórum Registro Global da Chaos Org; o canal, outros canais e seus conteúdos não são removidos.
 - A conclusão é registrada no Upstash para impedir que reinicializações futuras repitam a exclusão.
 - Os 12 tópicos oficiais serão criados e reutilizados nas próximas inicializações.

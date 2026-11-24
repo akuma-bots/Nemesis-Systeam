@@ -43,6 +43,6 @@ A busca da linha do tempo percorre até 40 mensagens recentes por categoria conf
 
 ## Limites conhecidos
 
-- O Discord não oferece um histórico completo de todas as mensagens antigas de um membro por meio deste dossiê; a linha do tempo consulta os registros que o Shinku gravou no Registro Global.
+- O Discord não oferece um histórico completo de todas as mensagens antigas de um membro por meio deste dossiê; a linha do tempo consulta os registros que o Systeam gravou no Registro Global.
 - Eventos anteriores à implantação dos respectivos sistemas, ou ações que nunca foram registradas, não podem ser reconstruídos retroativamente.
 - Guerras individuais só são atribuídas quando os dados de progressão/perfil identificam a participação; um placar geral de guerra não é atribuído a todos os membros automaticamente.
