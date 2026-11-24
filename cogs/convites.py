@@ -157,7 +157,7 @@ def _card_convites(origem: discord.ui.View, embed: discord.Embed | None = None,
             componentes.append(discord.ui.ActionRow(novo))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam • Consulta privada"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam • Consulta privada"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -309,7 +309,7 @@ class PainelConsultaConvitesView(discord.ui.View):
     async def abrir(self, interaction, button):
         if not _autorizado(interaction):
             await interaction.response.send_message(
-                "Acesso restrito à liderança autorizada da NÊMESIS.", ephemeral=True
+                "Acesso restrito à liderança autorizada da Chaos Org.", ephemeral=True
             )
             return
         origem = SeletorConvitesView(interaction.user.id)
@@ -320,7 +320,7 @@ class PainelConsultaConvitesView(discord.ui.View):
                     title="🔗 CENTRAL DE CONVITES",
                     description="Selecione um integrante para consultar quantos convites trouxe, quais links foram utilizados e quem continua no servidor. Consulta individual, não é um ranking.",
                     cor=0x991B33,
-                    rodape="NÊMESIS • REGISTRO GLOBAL • CONSULTA PRIVADA",
+                    rodape="Chaos Org • REGISTRO GLOBAL • CONSULTA PRIVADA",
                 ),
             ),
             ephemeral=True,
@@ -347,7 +347,7 @@ class PainelConsultaConvitesLayoutView(discord.ui.LayoutView):
         self.add_item(discord.ui.Container(
             discord.ui.TextDisplay(
                 "## 🔗 CENTRAL DE CONVITES\n"
-                "**Consulta individual da NÊMESIS.**\n"
+                "**Consulta individual da Chaos Org.**\n"
                 "Selecione um integrante para conferir os convites atribuídos, "
                 "os links utilizados e quem permanece no servidor.\n\n"
                 "A consulta é privada e não funciona como ranking."
@@ -355,7 +355,7 @@ class PainelConsultaConvitesLayoutView(discord.ui.LayoutView):
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(botao),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
             accent_colour=0x9F1239,
         ))
 

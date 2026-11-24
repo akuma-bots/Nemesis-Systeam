@@ -508,7 +508,7 @@ def _embed_automod_da_mensagem(mensagem: discord.Message) -> discord.Embed | Non
             titulo = linha[3:].strip()
             descricao = texto.split(linha, 1)[1].strip()
             break
-    descricao = re.sub(r"-# NÊMESIS • Segurança e Moderação\s*$", "", descricao).strip()
+    descricao = re.sub(r"-# Chaos Org • Segurança e Moderação\s*$", "", descricao).strip()
     return discord.Embed(title=titulo[:256], description=descricao[:4096])
 
 
@@ -543,7 +543,7 @@ def _card_automod_view(origem: discord.ui.View | None, embed: discord.Embed | No
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Segurança e Moderação"),
+        discord.ui.TextDisplay("-# Chaos Org • Segurança e Moderação"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -554,7 +554,7 @@ def _card_automod_view(origem: discord.ui.View | None, embed: discord.Embed | No
 
 
 def _mensagem_tem_cartao_automod(mensagem: discord.Message) -> bool:
-    return "NÊMESIS • Segurança e Moderação" in _texto_components_v2(mensagem)
+    return "Chaos Org • Segurança e Moderação" in _texto_components_v2(mensagem)
 
 
 async def _atualizar_cartao_automod(mensagem: discord.Message, embed: discord.Embed) -> None:
@@ -750,7 +750,7 @@ class PainelPunicao(discord.ui.View):
 # AUTOMOD
 # ============================================================
 
-class AutoMod(commands.GroupCog, group_name="automod", group_description="Configuração e consulta do AutoMod da NÊMESIS."):
+class AutoMod(commands.GroupCog, group_name="automod", group_description="Configuração e consulta do AutoMod da Chaos Org."):
 
     def __init__(
         self,
@@ -1749,7 +1749,7 @@ class AutoMod(commands.GroupCog, group_name="automod", group_description="Config
             4: "ban_temp", 5: "ban_permanente",
         }[nivel]
         duracao = int(custom.get("duracao") or (10 if medida == "timeout" else 24 if medida == "ban_temp" else 0))
-        motivo = f"AutoMod NÊMESIS | Nível {nivel} — {infracao['tipo']}: {infracao['motivo']}"
+        motivo = f"AutoMod Chaos Org | Nível {nivel} — {infracao['tipo']}: {infracao['motivo']}"
         nomes = {
             "warn": "Advertência automática",
             "timeout": f"Timeout por {max(1, duracao)} minuto(s)",
@@ -1877,7 +1877,7 @@ class AutoMod(commands.GroupCog, group_name="automod", group_description="Config
                 else ""
             )
             await membro.send(
-                f"**NÊMESIS — Punição automática**\n"
+                f"**Chaos Org — Punição automática**\n"
                 f"Infração: {infracao['tipo']}\n"
                 f"Nível: {nivel} — {NIVEIS[nivel]['nome']}\n"
                 f"Medida: {nomes[medida]}\nMotivo: {infracao['motivo']}{detalhe_duracao}"
@@ -1964,7 +1964,7 @@ class AutoMod(commands.GroupCog, group_name="automod", group_description="Config
 
         infracao_match = re.search(r"\*\*Infração:\*\*\s*([^\n]+)", embed.description or "")
         infracao_nome = infracao_match.group(1).strip() if infracao_match else "Infração AutoMod"
-        justificativa = f"NÊMESIS | Nível {nivel} | {motivo}"
+        justificativa = f"Chaos Org | Nível {nivel} | {motivo}"
 
         if medida == "warn":
             tipo_historico = "warn"
@@ -2015,7 +2015,7 @@ class AutoMod(commands.GroupCog, group_name="automod", group_description="Config
             if alvo is not None:
                 extra = f"\nDuração: {duracao} hora(s)." if medida == "ban_temp" else f"\nDuração: {duracao} minuto(s)." if medida == "timeout" else ""
                 await alvo.send(
-                    f"**NÊMESIS — Decisão de moderação**\n"
+                    f"**Chaos Org — Decisão de moderação**\n"
                     f"Infração: {infracao_nome}\nMedida: {medida_texto}\nMotivo: {motivo[:700]}{extra}"
                 )
         except (discord.Forbidden, discord.HTTPException):
@@ -2359,7 +2359,7 @@ class AutoMod(commands.GroupCog, group_name="automod", group_description="Config
     # ESTATÍSTICAS DE MODERAÇÃO
     # ========================================================
 
-    @app_commands.command(name="estatisticas", description="Mostra as estatísticas de moderação da NÊMESIS.")
+    @app_commands.command(name="estatisticas", description="Mostra as estatísticas de moderação da Chaos Org.")
     @lideranca_only()
     async def automod_estatisticas(self, interaction: discord.Interaction):
         if interaction.guild is None:
@@ -2379,7 +2379,7 @@ class AutoMod(commands.GroupCog, group_name="automod", group_description="Config
                 uid = str(r.get("membro_id"))
                 reincidentes[uid] = reincidentes.get(uid, 0) + 1
         repetidos = sum(1 for total in reincidentes.values() if total >= 2)
-        embed = criar_embed(title="📊 NÊMESIS — Estatísticas da moderação", color=COR_PRIMARIA)
+        embed = criar_embed(title="📊 Chaos Org — Estatísticas da moderação", color=COR_PRIMARIA)
         embed.add_field(name="Últimos 7 dias", value=f"Decisões: **{len(ultimos_7)}**", inline=True)
         embed.add_field(name="Últimos 30 dias", value=f"Decisões: **{len(ultimos_30)}**", inline=True)
         embed.add_field(name="Punições / Não punidos", value=f"**{punidos}** / **{nao_punidos}**", inline=True)

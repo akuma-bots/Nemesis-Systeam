@@ -52,7 +52,7 @@ def _layout_embed_publicado(embed: discord.Embed, origem: discord.ui.View | None
         componentes.append(discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small))
         for inicio in range(0, len(botoes), 5):
             componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
-    componentes.append(discord.ui.TextDisplay("-# NÊMESIS • Publicação institucional"))
+    componentes.append(discord.ui.TextDisplay("-# Chaos Org • Publicação institucional"))
     layout = discord.ui.LayoutView(timeout=origem.timeout)
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     return layout

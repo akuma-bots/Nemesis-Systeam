@@ -89,7 +89,7 @@ def _embed_central(atividades: list, selecionada: dict = None, estatisticas: dic
             value="Escolha uma atividade no seletor abaixo para consultar indicadores, editar informações ou arquivar/reativar o registro.",
             inline=False,
         )
-        embed.set_footer(text="NÊMESIS • GESTÃO OPERACIONAL • Acesso restrito à administração")
+        embed.set_footer(text="Chaos Org • GESTÃO OPERACIONAL • Acesso restrito à administração")
         return aplicar_identidade_servidor(embed, guild, bot)
 
     tipo = str(selecionada.get("tipo", "missao")).lower()
@@ -146,7 +146,7 @@ def _embed_central(atividades: list, selecionada: dict = None, estatisticas: dic
                 estado = STATUS_LABEL.get(item.get("status"), str(item.get("status", "—")))
                 linhas.append(f"• {membro} — **{estado}** — `{item.get('id', '—')}`")
             embed.add_field(name="◈ ATIVIDADE RECENTE", value="\n".join(linhas), inline=False)
-    embed.set_footer(text="NÊMESIS • GESTÃO OPERACIONAL • Alterações preservam o histórico")
+    embed.set_footer(text="Chaos Org • GESTÃO OPERACIONAL • Alterações preservam o histórico")
     return aplicar_identidade_servidor(embed, guild, bot)
 
 
@@ -298,7 +298,7 @@ def _card_gestao_missoes(origem: discord.ui.View, embed: discord.Embed | None = 
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • OCTÓGONO • Gestão de Missões"),
+        discord.ui.TextDisplay("-# Chaos Org • OCTÓGONO • Gestão de Missões"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -526,7 +526,7 @@ class GestaoMissoes(commands.Cog):
 
     async def central_missoes(self, interaction: discord.Interaction):
         if interaction.guild is None or not _administrador(interaction):
-            await interaction.response.send_message("A central é restrita aos administradores autorizados da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("A central é restrita aos administradores autorizados da Chaos Org.", ephemeral=True)
             return
         atividades = await missoes._guild(interaction.guild.id)
         lista = _ordenar_atividades(atividades.get("missoes", []))

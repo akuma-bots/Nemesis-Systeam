@@ -55,7 +55,7 @@ def _embed_desafio(desafio: dict, estado: str = "🟡 Aguardando resposta do opo
         cor=COR_ERRO if estado.startswith("🟡") else COR_SUCESSO if estado.startswith("✅") else COR_NEUTRA,
         rodape=None,
     )
-    embed.set_author(name="NÊMESIS  /  ARENA COMPETITIVA")
+    embed.set_author(name="Chaos Org  /  ARENA COMPETITIVA")
     embed.add_field(name="DESAFIANTE", value=f"<@{desafio['desafiante_id']}>", inline=True)
     embed.add_field(name="OPONENTE", value=f"<@{desafio['desafiado_id']}>", inline=True)
     embed.add_field(name="FASE ATUAL", value=estado, inline=False)
@@ -76,7 +76,7 @@ def _embed_desafio(desafio: dict, estado: str = "🟡 Aguardando resposta do opo
         if estado.startswith("🟡") else "A convocação foi encerrada. Consulte o canal competitivo para acompanhar os próximos passos.",
         inline=False,
     )
-    embed.set_footer(text=f"REGISTRO {desafio['id']}  •  NÊMESIS PvP")
+    embed.set_footer(text=f"REGISTRO {desafio['id']}  •  Chaos Org PvP")
     return embed
 
 
@@ -110,7 +110,7 @@ def _layout_desafio(embed: discord.Embed, desafio_id: str,
         componentes.append(discord.ui.ActionRow(aceitar, recusar))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Arena Competitiva"),
+        discord.ui.TextDisplay("-# Chaos Org • Arena Competitiva"),
     ])
     view.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     return view
@@ -188,7 +188,7 @@ def _mensagem_tem_cartao_desafio(mensagem: discord.Message) -> bool:
     pendentes = list(getattr(mensagem, "components", []) or [])
     while pendentes:
         item = pendentes.pop()
-        if "NÊMESIS • Arena Competitiva" in str(getattr(item, "content", "") or ""):
+        if "Chaos Org • Arena Competitiva" in str(getattr(item, "content", "") or ""):
             return True
         pendentes.extend(list(getattr(item, "children", []) or []))
     return False
@@ -729,7 +729,7 @@ class Desafios(commands.Cog):
             "N̷ÊMESIS ━ DIAGNÓSTICO DE CANAIS",
             "\n".join(linhas),
             cor=COR_SUCESSO if all("❌" not in linha and "⚠️" not in linha for linha in linhas) else COR_AVISO,
-            rodape="NÊMESIS • Diagnóstico administrativo",
+            rodape="Chaos Org • Diagnóstico administrativo",
         )
         await interaction.followup.send(embed=embed, ephemeral=True)
 
