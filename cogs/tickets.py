@@ -44,7 +44,7 @@ TITULO_PADRAO = "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE ATENDIMENTO 
 COR_TICKET = 0x9F1239
 DESCRICAO_PADRAO = (
     "Precisa de ajuda? Selecione abaixo a categoria que melhor representa "
-    "sua solicitação para abrir um atendimento privado com a equipe NÊMESIS."
+    "sua solicitação para abrir um atendimento privado com a equipe Chaos Org."
 )
 
 
@@ -137,9 +137,9 @@ async def fechar_canal_ticket(
             if dono:
                 try:
                     embed = criar_embed(
-                        "✦・ NÊMESIS — AVALIAÇÃO DE ATENDIMENTO ・✦",
+                        "✦・ Chaos Org — AVALIAÇÃO DE ATENDIMENTO ・✦",
                         f"Seu atendimento #{ticket.get('id', '—')} foi encerrado.\n\nSua avaliação é necessária para concluir o atendimento. Escolha uma nota de 1 a 5 abaixo.",
-                        rodape="NÊMESIS • Central de atendimento",
+                        rodape="Chaos Org • Central de atendimento",
                     )
                     await dono.send(view=AvaliacaoTicketLayoutView(
                         canal.guild.id, str(ticket["id"]), int(ticket.get("usuario_id") or 0),
@@ -233,21 +233,21 @@ async def _montar_select(guild_id: int, guild: discord.Guild | None = None) -> d
     banner = config.get("ticket_painel_banner_url")
     if banner:
         itens.append(discord.ui.MediaGallery(
-            discord.MediaGalleryItem(url=banner, description="Nêmesis • Atendimento")
+            discord.MediaGalleryItem(url=banner, description="Chaos Org • Atendimento")
         ))
 
     titulo = str(config.get("ticket_painel_titulo") or TITULO_PADRAO)
     descricao = str(config.get("ticket_painel_descricao") or DESCRICAO_PADRAO)
     texto = (
         f"## 🎟️ {titulo}\n"
-        "**NÊMESIS  /  CENTRAL DE ATENDIMENTO**\n"
+        "**Chaos Org  /  CENTRAL DE ATENDIMENTO**\n"
         f"{descricao}\n\n"
         "Escolha uma categoria para abrir seu canal privado."
     )
     if avatar:
         itens.append(discord.ui.Section(
             discord.ui.TextDisplay(texto),
-            accessory=discord.ui.Thumbnail(avatar, description="Ícone do bot Nêmesis"),
+            accessory=discord.ui.Thumbnail(avatar, description="Ícone do bot Chaos Org"),
         ))
     else:
         itens.append(discord.ui.TextDisplay(texto))
@@ -271,7 +271,7 @@ async def _montar_select(guild_id: int, guild: discord.Guild | None = None) -> d
         ),
         discord.ui.ActionRow(seletor),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam"),
     ])
     view = discord.ui.LayoutView(timeout=None)
     view.add_item(discord.ui.Container(*itens, accent_colour=COR_TICKET))
@@ -328,7 +328,7 @@ async def _publicar_historico_ticket(canal, ticket, motivo, fechado_por_id):
             for campo in emb.fields: linhas.append(f"[Embed: {campo.name}] {campo.value}")
         linhas.append("")
     texto = "\n".join(linhas)
-    resumo = criar_embed(f"📁 Histórico do Ticket #{ticket.get('id', '—')}", "Transcrição preservada antes da exclusão do canal.", rodape="NÊMESIS • Auditoria de atendimento")
+    resumo = criar_embed(f"📁 Histórico do Ticket #{ticket.get('id', '—')}", "Transcrição preservada antes da exclusão do canal.", rodape="Chaos Org • Auditoria de atendimento")
     resumo.add_field(name="Cliente", value=f"<@{usuario_id}> · ID {usuario_id}", inline=True)
     resumo.add_field(name="Responsável", value=f"<@{atendente_id}> · ID {atendente_id}" if atendente_id else "Não atribuído", inline=True)
     resumo.add_field(name="Tickets encerrados", value=str(len(atendidos)), inline=True)
@@ -445,7 +445,7 @@ class FeedbackTicketModal(discord.ui.Modal):
                 f"**Ticket #{self.ticket_id}** · avaliação confirmada\n\n"
                 "O feedback abaixo foi enviado pelo responsável pelo ticket e será usado "
                 "para acompanhar a qualidade da Central de Atendimento.",
-                rodape="NÊMESIS • Qualidade e experiência do membro",
+                rodape="Chaos Org • Qualidade e experiência do membro",
             )
             embed.color = 0xB3132B
             embed.add_field(
@@ -573,13 +573,13 @@ class AvaliacaoTicketLayoutView(discord.ui.LayoutView):
         ]
         self.add_item(discord.ui.Container(
             discord.ui.TextDisplay(
-                "## ✦ NÊMESIS — AVALIAÇÃO DE ATENDIMENTO\n"
+                "## ✦ Chaos Org — AVALIAÇÃO DE ATENDIMENTO\n"
                 f"**Ticket #{ticket_id}**\n"
                 "Como foi sua experiência? Selecione uma nota de 1 a 5."
             ),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(*botoes),
-            discord.ui.TextDisplay("-# Nêmesis Systeam • Central de Atendimento"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam • Central de Atendimento"),
             accent_colour=COR_TICKET,
         ))
 
@@ -591,7 +591,7 @@ class FecharTicketLayoutView(discord.ui.LayoutView):
         super().__init__(timeout=None)
         origem = origem or FecharTicketView()
         if embed is not None:
-            partes = [f"## {embed.title or 'NÊMESIS • CENTRAL DE ATENDIMENTO'}"]
+            partes = [f"## {embed.title or 'Chaos Org • CENTRAL DE ATENDIMENTO'}"]
             if embed.description:
                 partes.append(embed.description)
             for campo in embed.fields:
@@ -602,7 +602,7 @@ class FecharTicketLayoutView(discord.ui.LayoutView):
         texto_cartao = getattr(
             origem,
             "_card_content",
-            "## 🎟️ NÊMESIS — CENTRAL DE ATENDIMENTO\n"
+            "## 🎟️ Chaos Org — CENTRAL DE ATENDIMENTO\n"
             "Utilize os controles abaixo para assumir, encaminhar ou encerrar este atendimento.",
         )
         botoes_por_linha = {};
@@ -628,7 +628,7 @@ class FecharTicketLayoutView(discord.ui.LayoutView):
                 componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
         componentes.extend([
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam • Atendimento privado"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam • Atendimento privado"),
         ])
         self.add_item(discord.ui.Container(*componentes, accent_colour=COR_TICKET))
 
@@ -669,7 +669,7 @@ class AdicionarParticipanteModal(discord.ui.Modal, title="Adicionar participante
         except (discord.Forbidden, discord.HTTPException):
             await interaction.response.send_message("Não consegui conceder acesso. Verifique as permissões do bot.", ephemeral=True)
             return
-        embed = criar_embed("♧  PARTICIPANTE ADICIONADO", f"{alvo.mention} recebeu acesso ao atendimento.", cor=COR_TICKET, rodape="NÊMESIS  •  CONTROLE DE ACESSO")
+        embed = criar_embed("♧  PARTICIPANTE ADICIONADO", f"{alvo.mention} recebeu acesso ao atendimento.", cor=COR_TICKET, rodape="Chaos Org  •  CONTROLE DE ACESSO")
         await interaction.response.send_message(embed=embed, allowed_mentions=discord.AllowedMentions(users=True))
 
 
@@ -871,7 +871,7 @@ class FecharTicketView(discord.ui.View):
             await interaction.response.send_message("A equipe já foi notificada neste atendimento.", ephemeral=True)
             return
         CANAIS_ESCALADOS.add(canal.id)
-        embed = criar_embed("🔔  EQUIPE NOTIFICADA", "Sua solicitação foi encaminhada à equipe. Aguarde o retorno neste canal.", cor=COR_TICKET, rodape="NÊMESIS  •  ESCALONAMENTO")
+        embed = criar_embed("🔔  EQUIPE NOTIFICADA", "Sua solicitação foi encaminhada à equipe. Aguarde o retorno neste canal.", cor=COR_TICKET, rodape="Chaos Org  •  ESCALONAMENTO")
         await interaction.response.send_message(embed=embed, allowed_mentions=discord.AllowedMentions.none())
         await canal.send(
             f"{role.mention if role else 'Equipe de suporte'} — atendimento solicitado em {canal.mention}.",
@@ -1006,7 +1006,7 @@ async def sincronizar_painel_ticket(guild: discord.Guild) -> discord.Message:
     else:
         mensagem = await canal.send(view=view)
         try:
-            await mensagem.pin(reason="Central permanente de atendimento NÊMESIS")
+            await mensagem.pin(reason="Central permanente de atendimento Chaos Org")
         except (discord.Forbidden, discord.HTTPException):
             log.warning("Não foi possível fixar o painel de tickets no canal %s.", canal.id)
 
@@ -1114,7 +1114,7 @@ def _card_central_tickets(origem: discord.ui.View, embed: discord.Embed | None =
         adicionar_linha_botoes()
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam • Central de Atendimento"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam • Central de Atendimento"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=COR_TICKET))
     return layout
@@ -1369,7 +1369,7 @@ class CentralTicketsView(discord.ui.View):
             inline=True,
         )
         embed.add_field(name="Canal do painel", value=f"<#{painel_id}>", inline=True)
-        embed.set_footer(text="Acesso exclusivo à liderança • NÊMESIS")
+        embed.set_footer(text="Acesso exclusivo à liderança • Chaos Org")
         return embed
 
     @discord.ui.button(label="Personalizar painel", style=discord.ButtonStyle.primary, emoji="🎨", row=3)
@@ -1530,7 +1530,7 @@ class Tickets(commands.Cog):
             f"◈  ATENDIMENTO · {tipo['label'].upper()[:75]}",
             f"Olá, {user.mention}. Seu canal privado foi criado.\nA equipe responsável receberá sua solicitação neste espaço.",
             cor=0x9F1239,
-            rodape="NÊMESIS  •  ATENDIMENTO PRIVADO  •  REGISTRO ATIVO",
+            rodape="Chaos Org  •  ATENDIMENTO PRIVADO  •  REGISTRO ATIVO",
             timestamp=True,
         )
         embed.set_author(name="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  /  CENTRAL DE OPERAÇÕES")
@@ -1587,7 +1587,7 @@ class Tickets(commands.Cog):
         except Exception:
             # Sem registro persistido, não deixamos um canal privado órfão.
             try:
-                await canal.delete(reason="Falha ao inicializar/persistir ticket NÊMESIS")
+                await canal.delete(reason="Falha ao inicializar/persistir ticket Chaos Org")
             except (discord.Forbidden, discord.HTTPException):
                 logging.getLogger(__name__).exception(
                     "Falha ao remover canal órfão de ticket %s.",
@@ -1939,7 +1939,7 @@ class Tickets(commands.Cog):
         embed = criar_embed(
             "N̷ÊMESIS ━ RESPOSTA AUTOMÁTICA",
             resultado["resposta"],
-            rodape="NÊMESIS • Se precisar, solicite atendimento humano",
+            rodape="Chaos Org • Se precisar, solicite atendimento humano",
         )
 
         await message.reply(
@@ -2045,7 +2045,7 @@ class Tickets(commands.Cog):
                 self.bot.add_view(view, message_id=mensagem.id)
                 try:
                     await mensagem.pin(
-                        reason="Restaurando o painel permanente de tickets NÊMESIS"
+                        reason="Restaurando o painel permanente de tickets Chaos Org"
                     )
                 except (discord.Forbidden, discord.HTTPException):
                     pass

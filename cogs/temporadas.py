@@ -11,7 +11,7 @@ POSICAO_EMOJI = {1: "🥇", 2: "🥈", 3: "🥉"}
 _LOG = logging.getLogger(__name__)
 
 
-class Temporadas(commands.GroupCog, group_name="temporadas", group_description="Gerenciamento das temporadas competitivas da NÊMESIS."):
+class Temporadas(commands.GroupCog, group_name="temporadas", group_description="Gerenciamento das temporadas competitivas da Chaos Org."):
     """Temporadas competitivas com premiação automática: ao fim do prazo
     configurado, o bot calcula o Top 3 pela pontuação GANHA na temporada, dá
     bônus de XP e o cargo de campeão pro 1º lugar, anuncia no canal

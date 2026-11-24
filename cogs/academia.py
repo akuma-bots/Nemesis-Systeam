@@ -112,7 +112,7 @@ def _encerrar_sessao(registro: dict, *, agora: float | None = None) -> tuple[dic
     return registro, True
 
 
-class Academia(commands.GroupCog, group_name="academia", group_description="Treinamentos, inscrições e avaliações da NÊMESIS"):
+class Academia(commands.GroupCog, group_name="academia", group_description="Treinamentos, inscrições e avaliações da Chaos Org"):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
@@ -144,7 +144,7 @@ class Academia(commands.GroupCog, group_name="academia", group_description="Trei
         await atualizar_json(ARQUIVO_ACADEMIA, {}, aplicar)
         return resultado["status"]
 
-    @app_commands.command(name="criar", description="Registra um novo treinamento na Academia Nêmesis.")
+    @app_commands.command(name="criar", description="Registra um novo treinamento na Academia Chaos Org.")
     @app_commands.describe(nome="Nome do treinamento", descricao="Objetivo, conteúdo e orientações", data_hora="DD/MM/AAAA HH:MM, horário de Brasília", vagas="Limite de participantes; 0 significa sem limite")
     @lideranca_only()
     async def criar(self, interaction: discord.Interaction, nome: app_commands.Range[str, 3, 100], descricao: app_commands.Range[str, 10, 1500], data_hora: str, vagas: app_commands.Range[int, 0, 500] = 0):
@@ -213,7 +213,7 @@ class Academia(commands.GroupCog, group_name="academia", group_description="Trei
         sessoes = _sessoes_do_servidor(documento, interaction.guild.id)
         abertas = [item for item in sessoes.values() if isinstance(item, dict) and item.get("status") == "aberta"]
         abertas.sort(key=lambda item: float(item.get("inicio", 0) or 0))
-        embed = criar_embed(title="𓂀 ACADEMIA NÊMESIS · TREINAMENTOS", description="Treinamentos cadastrados e disponíveis para inscrição.", color=0x9F1239, rodape=None)
+        embed = criar_embed(title="𓂀 ACADEMIA Chaos Org · TREINAMENTOS", description="Treinamentos cadastrados e disponíveis para inscrição.", color=0x9F1239, rodape=None)
         if not abertas:
             embed.add_field(name="AGENDA", value="Não há treinamentos abertos no momento.", inline=False)
         else:
@@ -295,7 +295,7 @@ class Academia(commands.GroupCog, group_name="academia", group_description="Trei
             if isinstance(participante, dict):
                 resultados.append((sessao, participante))
         resultados.sort(key=lambda item: float(item[0].get("inicio", 0) or 0), reverse=True)
-        embed = criar_embed(title="𓂀 ACADEMIA NÊMESIS · HISTÓRICO", description=f"Treinamentos registrados para {membro.mention}.", color=0x9F1239, rodape=None)
+        embed = criar_embed(title="𓂀 ACADEMIA Chaos Org · HISTÓRICO", description=f"Treinamentos registrados para {membro.mention}.", color=0x9F1239, rodape=None)
         if not resultados:
             embed.add_field(name="HISTÓRICO", value="Nenhum treinamento registrado.", inline=False)
         else:

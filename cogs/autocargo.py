@@ -39,7 +39,7 @@ class CargoAutomatico(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    # Cargos-base concedidos automaticamente a novos membros da NÊMESIS.
+    # Cargos-base concedidos automaticamente a novos membros da Chaos Org.
     GUILD_ID_CARGOS_ENTRADA = 1563995879981981817
     CARGOS_ENTRADA = (
         CARGO_VISITANTES_ID,
@@ -81,7 +81,7 @@ class CargoAutomatico(commands.Cog):
         try:
             await membro.add_roles(
                 *cargos,
-                reason="Cargos automáticos de entrada da NÊMESIS (sem atraso).",
+                reason="Cargos automáticos de entrada da Chaos Org (sem atraso).",
             )
             _LOG.info(
                 "Cargos de entrada atribuídos (guild=%s, member=%s, roles=%s).",
@@ -103,7 +103,7 @@ class CargoAutomatico(commands.Cog):
         """Entrega os cargos também a membros que já estavam no servidor."""
         guild = self.bot.get_guild(self.GUILD_ID_CARGOS_ENTRADA)
         if guild is None:
-            _LOG.error("Servidor da NÊMESIS não encontrado para sincronizar cargos de entrada.")
+            _LOG.error("Servidor da Chaos Org não encontrado para sincronizar cargos de entrada.")
             return
 
         try:

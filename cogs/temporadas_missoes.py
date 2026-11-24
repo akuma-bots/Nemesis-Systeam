@@ -71,7 +71,7 @@ def _card_temporada(origem: discord.ui.View, embed: discord.Embed | None = None,
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Temporadas e Competitivo"),
+        discord.ui.TextDisplay("-# Chaos Org • Temporadas e Competitivo"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -103,7 +103,7 @@ def _autorizado(interaction, owner_id=None):
 def _embed_status(guild, bot, resultado):
     if not resultado.get("configurada"):
         embed = criar_embed(
-            "🏆 TEMPORADAS DE MISSÕES · NÊMESIS",
+            "🏆 TEMPORADAS DE MISSÕES · Chaos Org",
             "Nenhuma temporada foi iniciada.\n\nA liderança pode configurar duração, meta coletiva, reconhecimentos e canal de encerramento pela Central de Gestão de Missões.",
             cor=0x9F2035,
             rodape="◈ TEMPORADAS SAZONAIS • PROGRESSÃO PERMANENTE INDEPENDENTE",
@@ -404,7 +404,7 @@ class TemporadasMissoes(commands.Cog):
             + ("\n".join(linhas) if linhas else "Nenhum participante pontuou nesta temporada.")
         )
         embed = criar_embed(f"🏁 TEMPORADA DE MISSÕES {registro['numero']} · ENCERRADA", descricao[:4000],
-                            cor=0x9F2035, rodape="◈ NÊMESIS • HISTÓRICO SAZONAL PRESERVADO")
+                            cor=0x9F2035, rodape="◈ Chaos Org • HISTÓRICO SAZONAL PRESERVADO")
         aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
         try:
             await canal.send(embed=embed)

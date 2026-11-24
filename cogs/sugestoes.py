@@ -215,7 +215,7 @@ async def _notificar_atualizacao_sugestao(
         "📬 ATUALIZAÇÃO DA SUA SUGESTÃO",
         f"**{registro.get('titulo', 'Sugestão')}**\nSituação: **{rotulo}**\n\n{str(motivo)[:900]}",
         cor=cor,
-        rodape="NÊMESIS • CENTRAL DE SUGESTÕES",
+        rodape="Chaos Org • CENTRAL DE SUGESTÕES",
     )
     for membro_id in sorted(destinatarios):
         try:
@@ -317,7 +317,7 @@ def _embed_painel() -> discord.Embed:
     embed = criar_embed(
         "💡 CENTRAL DE SUGESTÕES",
         (
-            "Sua ideia pode ajudar a evoluir a NÊMESIS.\n\n"
+            "Sua ideia pode ajudar a evoluir a Chaos Org.\n\n"
             "**Como participar**\n"
             "1. Pressione **Enviar sugestão**.\n"
             "2. Informe um título, explique sua ideia e escolha uma categoria.\n"
@@ -328,14 +328,14 @@ def _embed_painel() -> discord.Embed:
             "Cada membro pode enviar uma sugestão a cada 10 minutos."
         ),
         cor=COR_SUGESTOES,
-        rodape="NÊMESIS • CENTRAL DE SUGESTÕES • PAINEL OFICIAL",
+        rodape="Chaos Org • CENTRAL DE SUGESTÕES • PAINEL OFICIAL",
     )
     embed.add_field(
         name="◈ CATEGORIAS",
         value="Sistemas • Missões • Eventos • Competitivo • Comunidade • Qualidade de vida • Outros",
         inline=False,
     )
-    embed.set_footer(text="NÊMESIS • CENTRAL DE SUGESTÕES • PAINEL OFICIAL")
+    embed.set_footer(text="Chaos Org • CENTRAL DE SUGESTÕES • PAINEL OFICIAL")
     return embed
 
 
@@ -350,7 +350,7 @@ def _embed_sugestao(registro: dict) -> discord.Embed:
         f"💡 {str(registro.get('titulo', 'Sugestão'))[:240]}",
         descricao[:4096],
         cor=cor,
-        rodape=f"NÊMESIS • SUGESTÃO #{registro.get('id', '—')}",
+        rodape=f"Chaos Org • SUGESTÃO #{registro.get('id', '—')}",
         timestamp=True,
     )
     embed.add_field(name="◈ AUTOR", value=f"<@{registro.get('autor_id')}>", inline=True)
@@ -378,14 +378,14 @@ def _embed_sugestao(registro: dict) -> discord.Embed:
     responsavel = registro.get("responsavel_id")
     if responsavel:
         embed.add_field(name="◈ RESPONSÁVEL PELA DECISÃO", value=f"<@{responsavel}>", inline=True)
-    embed.set_footer(text=f"NÊMESIS • SUGESTÃO #{registro.get('id', '—')} • VOTAÇÃO COM 1 VOTO POR MEMBRO")
+    embed.set_footer(text=f"Chaos Org • SUGESTÃO #{registro.get('id', '—')} • VOTAÇÃO COM 1 VOTO POR MEMBRO")
     return embed
 
 
 
 def _card_sugestoes_view(origem: discord.ui.View, embed: discord.Embed | None = None,
                          titulo: str = "CENTRAL DE SUGESTÕES", descricao: str = "",
-                         marcador: str = "NÊMESIS • SUGESTÕES • V2") -> discord.ui.LayoutView:
+                         marcador: str = "Chaos Org • SUGESTÕES • V2") -> discord.ui.LayoutView:
     layout = discord.ui.LayoutView(timeout=origem.timeout)
     partes = [f"## {embed.title if embed and embed.title else titulo}"]
     if embed and embed.description:
@@ -492,13 +492,13 @@ async def _atualizar_cartao_sugestao(mensagem: discord.Message, registro: dict) 
             edicao_encerrada=registro.get("status") not in {"pendente", "analise"},
         ),
         embed,
-        marcador="NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2",
+        marcador="Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2",
     )
     argumentos = {
         "view": view,
         "allowed_mentions": discord.AllowedMentions.none(),
     }
-    if not _mensagem_tem_cartao_sugestoes(mensagem, "NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2"):
+    if not _mensagem_tem_cartao_sugestoes(mensagem, "Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2"):
         argumentos.update(content=None, embeds=[], attachments=[])
     await mensagem.edit(**argumentos)
 
@@ -617,7 +617,7 @@ class ModalNovaSugestao(discord.ui.Modal, title="Enviar uma sugestão"):
     )
     descricao = discord.ui.TextInput(
         label="Explique sua sugestão",
-        placeholder="Qual é a ideia? Como ela ajudaria a NÊMESIS?",
+        placeholder="Qual é a ideia? Como ela ajudaria a Chaos Org?",
         style=discord.TextStyle.paragraph,
         min_length=20,
         max_length=1800,
@@ -708,7 +708,7 @@ class ModalNovaSugestao(discord.ui.Modal, title="Enviar uma sugestão"):
                     name=f"💡・{registro['titulo']}"[:100],
                     view=_card_sugestoes_view(
                         PublicacaoSugestaoView(), _embed_sugestao(registro),
-                        marcador="NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2",
+                        marcador="Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2",
                     ),
                     reason="Nova sugestão enviada pela comunidade",
                 )
@@ -717,7 +717,7 @@ class ModalNovaSugestao(discord.ui.Modal, title="Enviar uma sugestão"):
                 mensagem = await canal.send(
                     view=_card_sugestoes_view(
                         PublicacaoSugestaoView(), _embed_sugestao(registro),
-                        marcador="NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2",
+                        marcador="Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2",
                     ),
                     allowed_mentions=discord.AllowedMentions.none(),
                 )
@@ -764,7 +764,7 @@ class PainelSugestoesView(discord.ui.View):
     )
     async def enviar(self, interaction: discord.Interaction, button: discord.ui.Button):
         if not _esta_no_canal_sugestoes(interaction):
-            await interaction.response.send_message("Use o painel no canal oficial da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Use o painel no canal oficial da Chaos Org.", ephemeral=True)
             return
         await interaction.response.send_modal(ModalNovaSugestao())
 
@@ -790,7 +790,7 @@ class PainelSugestoesView(discord.ui.View):
                 view=_card_sugestoes_view(
                     PainelAdminSugestoesView(registros),
                     _embed_painel_administrativo(registros),
-                    marcador="NÊMESIS • PAINEL ADMINISTRATIVO DE SUGESTÕES • V2",
+                    marcador="Chaos Org • PAINEL ADMINISTRATIVO DE SUGESTÕES • V2",
                 ),
             )
         except Exception:
@@ -805,9 +805,9 @@ def _embed_painel_administrativo(registros: dict, filtro: str = "resumo") -> dis
     }
     embed = criar_embed(
         "📊 CENTRAL DE SUGESTÕES • LIDERANÇA",
-        "Acompanhamento interno das propostas recebidas pela NÊMESIS.",
+        "Acompanhamento interno das propostas recebidas pela Chaos Org.",
         cor=COR_SUGESTOES,
-        rodape="NÊMESIS • PAINEL ADMINISTRATIVO DE SUGESTÕES",
+        rodape="Chaos Org • PAINEL ADMINISTRATIVO DE SUGESTÕES",
     )
     embed.add_field(name="📥 TOTAL RECEBIDO", value=str(len(itens)), inline=True)
     embed.add_field(name="⏳ PENDENTES", value=str(contagens["pendente"]), inline=True)
@@ -913,7 +913,7 @@ class PainelAdminSugestoesView(discord.ui.View):
                 view=_card_sugestoes_view(
                     self,
                     _embed_painel_administrativo(self.registros, self.children[0].values[0]),
-                    marcador="NÊMESIS • PAINEL ADMINISTRATIVO DE SUGESTÕES • V2",
+                    marcador="Chaos Org • PAINEL ADMINISTRATIVO DE SUGESTÕES • V2",
                 ),
             )
         except Exception:
@@ -961,7 +961,7 @@ class PublicacaoSugestaoView(discord.ui.View):
     )
     async def comentar(self, interaction: discord.Interaction, button: discord.ui.Button):
         if interaction.message is None or interaction.user.bot:
-            await interaction.response.send_message("Esta ação só está disponível para membros da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Esta ação só está disponível para membros da Chaos Org.", ephemeral=True)
             return
         message_id = _chave_mensagem(interaction)
         await interaction.response.defer(ephemeral=True, thinking=True)
@@ -1325,7 +1325,7 @@ class Sugestoes(commands.Cog):
                     else:
                         raise
                 if _mensagem_tem_cartao_sugestoes(
-                    mensagem, "NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2"
+                    mensagem, "Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2"
                 ):
                     continue
                 await _atualizar_cartao_sugestao(mensagem, registro)
@@ -1357,7 +1357,7 @@ class Sugestoes(commands.Cog):
         if canal is None:
             canal = await guild.fetch_channel(CANAL_SUGESTOES_ID)
         if not isinstance(canal, (discord.TextChannel, discord.ForumChannel)) or canal.guild.id != GUILD_NEMESIS_ID:
-            raise TypeError("O canal oficial de sugestões não é um canal de texto ou Fórum da NÊMESIS.")
+            raise TypeError("O canal oficial de sugestões não é um canal de texto ou Fórum da Chaos Org.")
 
         dados = await carregar(ARQUIVO_PAINEL, {})
         mensagem = None
@@ -1399,10 +1399,10 @@ class Sugestoes(commands.Cog):
             async for candidata in canal.history(limit=100, oldest_first=True):
                 if candidata.author.id == self.bot.user.id and (
                     _mensagem_tem_cartao_sugestoes(
-                        candidata, "NÊMESIS • CENTRAL DE SUGESTÕES • V2"
+                        candidata, "Chaos Org • CENTRAL DE SUGESTÕES • V2"
                     )
                     or any(
-                        embed.footer.text == "NÊMESIS • CENTRAL DE SUGESTÕES • PAINEL OFICIAL"
+                        embed.footer.text == "Chaos Org • CENTRAL DE SUGESTÕES • PAINEL OFICIAL"
                         for embed in candidata.embeds
                     )
                 ):
@@ -1415,7 +1415,7 @@ class Sugestoes(commands.Cog):
                 name="💡・Central de Sugestões",
                 view=_card_sugestoes_view(
                     PainelSugestoesView(), embed_painel,
-                    marcador="NÊMESIS • CENTRAL DE SUGESTÕES • V2",
+                    marcador="Chaos Org • CENTRAL DE SUGESTÕES • V2",
                 ),
                 reason="Publicar painel oficial da Central de Sugestões",
             )
@@ -1424,7 +1424,7 @@ class Sugestoes(commands.Cog):
             mensagem = await canal.send(
                 view=_card_sugestoes_view(
                     PainelSugestoesView(), embed_painel,
-                    marcador="NÊMESIS • CENTRAL DE SUGESTÕES • V2",
+                    marcador="Chaos Org • CENTRAL DE SUGESTÕES • V2",
                 ),
                 allowed_mentions=discord.AllowedMentions.none(),
             )
@@ -1432,10 +1432,10 @@ class Sugestoes(commands.Cog):
             embed_painel = _embed_painel()
             view_painel = _card_sugestoes_view(
                 PainelSugestoesView(), embed_painel,
-                marcador="NÊMESIS • CENTRAL DE SUGESTÕES • V2",
+                marcador="Chaos Org • CENTRAL DE SUGESTÕES • V2",
             )
             if not _mensagem_tem_cartao_sugestoes(
-                mensagem, "NÊMESIS • CENTRAL DE SUGESTÕES • V2"
+                mensagem, "Chaos Org • CENTRAL DE SUGESTÕES • V2"
             ):
                 await mensagem.edit(content=None, embeds=[], attachments=[])
             await mensagem.edit(
@@ -1457,7 +1457,7 @@ class Sugestoes(commands.Cog):
             return
         guild = self.bot.get_guild(GUILD_NEMESIS_ID)
         if guild is None:
-            _LOG.error("Servidor NÊMESIS indisponível; painel de sugestões aguardando conexão.")
+            _LOG.error("Servidor Chaos Org indisponível; painel de sugestões aguardando conexão.")
             return
         try:
             await self._sincronizar_painel(guild)
@@ -1470,12 +1470,12 @@ class Sugestoes(commands.Cog):
 async def setup(bot: commands.Bot):
     bot.add_view(_card_sugestoes_view(
         PublicacaoSugestaoView(), None, "PUBLICAÇÃO DE SUGESTÃO",
-        "Painel oficial de votação da NÊMESIS.",
-        marcador="NÊMESIS • PUBLICAÇÃO DE SUGESTÃO • V2",
+        "Painel oficial de votação da Chaos Org.",
+        marcador="Chaos Org • PUBLICAÇÃO DE SUGESTÃO • V2",
     ))
     bot.add_view(_card_sugestoes_view(
         PainelSugestoesView(), _embed_painel(),
-        marcador="NÊMESIS • CENTRAL DE SUGESTÕES • V2",
+        marcador="Chaos Org • CENTRAL DE SUGESTÕES • V2",
     ))
     await bot.add_cog(Sugestoes(bot))
 
