@@ -1,11 +1,11 @@
 {
-  "release_id": "20261124-005145",
+  "release_id": "20261124-065122",
   "habilitada": true,
   "tipo": "Melhorias dos sistemas",
-  "titulo": "Remove obsolete music tutorial.",
-  "mensagem": "A Chaos Org recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove obsolete music tutorial.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
+  "titulo": "Remove the official war system.",
+  "mensagem": "A Chaos Org recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove the official war system.\n\n**Áreas envolvidas:** sistemas e comandos, mecanismos internos e infraestrutura.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
   "data_atualizacao": "24/11/2026",
-  "hora_atualizacao": "00:51",
+  "hora_atualizacao": "06:51",
   "fuso_horario": "Horário de Brasília (BRT)",
-  "gerado_em": "2026-11-24T00:51:45.436384-03:00"
+  "gerado_em": "2026-11-24T06:51:22.585317-03:00"
 }
