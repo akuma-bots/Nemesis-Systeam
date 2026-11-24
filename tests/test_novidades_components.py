@@ -63,11 +63,11 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
             url="https://example.com/comunicado",
             color=0x8B1E2D,
         )
-        embed.set_author(name="NÊMESIS", url="https://example.com")
+        embed.set_author(name="Chaos Org", url="https://example.com")
         embed.add_field(name="Detalhes", value="D" * 1024, inline=False)
         embed.set_thumbnail(url="https://example.com/miniatura.png")
         embed.set_image(url="https://example.com/banner.png")
-        embed.set_footer(text="Nêmesis Systeam")
+        embed.set_footer(text="Chaos Org Systeam")
 
         resultado = await _enviar_dm_com_retry(membro, embed=embed)
 
@@ -121,7 +121,7 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
             "".join(textos[:-1]),
             ("A" * 4000) + "\n\n" + ("B" * 1200),
         )
-        self.assertEqual(textos[-1], "-# Nêmesis Systeam")
+        self.assertEqual(textos[-1], "-# Chaos Org Systeam")
         self.assertTrue(all(len(texto) <= 3900 for texto in textos))
 
         botoes = _botoes_do_container(container)
@@ -157,7 +157,7 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
                     break
                 texto_conteudo.append(item.content)
         self.assertEqual("".join(texto_conteudo), texto_embed_components_v2(embed))
-        self.assertEqual(textos[-1], "-# NÊMESIS • INTEGRAÇÃO OFICIAL • NΞM")
+        self.assertEqual(textos[-1], "-# Chaos Org • INTEGRAÇÃO OFICIAL • NΞM")
         self.assertTrue(all(len(texto) <= 3900 for texto in textos))
         self.assertTrue(any(
             isinstance(item, discord.ui.MediaGallery)
@@ -209,7 +209,7 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
             description="Conteúdo preservado.\n" * 260,
         )
         embed.set_image(url="https://example.com/arquivo.png")
-        embed.set_footer(text="Nêmesis Systeam")
+        embed.set_footer(text="Chaos Org Systeam")
         mensagem = Mock()
         mensagem.components = []
         mensagem.embeds = [embed]

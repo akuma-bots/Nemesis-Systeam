@@ -57,7 +57,7 @@ def test_tutorial_index_is_short_and_keeps_teaching_content_behind_selector():
     embed = _embed_indice()
     assert len(embed.fields) == 1
     assert "seletor" in embed.description.lower()
-    assert "Começando na NÊMESIS" not in embed.description
+    assert "Começando na Chaos Org" not in embed.description
     assert all(item["descricao"] not in embed.description for item in TUTORIAIS.values())
 
 
