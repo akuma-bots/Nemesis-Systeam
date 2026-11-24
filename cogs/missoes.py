@@ -514,7 +514,7 @@ def _calcular_inteligencia_participantes(
 
 def _texto_embed_missoes(embed: discord.Embed | None) -> str:
     if embed is None:
-        return "## 🎯 NÊMESIS • CENTRAL DE MISSÕES\nSelecione uma categoria ou página para consultar as atividades."
+        return "## 🎯 Chaos Org • CENTRAL DE MISSÕES\nSelecione uma categoria ou página para consultar as atividades."
     partes = []
     if embed.author and embed.author.name:
         partes.append(f"-# {embed.author.name}")
@@ -531,8 +531,8 @@ def _texto_embed_missoes(embed: discord.Embed | None) -> str:
 
 
 def _card_view_missoes(origem: discord.ui.View, embed: discord.Embed | None = None,
-                       titulo: str = "CENTRAL NÊMESIS", descricao: str = "",
-                       rodape: str = "NÊMESIS • Gestão de Missões") -> discord.ui.LayoutView:
+                       titulo: str = "CENTRAL Chaos Org", descricao: str = "",
+                       rodape: str = "Chaos Org • Gestão de Missões") -> discord.ui.LayoutView:
     """Envolve fluxos privados legados em cartão sem perder os callbacks originais."""
     layout = discord.ui.LayoutView(timeout=origem.timeout)
     texto = _texto_embed_missoes(embed) if embed else f"## {titulo}\n{descricao}".strip()
@@ -625,7 +625,7 @@ class NavegacaoMissoesView(discord.ui.LayoutView):
             itens.append(discord.ui.ActionRow(*botoes[inicio:inicio + 2]))
         itens.extend([
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
         ])
         self.add_item(discord.ui.Container(*itens, accent_colour=0x9F1239))
 
@@ -1092,7 +1092,7 @@ NOMES_CANAIS = {}
 
 
 class RankingPublicoView(discord.ui.View):
-    """Seletor público que alterna entre as classificações oficiais da NÊMESIS."""
+    """Seletor público que alterna entre as classificações oficiais da Chaos Org."""
 
     def __init__(self, cog, guild: discord.Guild, selecionado: str = "missoes"):
         super().__init__(timeout=None)
@@ -1126,7 +1126,7 @@ class RankingPublicoView(discord.ui.View):
 
     async def selecionar(self, interaction: discord.Interaction):
         if interaction.guild is None or interaction.guild.id != self.guild_id:
-            await interaction.response.send_message("Este ranking pertence à NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este ranking pertence à Chaos Org.", ephemeral=True)
             return
         tipo = interaction.data.get("values", [None])[0]
         tipos_validos = {"reputacao", "ativos", "jogos"}
@@ -1143,7 +1143,7 @@ class RankingPublicoView(discord.ui.View):
                 content=None, embeds=[], attachments=[],
                 view=_card_view_missoes(
                     nova_view, embed,
-                    rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+                    rodape="Chaos Org • CENTRAL DE RANKINGS • Classificações oficiais",
                 ),
             )
         except Exception:
@@ -1184,7 +1184,7 @@ class Missoes(commands.Cog):
     async def on_ready(self):
         guild = self.bot.get_guild(1563995879981981817)
         if guild is None:
-            log.warning("Missões padrão: servidor NÊMESIS não encontrado no cache.")
+            log.warning("Missões padrão: servidor Chaos Org não encontrado no cache.")
             return
         await self.sincronizar_missoes_discord(guild)
 
@@ -1213,7 +1213,7 @@ class Missoes(commands.Cog):
                 log.warning("Sem permissão para renomear o canal %s para %s.", canal.id, nome_novo)
                 continue
             try:
-                await canal.edit(name=nome_novo, reason="Padronização do sistema de missões da NÊMESIS")
+                await canal.edit(name=nome_novo, reason="Padronização do sistema de missões da Chaos Org")
             except discord.HTTPException:
                 log.exception("Falha ao renomear o canal %s.", canal.id)
 
@@ -1309,7 +1309,7 @@ class Missoes(commands.Cog):
                 cor=cor,
                 rodape=None,
             )
-            embed.set_author(name="NÊMESIS  /  CENTRAL DE OPERAÇÕES")
+            embed.set_author(name="Chaos Org  /  CENTRAL DE OPERAÇÕES")
 
             if indice == 1:
                 jogo_slug = str(atividade.get("jogo") or "").strip().lower()
@@ -1374,7 +1374,7 @@ class Missoes(commands.Cog):
                         inline=False,
                     )
                     embed.set_footer(
-                        text="NÊMESIS  •  CATÁLOGO OFICIAL  •  Participação sujeita à validação da staff"
+                        text="Chaos Org  •  CATÁLOGO OFICIAL  •  Participação sujeita à validação da staff"
                     )
                 else:
                     embed.add_field(
@@ -1385,10 +1385,10 @@ class Missoes(commands.Cog):
                         ),
                         inline=False,
                     )
-                    embed.set_footer(text="NÊMESIS  •  ARQUIVO DE OPERAÇÕES  •  SOMENTE CONSULTA")
+                    embed.set_footer(text="Chaos Org  •  ARQUIVO DE OPERAÇÕES  •  SOMENTE CONSULTA")
             else:
                 embed.set_footer(
-                    text=f"NÊMESIS  •  CONTINUAÇÃO DA OPERAÇÃO  •  {indice}/{len(partes)}"
+                    text=f"Chaos Org  •  CONTINUAÇÃO DA OPERAÇÃO  •  {indice}/{len(partes)}"
                 )
 
             embeds.append(embed)
@@ -1451,7 +1451,7 @@ class Missoes(commands.Cog):
                 "╭────────────── ◈ ──────────────╮\n"
                 f"                 **{nome_categoria}  /  TODOS OS JOGOS**\n"
                 "╰────────────── ◈ ──────────────╯\n\n"
-                "Um catálogo unificado de operações da **NÊMESIS**. "
+                "Um catálogo unificado de operações da **Chaos Org**. "
                 "Todas as atividades são válidas para qualquer jogo compatível com a organização. "
                 "Não existe divisão de missões por título de jogo.\n\n"
                 f"**✧ XP em recompensas abertas**  {xp_disponivel:,} XP\n".replace(",", ".")
@@ -1512,7 +1512,7 @@ class Missoes(commands.Cog):
                 inline=False,
             )
         embed.set_footer(
-            text=f"CATEGORIA:{categoria} • PAGINA:{pagina + 1}/{total_paginas} • NÊMESIS / TODOS OS JOGOS"
+            text=f"CATEGORIA:{categoria} • PAGINA:{pagina + 1}/{total_paginas} • Chaos Org / TODOS OS JOGOS"
         )
         def tamanho() -> int:
             return len(embed.title or "") + len(embed.description or "") + len(embed.author.name or "") + len(embed.footer.text or "") + sum(len(field.name) + len(field.value) for field in embed.fields)
@@ -1552,12 +1552,12 @@ class Missoes(commands.Cog):
             if len(atividades[inicio:inicio + 25]) > 8:
                 linhas.append(f"*+ {len(atividades[inicio:inicio + 25]) - 8} opções nesta página; consulte o seletor.*")
             embed.add_field(name="◈ SELEÇÃO", value="\n".join(linhas)[:1024], inline=False)
-        embed.set_footer(text="NÊMESIS • CENTRAL DE OPERAÇÕES • Evidências sujeitas à validação")
+        embed.set_footer(text="Chaos Org • CENTRAL DE OPERAÇÕES • Evidências sujeitas à validação")
         return aplicar_identidade_servidor(embed, guild, self.bot, banner=False)
 
     async def abrir_seletor_prova(self, interaction: discord.Interaction, categoria: str = "missao"):
         if interaction.guild is None:
-            await interaction.response.send_message("Este recurso só pode ser utilizado no servidor da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este recurso só pode ser utilizado no servidor da Chaos Org.", ephemeral=True)
             return
         categoria = categoria if categoria in TIPOS else "missao"
         dados = await missoes._guild(interaction.guild.id)
@@ -1632,7 +1632,7 @@ class Missoes(commands.Cog):
                 if not any(termo in texto for termo in termos):
                     continue
                 try:
-                    await mensagem.delete(reason="Limpeza de mensagens duplicadas do sistema de missões NÊMESIS")
+                    await mensagem.delete(reason="Limpeza de mensagens duplicadas do sistema de missões Chaos Org")
                     removidas += 1
                 except discord.NotFound:
                     continue
@@ -1643,7 +1643,7 @@ class Missoes(commands.Cog):
         return removidas
 
     async def _atualizar_painel_missoes(self, guild: discord.Guild) -> None:
-        # Canal fixo oficial da Central de Missões da NÊMESIS.
+        # Canal fixo oficial da Central de Missões da Chaos Org.
         canal_id = 1563995881315897549
         canal = await self._resolver_canal(guild, canal_id)
         if canal is None:
@@ -1668,7 +1668,7 @@ class Missoes(commands.Cog):
                 mensagem = await canal.send(view=view)
                 await ranking_missoes_jogos.salvar_painel(guild.id, "missoes", mensagem.id)
                 try:
-                    await mensagem.pin(reason="Painel de navegação de missões NÊMESIS")
+                    await mensagem.pin(reason="Painel de navegação de missões Chaos Org")
                 except discord.HTTPException:
                     pass
             else:
@@ -1679,16 +1679,16 @@ class Missoes(commands.Cog):
             raise
 
     async def _montar_painel_ranking(self, guild: discord.Guild) -> discord.Embed:
-        """Classificação única da NÊMESIS, somando XP de missões em todos os jogos."""
+        """Classificação única da Chaos Org, somando XP de missões em todos os jogos."""
         linhas = await ranking_missoes_jogos.obter_ranking_geral(guild.id, limite=10)
         embed = criar_embed(
-            "🏆 RANKING GERAL · NÊMESIS",
+            "🏆 RANKING GERAL · Chaos Org",
             "**CLASSIFICAÇÃO OFICIAL DA ORGANIZAÇÃO**\n"
             "Pontuação consolidada de missões, contribuições e operações especiais em todos os jogos. "
             "A classificação não possui filtros ou categorias separadas por jogo.",
             cor=0x9F2035, rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  CLASSIFICAÇÃO GERAL")
+        embed.set_author(name="Chaos Org  /  CLASSIFICAÇÃO GERAL")
         aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
         embed.add_field(name="ESCOPO", value="**Todos os jogos**", inline=True)
         embed.add_field(name="CLASSIFICADOS", value=f"**{len(linhas)}**", inline=True)
@@ -1726,7 +1726,7 @@ class Missoes(commands.Cog):
                     ).replace(",", ".")[:1024],
                     inline=False,
                 )
-        embed.set_footer(text="NÊMESIS • RANKING GERAL • TODOS OS JOGOS • ATUALIZAÇÃO AUTOMÁTICA")
+        embed.set_footer(text="Chaos Org • RANKING GERAL • TODOS OS JOGOS • ATUALIZAÇÃO AUTOMÁTICA")
         return embed
 
     async def _montar_embed_reputacao_ranking(self, guild: discord.Guild) -> discord.Embed:
@@ -1747,12 +1747,12 @@ class Missoes(commands.Cog):
         classificados.sort(key=lambda item: (item[1], item[2], item[0].display_name.casefold()), reverse=True)
         embed = criar_embed(
             "REPUTAÇÃO • CLASSIFICAÇÃO GERAL",
-            "**QUADRO DE MÉRITO NÊMESIS**\n"
+            "**QUADRO DE MÉRITO Chaos Org**\n"
             "Pontuação formada exclusivamente por reconhecimentos aprovados pela liderança. "
             "A reputação não substitui XP, não promove cargos e não concede permissões.",
             cor=0x9F2035, rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  RANKING DE REPUTAÇÃO")
+        embed.set_author(name="Chaos Org  /  RANKING DE REPUTAÇÃO")
         aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
         embed.add_field(name="CLASSIFICADOS", value=f"**{len(classificados)}**", inline=True)
         embed.add_field(name="CRITÉRIO", value="**Pontos aprovados**", inline=True)
@@ -1771,7 +1771,7 @@ class Missoes(commands.Cog):
                     value=f"{membro.mention}\n**RECONHECIMENTOS APROVADOS**  {aprovacoes}",
                     inline=False,
                 )
-        embed.set_footer(text="NÊMESIS • REPUTAÇÃO • Atualização ao alternar a categoria")
+        embed.set_footer(text="Chaos Org • REPUTAÇÃO • Atualização ao alternar a categoria")
         return embed
 
     async def _montar_embed_atividade_ranking(self, guild: discord.Guild) -> discord.Embed:
@@ -1806,13 +1806,13 @@ class Missoes(commands.Cog):
             reverse=True,
         )
         embed = criar_embed(
-            "ATIVIDADE • CLASSIFICAÇÃO NÊMESIS",
+            "ATIVIDADE • CLASSIFICAÇÃO Chaos Org",
             "**INTEGRANTES MAIS ATIVOS**\n"
             "Classificação baseada nas mensagens registradas pelo sistema nos últimos 30 dias. "
             "Mensagens apagadas continuam contando como participação; presença online e tempo em voz não são pontuados.",
             cor=0x9F2035, rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  RANKING DE ATIVIDADE")
+        embed.set_author(name="Chaos Org  /  RANKING DE ATIVIDADE")
         aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
         embed.add_field(name="PERÍODO", value="**Últimos 30 dias**", inline=True)
         embed.add_field(name="CLASSIFICADOS", value=f"**{len(classificados)}**", inline=True)
@@ -1821,7 +1821,7 @@ class Missoes(commands.Cog):
         if not classificados:
             embed.add_field(
                 name="DADOS INSUFICIENTES",
-                value="Ainda não há mensagens registradas no período para integrantes com o cargo oficial NÊMESIS.",
+                value="Ainda não há mensagens registradas no período para integrantes com o cargo oficial Chaos Org.",
                 inline=False,
             )
         else:
@@ -1832,7 +1832,7 @@ class Missoes(commands.Cog):
                     value=f"{membro.mention}\n**DIAS ATIVOS**  {dias_ativos}/30",
                     inline=False,
                 )
-        embed.set_footer(text="NÊMESIS • ATIVIDADE • Janela móvel de 30 dias")
+        embed.set_footer(text="Chaos Org • ATIVIDADE • Janela móvel de 30 dias")
         return embed
 
     async def _montar_embed_jogos_ranking(self, guild: discord.Guild) -> discord.Embed:
@@ -1871,12 +1871,12 @@ class Missoes(commands.Cog):
             reverse=True,
         )
         embed = criar_embed(
-            "JOGOS • CLASSIFICAÇÃO GERAL NÊMESIS",
+            "JOGOS • CLASSIFICAÇÃO GERAL Chaos Org",
             "**DESEMPENHO CONSOLIDADO NOS JOGOS**\n"
             "Soma apenas os pontos registrados nos jogos cadastrados. O XP de missões e o ranking competitivo permanecem separados.",
             cor=0x9F2035, rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  RANKING DE JOGOS")
+        embed.set_author(name="Chaos Org  /  RANKING DE JOGOS")
         aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
         embed.add_field(name="JOGOS INCLUÍDOS", value=f"**{len(ranking_missoes_jogos.JOGOS)}**", inline=True)
         embed.add_field(name="CLASSIFICADOS", value=f"**{len(classificados)}**", inline=True)
@@ -1900,7 +1900,7 @@ class Missoes(commands.Cog):
                     value=f"{membro.mention}\n" + (" · ".join(detalhes) or "Sem detalhamento por jogo"),
                     inline=False,
                 )
-        embed.set_footer(text="NÊMESIS • JOGOS • Pontuação consolidada entre os jogos cadastrados")
+        embed.set_footer(text="Chaos Org • JOGOS • Pontuação consolidada entre os jogos cadastrados")
         return embed
 
     async def _montar_embed_jogo_ranking(self, guild: discord.Guild, jogo: str) -> discord.Embed:
@@ -1915,12 +1915,12 @@ class Missoes(commands.Cog):
                 continue
             elegiveis.append((membro, pontos))
         embed = criar_embed(
-            f"RANKING {dados_jogo['nome'].upper()} · NÊMESIS",
+            f"RANKING {dados_jogo['nome'].upper()} · Chaos Org",
             f"**CLASSIFICAÇÃO INDIVIDUAL · {dados_jogo['nome'].upper()}**\n"
             "Pontuação validada exclusivamente para este jogo. Os pontos não são somados aos outros jogos.",
             cor=0x9F2035, rodape=None,
         )
-        embed.set_author(name=f"NÊMESIS  /  RANKING {dados_jogo['nome'].upper()}")
+        embed.set_author(name=f"Chaos Org  /  RANKING {dados_jogo['nome'].upper()}")
         aplicar_identidade_servidor(embed, guild, getattr(self, "bot", None))
         embed.add_field(name="JOGO", value=f"**{dados_jogo['nome']}**", inline=True)
         embed.add_field(name="CLASSIFICADOS", value=f"**{len(elegiveis)}**", inline=True)
@@ -1940,7 +1940,7 @@ class Missoes(commands.Cog):
                     value=membro.mention,
                     inline=False,
                 )
-        embed.set_footer(text=f"NÊMESIS • {dados_jogo['nome'].upper()} • Atualização ao alternar a categoria")
+        embed.set_footer(text=f"Chaos Org • {dados_jogo['nome'].upper()} • Atualização ao alternar a categoria")
         return embed
 
     async def _montar_embed_ranking(self, guild: discord.Guild, tipo: str) -> discord.Embed:
@@ -1951,7 +1951,7 @@ class Missoes(commands.Cog):
             if cog_ranking is not None:
                 return await cog_ranking._montar_embed(guild)
             return criar_embed(
-                "XP COMPETITIVO • NÊMESIS",
+                "XP COMPETITIVO • Chaos Org",
                 "O módulo de classificação competitiva está temporariamente indisponível.",
                 cor=0x9F2035,
             )
@@ -1991,14 +1991,14 @@ class Missoes(commands.Cog):
         embed = await self._montar_embed_ranking(guild, tipo)
         view = _card_view_missoes(
             RankingPublicoView(self, guild, tipo), embed,
-            rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+            rodape="Chaos Org • CENTRAL DE RANKINGS • Classificações oficiais",
         )
         try:
             if mensagem is None:
                 mensagem = await canal.send(view=view)
                 await ranking_missoes_jogos.salvar_painel(guild.id, "ranking", mensagem.id)
                 try:
-                    await mensagem.pin(reason="Central de Rankings da NÊMESIS")
+                    await mensagem.pin(reason="Central de Rankings da Chaos Org")
                 except discord.HTTPException:
                     log.warning("Não foi possível fixar a Central de Rankings.")
             else:
@@ -2023,14 +2023,14 @@ class Missoes(commands.Cog):
                 try:
                     nova_view = _card_view_missoes(
                         RankingPublicoView(self, guild, tipo), embed,
-                        rodape="NÊMESIS • CENTRAL DE RANKINGS • Classificações oficiais",
+                        rodape="Chaos Org • CENTRAL DE RANKINGS • Classificações oficiais",
                     )
                     nova_mensagem = await canal.send(view=nova_view)
                     await ranking_missoes_jogos.salvar_painel(guild.id, "ranking", nova_mensagem.id)
                     self.bot.add_view(nova_view, message_id=nova_mensagem.id)
                     self._ranking_views_registradas.add(nova_mensagem.id)
                     try:
-                        await nova_mensagem.pin(reason="Substituição da Central de Rankings da NÊMESIS")
+                        await nova_mensagem.pin(reason="Substituição da Central de Rankings da Chaos Org")
                     except discord.HTTPException:
                         pass
                     try:
@@ -2125,7 +2125,7 @@ class Missoes(commands.Cog):
                             resultado["publicadas"] += 1
                     for mensagem_extra in mensagens[len(embeds):]:
                         try:
-                            await mensagem_extra.delete(reason="Cartão de missão atualizado pela sincronização NÊMESIS")
+                            await mensagem_extra.delete(reason="Cartão de missão atualizado pela sincronização Chaos Org")
                         except (discord.Forbidden, discord.HTTPException):
                             log.warning("Não foi possível remover página excedente da missão %s.", missao_id)
                 else:
@@ -2151,7 +2151,7 @@ class Missoes(commands.Cog):
                                 continue
                             try:
                                 antiga = await canal_limpeza.fetch_message(mensagem_id)
-                                await antiga.delete(reason="Substituição do cartão pela sincronização oficial NÊMESIS")
+                                await antiga.delete(reason="Substituição do cartão pela sincronização oficial Chaos Org")
                             except (discord.NotFound, discord.Forbidden, discord.HTTPException):
                                 log.warning("Não foi possível limpar cartão antigo da missão %s (%s).", missao_id, mensagem_id)
 
@@ -2183,7 +2183,7 @@ class Missoes(commands.Cog):
             for mensagem_id in ids:
                 try:
                     mensagem = await canal.fetch_message(int(mensagem_id))
-                    await mensagem.delete(reason="Migração para a central única de missões NÊMESIS")
+                    await mensagem.delete(reason="Migração para a central única de missões Chaos Org")
                     removidas += 1
                 except discord.NotFound:
                     continue
@@ -2288,7 +2288,7 @@ class Missoes(commands.Cog):
                 f"**Página:** {pagina + 1}/{total_paginas} · **Ocorrências:** {resultado['total_ocorrencias']}"
             ),
             cor=0x9F2035,
-            rodape="NÊMESIS • AUDITORIA DE OPERAÇÕES • SOMENTE LEITURA",
+            rodape="Chaos Org • AUDITORIA DE OPERAÇÕES • SOMENTE LEITURA",
         )
         aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
         embed.set_thumbnail(url=guild.icon.url if guild.icon else self.bot.user.display_avatar.url)
@@ -2357,7 +2357,7 @@ class Missoes(commands.Cog):
                 )[:1024],
                 inline=False,
             )
-        embed.set_footer(text=f"NÊMESIS • DIAGNÓSTICO SOMENTE LEITURA • Página {pagina + 1}/{total_paginas}")
+        embed.set_footer(text=f"Chaos Org • DIAGNÓSTICO SOMENTE LEITURA • Página {pagina + 1}/{total_paginas}")
         return embed
 
     async def _montar_embed_relatorio_missoes(
@@ -2408,7 +2408,7 @@ class Missoes(commands.Cog):
             title=f"𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  {titulo}",
             description=descricao,
             cor=0x9F2035,
-            rodape="NÊMESIS • RELATÓRIOS ADMINISTRATIVOS • DADOS AUDITÁVEIS",
+            rodape="Chaos Org • RELATÓRIOS ADMINISTRATIVOS • DADOS AUDITÁVEIS",
         )
         aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
         if membro:
@@ -2450,7 +2450,7 @@ class Missoes(commands.Cog):
             ),
             inline=False,
         )
-        embed.set_footer(text="NÊMESIS • EXPORTAÇÃO CSV DISPONÍVEL • ACESSO EXCLUSIVO À LIDERANÇA")
+        embed.set_footer(text="Chaos Org • EXPORTAÇÃO CSV DISPONÍVEL • ACESSO EXCLUSIVO À LIDERANÇA")
         return embed
 
     async def _montar_embed_inteligencia(
@@ -2469,7 +2469,7 @@ class Missoes(commands.Cog):
                 "Visão consolidada da execução, validação e distribuição de recompensas das missões."
             ),
             cor=0x9F2035,
-            rodape=f"NÊMESIS • INTELIGÊNCIA ADMINISTRATIVA • Página {pagina + 1}/4",
+            rodape=f"Chaos Org • INTELIGÊNCIA ADMINISTRATIVA • Página {pagina + 1}/4",
         )
         aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
         embed.set_thumbnail(url=guild.icon.url if guild.icon else self.bot.user.display_avatar.url)
@@ -2627,7 +2627,7 @@ class Missoes(commands.Cog):
             embed.add_field(name="◈ INDICADORES DE REVISÃO", value="\n".join(linhas)[:1024] if linhas else "Sem decisões com timestamps confiáveis no período.", inline=False)
             embed.add_field(name="◈ PROTOCOLO DE INTERPRETAÇÃO", value="Envios e decisões: últimos 30 dias. Hashes: histórico completo. Indicadores sinalizam padrões para conferência humana; hash idêntico pode ocorrer por reenvio legítimo, e frequência ou taxa de rejeição não comprova irregularidade. Tempos usam apenas datas válidas.", inline=False)
 
-        embed.set_footer(text="NÊMESIS • DADOS DE REVISÕES OFICIAIS • ACESSO EXCLUSIVO À LIDERANÇA")
+        embed.set_footer(text="Chaos Org • DADOS DE REVISÕES OFICIAIS • ACESSO EXCLUSIVO À LIDERANÇA")
         return embed
 
     async def enviar_painel_inteligencia(self, interaction: discord.Interaction) -> None:
@@ -2665,7 +2665,7 @@ class Missoes(commands.Cog):
                 "Registro cronológico de protocolos enviados para validação."
             ),
             cor=0x9F2035,
-            rodape=f"NÊMESIS • HISTÓRICO PRIVADO • Página {pagina + 1}/{max(1, (len(registros) + 4) // 5)}",
+            rodape=f"Chaos Org • HISTÓRICO PRIVADO • Página {pagina + 1}/{max(1, (len(registros) + 4) // 5)}",
         )
         aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
         if membro:
@@ -2730,7 +2730,7 @@ class Missoes(commands.Cog):
         guild = interaction.guild
         if guild is None or not isinstance(interaction.user, discord.Member):
             await interaction.response.send_message(
-                "Este painel só pode ser consultado dentro do servidor da NÊMESIS.",
+                "Este painel só pode ser consultado dentro do servidor da Chaos Org.",
                 ephemeral=True,
             )
             return
@@ -2764,7 +2764,7 @@ class Missoes(commands.Cog):
                 "Acompanhamento individual de missões validadas, evidências e progressão organizacional."
             ),
             cor=0x9F2035,
-            rodape="NÊMESIS • CENTRAL DE DESEMPENHO • Dados de evidências oficiais",
+            rodape="Chaos Org • CENTRAL DE DESEMPENHO • Dados de evidências oficiais",
         )
         aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
         embed.set_thumbnail(url=interaction.user.display_avatar.url)
@@ -2839,7 +2839,7 @@ class Missoes(commands.Cog):
                 value="\n".join(linhas_ranking),
                 inline=False,
             )
-        embed.set_footer(text="NÊMESIS • XP de missões calculado apenas com recompensas persistidas")
+        embed.set_footer(text="Chaos Org • XP de missões calculado apenas com recompensas persistidas")
         await interaction.followup.send(
             view=_card_view_missoes(
                 HistoricoDesempenhoView(self, interaction.user.id, resumo["historico"]), embed
@@ -3047,7 +3047,7 @@ class Missoes(commands.Cog):
         """Recebe a imagem como anexo e seleciona missão/auxiliar pelo Discord."""
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Use este comando dentro do servidor da NÊMESIS.",
+                "Use este comando dentro do servidor da Chaos Org.",
                 ephemeral=True,
             )
             return
@@ -3124,7 +3124,7 @@ class Missoes(commands.Cog):
         await interaction.response.defer(ephemeral=True, thinking=True)
         guild = interaction.guild
         if guild is None:
-            await interaction.followup.send("❌ Use este botão dentro do servidor da NÊMESIS.", ephemeral=True)
+            await interaction.followup.send("❌ Use este botão dentro do servidor da Chaos Org.", ephemeral=True)
             return
 
         auxiliar_id = None

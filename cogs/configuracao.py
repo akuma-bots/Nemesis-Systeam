@@ -14,14 +14,14 @@ TIPOS_ATIVIDADE = {
 
 
 class Customizacao(commands.Cog):
-    """Personalização visual do bot oficial da NÊMESIS."""
+    """Personalização visual do bot oficial da Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @app_commands.command(
         name="definir-status",
-        description="[Dono do bot] Altera a atividade exibida pelo bot da NÊMESIS.",
+        description="[Dono do bot] Altera a atividade exibida pelo bot da Chaos Org.",
     )
     @app_commands.describe(
         tipo="Tipo de atividade",
@@ -43,7 +43,7 @@ class Customizacao(commands.Cog):
             await interaction.response.send_message(
                 embed=embed_erro(
                     "ACESSO RESTRITO",
-                    "Este comando é exclusivo do responsável pela aplicação da NÊMESIS.",
+                    "Este comando é exclusivo do responsável pela aplicação da Chaos Org.",
                 ),
                 ephemeral=True,
             )

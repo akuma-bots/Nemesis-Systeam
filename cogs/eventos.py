@@ -285,7 +285,7 @@ class AgendaAtualizarButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         if interaction.guild is None or interaction.guild.id != GUILD_NEMESIS_ID:
-            await interaction.response.send_message("Este painel pertence à NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este painel pertence à Chaos Org.", ephemeral=True)
             return
         await interaction.response.defer(ephemeral=True)
         atualizado = await self.cog.atualizar_agenda(interaction.guild, force=True)
@@ -302,14 +302,14 @@ class AgendaLayoutView(discord.ui.LayoutView):
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(AgendaAtualizarButton(cog)),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam • NEMESIS_AGENDA_LIVE"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam • NEMESIS_AGENDA_LIVE"),
             accent_colour=0x9F1239,
         ))
 
 
 class Eventos(commands.Cog):
     """
-    Sistema de eventos da NÊMESIS.
+    Sistema de eventos da Chaos Org.
 
     Os eventos do Discord continuam sendo eventos nativos,
     e seus dados também são persistidos em eventos.json para histórico
@@ -320,7 +320,7 @@ class Eventos(commands.Cog):
         self.bot = bot
         self._agenda_lock = asyncio.Lock()
         self._ultima_atualizacao_agenda = 0.0
-        self.bot.add_view(AgendaLayoutView(self, "## 𓂀 NÊMESIS · AGENDA AO VIVO\n\nSincronizando os dados do servidor..."))
+        self.bot.add_view(AgendaLayoutView(self, "## 𓂀 Chaos Org · AGENDA AO VIVO\n\nSincronizando os dados do servidor..."))
         self.atualizacao_periodica.start()
 
     def cog_unload(self):
@@ -487,7 +487,7 @@ class Eventos(commands.Cog):
         alvo = int(meta.get("alvo", 0) or 0)
         descricao = discord.utils.escape_markdown(str(meta.get("descricao") or "Marco da comunidade")[:200])
         mensagem = (
-            "𓂀 **NÊMESIS · META ALCANÇADA**\n\n"
+            "𓂀 **Chaos Org · META ALCANÇADA**\n\n"
             f"A comunidade atingiu **{alvo:,} membros**.\n"
             f"**Marco:** {descricao}\n\n"
             "A liderança foi convocada para definir uma celebração. "
@@ -613,7 +613,7 @@ class Eventos(commands.Cog):
                     sorteios_especiais.append((sorteio_historico, contextos))
 
             linhas = [
-                "## 𓂀 NÊMESIS · AGENDA AO VIVO",
+                "## 𓂀 Chaos Org · AGENDA AO VIVO",
                 "Acompanhamento automático da comunidade e dos próximos compromissos.",
                 "### 👥 MEMBROS NO SERVIDOR",
                 f"**{resumo['total']:,} membros**".replace(",", "."),
@@ -683,7 +683,7 @@ class Eventos(commands.Cog):
             if mensagem is None:
                 try:
                     async for antiga in canal.history(limit=50):
-                        if antiga.author.id == self.bot.user.id and (_componentes_sao_agenda(getattr(antiga, "components", [])) or any(embed.title == "𓂀 NÊMESIS · AGENDA" for embed in (antiga.embeds or []))):
+                        if antiga.author.id == self.bot.user.id and (_componentes_sao_agenda(getattr(antiga, "components", [])) or any(embed.title == "𓂀 Chaos Org · AGENDA" for embed in (antiga.embeds or []))):
                             mensagem = antiga
                             break
                 except (discord.Forbidden, discord.HTTPException):
@@ -702,11 +702,11 @@ class Eventos(commands.Cog):
             _LOG.info("Agenda ao Vivo sincronizada (guild=%s, membros=%s, eventos=%s, sorteios_ativos=%s, sorteios_concluidos=%s, sorteios_especiais=%s).", guild.id, resumo["total"], len(eventos), len(sorteios_abertos), len(sorteios_concluidos), len(sorteios_especiais))
             return True
 
-    @app_commands.command(name="agenda", description="Publica ou atualiza o painel ao vivo da NÊMESIS.")
+    @app_commands.command(name="agenda", description="Publica ou atualiza o painel ao vivo da Chaos Org.")
     @lideranca_only()
     async def agenda(self, interaction: discord.Interaction):
         if interaction.guild is None or interaction.guild.id != GUILD_NEMESIS_ID:
-            await interaction.response.send_message("Este sistema pertence à NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este sistema pertence à Chaos Org.", ephemeral=True)
             return
         await interaction.response.defer(ephemeral=True)
         atualizado = await self.atualizar_agenda(interaction.guild, force=True)
@@ -783,7 +783,7 @@ class Eventos(commands.Cog):
     ) -> discord.Embed:
 
         embed = criar_embed(
-            title=f"📅 AGENDA NÊMESIS · {titulo.upper()[:120]}",
+            title=f"📅 AGENDA Chaos Org · {titulo.upper()[:120]}",
             description=(
                 evento.description
                 or "Este evento não possui uma descrição adicional."
@@ -791,7 +791,7 @@ class Eventos(commands.Cog):
             color=0x9F1239,
             rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  EVENTOS E CAMPEONATOS")
+        embed.set_author(name="Chaos Org  /  EVENTOS E CAMPEONATOS")
         embed.add_field(name="EVENTO", value=f"**{evento.name[:200]}**", inline=False)
         embed.add_field(name="SITUAÇÃO", value=f"🟢 {str(evento.status).replace('_', ' ').title()}", inline=True)
         embed.add_field(name="FORMATO", value=str(evento.entity_type).replace('_', ' ').title(), inline=True)
@@ -929,7 +929,7 @@ class Eventos(commands.Cog):
         inscricoes = inscricoes if isinstance(inscricoes, list) else []
 
         embed = criar_embed(
-            title="📅 RELATÓRIO DE EVENTO · NÊMESIS",
+            title="📅 RELATÓRIO DE EVENTO · Chaos Org",
             description=(
                 f"**{str(registro.get('nome') or 'Evento sem nome')[:200]}**\n"
                 f"Situação: **{str(registro.get('status') or 'desconhecida').replace('_', ' ').title()}**"

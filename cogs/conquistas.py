@@ -153,7 +153,7 @@ class Conquistas(commands.Cog):
                         inline=False,
                     )
                 aplicar_identidade_servidor(embed, guild, self.bot, banner=True)
-                embed.set_footer(text="NÊMESIS • MÉRITO REGISTRADO • Conquistas permanentes")
+                embed.set_footer(text="Chaos Org • MÉRITO REGISTRADO • Conquistas permanentes")
                 try:
                     await canal.send(
                         embed=embed,
@@ -176,7 +176,7 @@ class Conquistas(commands.Cog):
     async def conquistas(self, interaction: discord.Interaction, membro: discord.Member = None):
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Use este comando dentro do servidor da NÊMESIS.", ephemeral=True
+                "Use este comando dentro do servidor da Chaos Org.", ephemeral=True
             )
             return
         alvo = membro or interaction.user
@@ -218,7 +218,7 @@ class Conquistas(commands.Cog):
                 value=f"{conquista['descricao']}\n{detalhe}",
                 inline=True,
             )
-        embed.set_footer(text="NÊMESIS • CONQUISTAS • Critérios validados automaticamente")
+        embed.set_footer(text="Chaos Org • CONQUISTAS • Critérios validados automaticamente")
         await interaction.followup.send(embed=embed, ephemeral=True)
 
 

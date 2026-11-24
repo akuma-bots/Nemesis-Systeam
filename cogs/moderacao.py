@@ -45,8 +45,8 @@ class Moderacao(commands.Cog):
                 for embed in mensagem.embeds:
                     rodape = embed.footer.text or ""
                     if (
-                        embed.title == "𓂀 NÊMESIS — CÓDIGO DE CONDUTA"
-                        and rodape.startswith("NÊMESIS • Código de Conduta oficial")
+                        embed.title == "𓂀 Chaos Org — CÓDIGO DE CONDUTA"
+                        and rodape.startswith("Chaos Org • Código de Conduta oficial")
                         and len(embed.fields) == 11
                     ):
                         return embed.copy()

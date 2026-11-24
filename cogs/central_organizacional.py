@@ -10,7 +10,7 @@ _LOG = logging.getLogger(__name__)
 GUILD_ID = int(os.getenv("NEMESIS_GUILD_ID", "1563995879981981817"))
 CANAL_HIERARQUIA_ID = 1563995880833421511
 ARQUIVO_ESTADO = "central_hierarquia_nemesis.json"
-MARCADOR = "NÊMESIS • CENTRAL ORGANIZACIONAL • V1"
+MARCADOR = "Chaos Org • CENTRAL ORGANIZACIONAL • V1"
 
 CARGO_OCTOGONO_ID = 1563995880007139425
 CARGO_SUPERVISOR_STAFF_ID = 1563995880007139422
@@ -41,25 +41,25 @@ def _cargo(guild: discord.Guild, cargo_id: int, nome: str) -> str:
 
 def _pagina_hierarquia(guild: discord.Guild) -> str:
     progressao = (
-        (1563995879998754943, "Capitão Geral", 1, "Direção estratégica", "Define diretrizes, estabelece prioridades e responde pela condução geral da NÊMESIS."),
+        (1563995879998754943, "Capitão Geral", 1, "Direção estratégica", "Define diretrizes, estabelece prioridades e responde pela condução geral da Chaos Org."),
         (1563995879998754942, "Capitão", 2, "Comando superior", "Acompanha as lideranças e assegura que as decisões estratégicas sejam executadas."),
         (1563995879998754941, "Vice Capitão", 3, "Apoio ao comando", "Auxilia diretamente a liderança e assume atribuições de comando quando necessário."),
         (1563995879998754940, "Comandante", 4, "Coordenação operacional", "Organiza atividades, orienta integrantes e acompanha a execução das operações."),
         (1563995879998754939, "Treinador", 5, "Formação de integrantes", "Prepara membros, transmite conhecimentos e acompanha o desenvolvimento técnico."),
         (1563995879998754938, "Veterano", 6, "Orientação e experiência", "Compartilha experiência, orienta integrantes e contribui para manter os padrões da organização."),
-        (1563995879998754937, "Elite", 7, "Excelência e referência", "Representa alto desempenho, consistência e comprometimento com a NÊMESIS."),
+        (1563995879998754937, "Elite", 7, "Excelência e referência", "Representa alto desempenho, consistência e comprometimento com a Chaos Org."),
         (1563995879990624377, "Especialista", 8, "Domínio técnico", "Aplica conhecimentos específicos e auxilia no aperfeiçoamento das atividades."),
         (1563995879990624376, "Executor", 9, "Execução de diretrizes", "Transforma orientações em ações e cumpre as tarefas sob sua responsabilidade."),
         (1563995879990624375, "Tenente", 10, "Apoio à coordenação", "Acompanha atividades, auxilia na organização dos integrantes e reforça as orientações superiores."),
         (1563995879990624374, "Subtenente", 11, "Suporte interno", "Apoia a rotina da organização, facilita a comunicação e desenvolve capacidade de liderança."),
-        (1563995879990624373, "Lutador", 12, "Participação e evolução", "Integra a base ativa, participa das atividades e desenvolve sua trajetória na NÊMESIS."),
+        (1563995879990624373, "Lutador", 12, "Participação e evolução", "Integra a base ativa, participa das atividades e desenvolve sua trajetória na Chaos Org."),
     )
     linhas = [
-        "## 𓂀 NÊMESIS • HIERARQUIA INSTITUCIONAL",
+        "## 𓂀 Chaos Org • HIERARQUIA INSTITUCIONAL",
         "Conheça as patentes, suas funções e responsabilidades. Cada posição representa uma etapa de experiência, desempenho e compromisso com a organização.",
         "",
         "**IDENTIDADE ORGANIZACIONAL**",
-        _cargo(guild, 1563995879990624372, "NÊMESIS"),
+        _cargo(guild, 1563995879990624372, "Chaos Org"),
         "",
         "━━━━━━━━━━━━━━━━━━━━",
         "**PATENTES • FUNÇÕES E RESPONSABILIDADES**",
@@ -81,7 +81,7 @@ def _pagina_hierarquia(guild: discord.Guild) -> str:
         "• Staff e OCTÓGONO possuem hierarquias próprias e não integram esta progressão.",
         "",
         "-# A progressão é vinculada ao XP organizacional. O sistema competitivo permanece independente.",
-        "-# NÊMESIS — Authority Beyond Rank.",
+        "-# Chaos Org — Authority Beyond Rank.",
     ])
     return _limitar("\n".join(linhas), limite=3900)
 
@@ -102,7 +102,7 @@ def _pagina_divisoes(guild: discord.Guild) -> str:
     )
     linhas = [
         "## ⚔️ DIVISÕES",
-        "As divisões são núcleos de atuação da NÊMESIS. Cada uma possui uma identidade e uma finalidade própria dentro das atividades da organização.",
+        "As divisões são núcleos de atuação da Chaos Org. Cada uma possui uma identidade e uma finalidade própria dentro das atividades da organização.",
         "",
         "**ESTRUTURA • FUNÇÕES E RESPONSABILIDADES**",
         "",
@@ -121,7 +121,7 @@ def _pagina_divisoes(guild: discord.Guild) -> str:
     linhas.extend([
         "**LIDERANÇA E ORGANIZAÇÃO**",
         "A liderança interna de cada divisão será apresentada quando os respectivos responsáveis e cargos oficiais estiverem definidos.",
-        "• As divisões não substituem nem se confundem com as hierarquias NÊMESIS, Staff e OCTÓGONO.",
+        "• As divisões não substituem nem se confundem com as hierarquias Chaos Org, Staff e OCTÓGONO.",
         "• Cargos gerais e funções administrativas não são atribuídos por pertencer a uma divisão.",
         "",
         "-# As descrições definem a finalidade organizacional de cada núcleo; permissões e chefias são configuradas separadamente.",
@@ -155,7 +155,7 @@ def _pagina_staffs(guild: discord.Guild) -> str:
          "Conhece os procedimentos internos, acompanha a equipe e realiza tarefas de apoio sob orientação."),
     )
     linhas = [
-        "## ♟️ NÊMESIS • HIERARQUIA STAFF",
+        "## ♟️ Chaos Org • HIERARQUIA STAFF",
         "Estrutura administrativa responsável pela organização, moderação, atendimento e suporte aos membros.",
         "",
         "**CARGOS • FUNÇÕES E RESPONSABILIDADES**",
@@ -178,7 +178,7 @@ def _pagina_staffs(guild: discord.Guild) -> str:
         "• A hierarquia Staff não substitui a autoridade exclusiva do OCTÓGONO sobre a gestão de missões.",
         "",
         "-# Esta apresentação descreve atribuições; permissões são definidas separadamente pela configuração do servidor.",
-        "-# NÊMESIS — Authority Beyond Rank.",
+        "-# Chaos Org — Authority Beyond Rank.",
     ])
     return _limitar("\n".join(linhas), limite=3900)
 
@@ -195,7 +195,7 @@ def _pagina_octogono(guild: discord.Guild) -> str:
         (1563995880007139426, "Perdition", "Suporte estratégico", "Presta apoio às demandas do núcleo e contribui para a execução organizada das responsabilidades do OCTÓGONO."),
     )
     linhas = [
-        "## 𓂀 NÊMESIS • HIERARQUIA OCTÓGONO",
+        "## 𓂀 Chaos Org • HIERARQUIA OCTÓGONO",
         "Núcleo exclusivo responsável pela gestão de missões e pela supervisão das operações atribuídas ao OCTÓGONO.",
         "",
         "**OS OITO CARGOS • FUNÇÕES E RESPONSABILIDADES**",
@@ -221,12 +221,12 @@ def _pagina_octogono(guild: discord.Guild) -> str:
         "As atribuições específicas acima organizam a atuação interna. Não alteram automaticamente permissões individuais nem a autoridade administrativa geral da Staff.",
         "",
         "-# Esta apresentação descreve funções; permissões são definidas separadamente pela configuração do servidor.",
-        "-# NÊMESIS — Authority Beyond Rank.",
+        "-# Chaos Org — Authority Beyond Rank.",
     ])
     return _limitar("\n".join(linhas), limite=3900)
 
 PAGINAS = {
-    "hierarquia": ("Hierarquia Nêmesis", None, _pagina_hierarquia),
+    "hierarquia": ("Hierarquia Chaos Org", None, _pagina_hierarquia),
     "divisoes": ("Divisões", None, _pagina_divisoes),
     "staffs": ("Hierarquia Staff", None, _pagina_staffs),
     "octogono": ("Hierarquia Octógono", None, _pagina_octogono),
@@ -248,7 +248,7 @@ class SeletorHierarquia(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         if interaction.guild_id != GUILD_ID or interaction.guild is None:
-            await interaction.response.send_message("Esta central pertence à NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Esta central pertence à Chaos Org.", ephemeral=True)
             return
         chave = self.values[0]
         nome, emoji, renderizar = PAGINAS[chave]
@@ -264,7 +264,7 @@ class CentralOrganizacionalView(discord.ui.LayoutView):
         seletor = SeletorHierarquia(chave)
         if texto is None:
             texto = (
-                "## 𓂀 NÊMESIS • CENTRAL ORGANIZACIONAL\n"
+                "## 𓂀 Chaos Org • CENTRAL ORGANIZACIONAL\n"
                 "Consulte a estrutura da organização, suas equipes e seus núcleos de responsabilidade. "
                 "Selecione uma categoria abaixo para alternar o conteúdo."
             )
@@ -295,7 +295,7 @@ class CentralOrganizacional(commands.Cog):
                 return
             guild = self.bot.get_guild(GUILD_ID)
             if guild is None:
-                _LOG.warning("Servidor NÊMESIS indisponível; central organizacional aguardará reconexão.")
+                _LOG.warning("Servidor Chaos Org indisponível; central organizacional aguardará reconexão.")
                 return
             canal = guild.get_channel(CANAL_HIERARQUIA_ID)
             if canal is None:
@@ -305,7 +305,7 @@ class CentralOrganizacional(commands.Cog):
                     _LOG.exception("Não foi possível localizar o canal da central organizacional.")
                     return
             if not isinstance(canal, discord.TextChannel) or canal.guild.id != GUILD_ID:
-                _LOG.error("Canal %s não é um canal de texto válido da NÊMESIS.", CANAL_HIERARQUIA_ID)
+                _LOG.error("Canal %s não é um canal de texto válido da Chaos Org.", CANAL_HIERARQUIA_ID)
                 return
             permissoes = canal.permissions_for(guild.me)
             if not (permissoes.view_channel and permissoes.send_messages and permissoes.read_message_history):

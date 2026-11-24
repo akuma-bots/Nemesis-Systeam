@@ -30,14 +30,14 @@ def _inteiro_seguro(valor, padrao=0):
 
 def _resultado(placar_nemesis: int, placar_inimiga: int) -> str:
     if placar_nemesis > placar_inimiga:
-        return "VITÓRIA DA NÊMESIS"
+        return "VITÓRIA DA Chaos Org"
     if placar_nemesis < placar_inimiga:
-        return "DERROTA DA NÊMESIS"
+        return "DERROTA DA Chaos Org"
     return "EMPATE"
 
 
-class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras oficiais da NÊMESIS"):
-    """Sistema oficial de registro, regras e histórico de guerras da NÊMESIS."""
+class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras oficiais da Chaos Org"):
+    """Sistema oficial de registro, regras e histórico de guerras da Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -93,11 +93,11 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
 
     @app_commands.command(
         name="registrar",
-        description="Registra o placar oficial da NÊMESIS contra uma gangue inimiga.",
+        description="Registra o placar oficial da Chaos Org contra uma gangue inimiga.",
     )
     @app_commands.describe(
-        gangue_inimiga="Nome da gangue que enfrentou a NÊMESIS",
-        placar_nemesis="Placar conquistado pela NÊMESIS",
+        gangue_inimiga="Nome da gangue que enfrentou a Chaos Org",
+        placar_nemesis="Placar conquistado pela Chaos Org",
         placar_inimiga="Placar conquistado pela gangue inimiga",
         prova_url="Link da prova ou print do resultado (opcional)",
         formato="Formato disputado, por exemplo 5v5 MD3 (opcional)",
@@ -128,7 +128,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             return
         if gangue_inimiga.casefold() in {"nêmesis", "nemesis", "n̷êmesis"}:
             await interaction.response.send_message(
-                "A gangue inimiga não pode ser a própria NÊMESIS.", ephemeral=True
+                "A gangue inimiga não pode ser a própria Chaos Org.", ephemeral=True
             )
             return
         if prova_url and not re.match(r"^https?://\S+$", prova_url.strip(), re.IGNORECASE):
@@ -144,14 +144,14 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
         registro = {
             "id": registro_id,
             "guild_id": interaction.guild.id,
-            "gangue_a": "NÊMESIS",
+            "gangue_a": "Chaos Org",
             "gangue_b": gangue_inimiga,
             "gangue_inimiga": gangue_inimiga,
             "placar_a": int(placar_nemesis),
             "placar_b": int(placar_inimiga),
             "placar_nemesis": int(placar_nemesis),
             "placar_inimiga": int(placar_inimiga),
-            "vencedor": "NÊMESIS" if placar_nemesis > placar_inimiga else (
+            "vencedor": "Chaos Org" if placar_nemesis > placar_inimiga else (
                 gangue_inimiga if placar_inimiga > placar_nemesis else "Empate"
             ),
             "resultado": status,
@@ -169,7 +169,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
         from utils.registro_global import registrar
         detalhe_registro = (
             f"**Protocolo:** {registro_id}\n"
-            f"**Placar:** NÊMESIS {placar_nemesis} × {placar_inimiga} {gangue_inimiga}\n"
+            f"**Placar:** Chaos Org {placar_nemesis} × {placar_inimiga} {gangue_inimiga}\n"
             f"**Resultado:** {status}\n"
             f"**Temporada:** {registro['temporada']}\n"
             f"**Responsável:** {interaction.user.mention} (ID: {interaction.user.id})"
@@ -192,7 +192,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
         embed = criar_embed(
             title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ RELATÓRIO OFICIAL DE GUERRA",
             description=(
-                f"**NÊMESIS**  **{placar_nemesis} × {placar_inimiga}**  "
+                f"**Chaos Org**  **{placar_nemesis} × {placar_inimiga}**  "
                 f"**{discord.utils.escape_markdown(gangue_inimiga)}**\n\n"
                 f"**RESULTADO: {status}**"
             ),
@@ -216,7 +216,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             value=regras_no_relatorio or "Consulte /guerra-regras.",
             inline=False,
         )
-        embed.set_footer(text=f"Registrado por {interaction.user} • NÊMESIS")
+        embed.set_footer(text=f"Registrado por {interaction.user} • Chaos Org")
 
         canal = await self._canal_guerras(interaction)
         try:
@@ -238,7 +238,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
 
     @app_commands.command(
         name="regras",
-        description="Mostra as regras oficiais para guerras da NÊMESIS.",
+        description="Mostra as regras oficiais para guerras da Chaos Org.",
     )
     async def guerra_regras(self, interaction: discord.Interaction):
         if interaction.guild is None:
@@ -301,7 +301,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
 
     @app_commands.command(
         name="historico",
-        description="Mostra os registros recentes de guerras da NÊMESIS.",
+        description="Mostra os registros recentes de guerras da Chaos Org.",
     )
     @app_commands.describe(gangue="Filtra pelo nome da gangue adversária (opcional)")
     async def guerra_historico(
@@ -331,7 +331,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             pn = guerra.get("placar_nemesis", guerra.get("placar_a", 0))
             pi = guerra.get("placar_inimiga", guerra.get("placar_b", 0))
             resultado = "EM ANDAMENTO" if guerra.get("status") == "ativa" else ("CANCELADA" if guerra.get("status") == "cancelada" else (guerra.get("resultado") or _resultado(int(pn), int(pi))))
-            linha = f"**{guerra.get('id', 'SEM-ID')}** · **NÊMESIS {pn} × {pi} {discord.utils.escape_markdown(inimiga)}** — {resultado}"
+            linha = f"**{guerra.get('id', 'SEM-ID')}** · **Chaos Org {pn} × {pi} {discord.utils.escape_markdown(inimiga)}** — {resultado}"
             if guerra.get("prova_url"):
                 linha += f" · [prova]({guerra['prova_url']})"
             linhas.append(linha)
@@ -345,7 +345,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
 
     @app_commands.command(
         name="ranking-gangues",
-        description="Mostra o desempenho da NÊMESIS contra cada gangue registrada.",
+        description="Mostra o desempenho da Chaos Org contra cada gangue registrada.",
     )
     async def guerra_ranking_gangues(self, interaction: discord.Interaction):
         if interaction.guild is None:
@@ -367,9 +367,9 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
                 int(guerra.get("placar_nemesis", guerra.get("placar_a", 0))),
                 int(guerra.get("placar_inimiga", guerra.get("placar_b", 0))),
             )
-            if resultado == "VITÓRIA DA NÊMESIS":
+            if resultado == "VITÓRIA DA Chaos Org":
                 item["vitorias"] += 1
-            elif resultado == "DERROTA DA NÊMESIS":
+            elif resultado == "DERROTA DA Chaos Org":
                 item["derrotas"] += 1
             else:
                 item["empates"] += 1
@@ -419,7 +419,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             return
         codigo, agora = uuid.uuid4().hex[:8].upper(), time.time()
         registro = {
-            "id": codigo, "guild_id": interaction.guild.id, "gangue_a": "NÊMESIS",
+            "id": codigo, "guild_id": interaction.guild.id, "gangue_a": "Chaos Org",
             "gangue_b": nome, "gangue_inimiga": nome, "placar_a": 0, "placar_b": 0,
             "placar_nemesis": 0, "placar_inimiga": 0, "resultado": "EM ANDAMENTO",
             "vencedor": None, "prova_url": None, "formato": formato.strip()[:100] if formato else None,
@@ -434,8 +434,8 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             description="**A OPERAÇÃO COMPETITIVA ESTÁ ATIVA**\nO placar será atualizado neste registro até o encerramento oficial.",
             color=COR_NEMESIS, timestamp=discord.utils.utcnow(), rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  COMANDO DE GUERRA")
-        embed.add_field(name="NÊMESIS", value="**0** pontos", inline=True)
+        embed.set_author(name="Chaos Org  /  COMANDO DE GUERRA")
+        embed.add_field(name="Chaos Org", value="**0** pontos", inline=True)
         embed.add_field(name="ADVERSÁRIA", value=f"**{discord.utils.escape_markdown(nome)[:100]}**\n**0** pontos", inline=True)
         embed.add_field(name="ESTADO", value="🟢 EM ANDAMENTO", inline=True)
         embed.add_field(name="CÓDIGO OPERACIONAL", value=f"`{codigo}`", inline=True)
@@ -455,7 +455,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
         await interaction.followup.send(f"Guerra aberta contra **{discord.utils.escape_markdown(nome)}**. Código: **{codigo}**. Use /guerra-placar para atualizar e /guerra-encerrar ao finalizar.", ephemeral=True)
 
     @app_commands.command(name="placar", description="Atualiza o placar de uma guerra em andamento.")
-    @app_commands.describe(codigo="Código da guerra ativa", placar_nemesis="Placar atual da NÊMESIS", placar_inimiga="Placar atual da gangue adversária", observacoes="Observação opcional")
+    @app_commands.describe(codigo="Código da guerra ativa", placar_nemesis="Placar atual da Chaos Org", placar_inimiga="Placar atual da gangue adversária", observacoes="Observação opcional")
     @lideranca_only()
     async def guerra_placar(self, interaction: discord.Interaction, codigo: str, placar_nemesis: app_commands.Range[int, 0, 9999], placar_inimiga: app_commands.Range[int, 0, 9999], observacoes: str = None):
         if interaction.guild is None:
@@ -495,8 +495,8 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             description="O registro da guerra foi atualizado. O histórico das alterações continua preservado.",
             color=COR_NEMESIS, timestamp=discord.utils.utcnow(), rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  COMANDO DE GUERRA")
-        embed.add_field(name="NÊMESIS", value=f"**{placar_nemesis}** pontos", inline=True)
+        embed.set_author(name="Chaos Org  /  COMANDO DE GUERRA")
+        embed.add_field(name="Chaos Org", value=f"**{placar_nemesis}** pontos", inline=True)
         embed.add_field(name="ADVERSÁRIA", value=f"**{discord.utils.escape_markdown(nome)[:100]}**\n**{placar_inimiga}** pontos", inline=True)
         embed.add_field(name="ESTADO", value="🟢 EM ANDAMENTO", inline=True)
         embed.add_field(name="CÓDIGO OPERACIONAL", value=f"`{registro['id']}`", inline=True)
@@ -527,7 +527,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
         await interaction.followup.send(f"Placar da guerra {registro['id']} atualizado. O histórico das alterações foi preservado.", ephemeral=True)
 
     @app_commands.command(name="encerrar", description="Encerra uma guerra ativa e publica o resultado definitivo.")
-    @app_commands.describe(codigo="Código da guerra ativa", placar_nemesis="Placar final da NÊMESIS", placar_inimiga="Placar final da gangue adversária", prova_url="Link da prova (opcional)", observacoes="Observações finais (opcional)")
+    @app_commands.describe(codigo="Código da guerra ativa", placar_nemesis="Placar final da Chaos Org", placar_inimiga="Placar final da gangue adversária", prova_url="Link da prova (opcional)", observacoes="Observações finais (opcional)")
     @lideranca_only()
     async def guerra_encerrar(self, interaction: discord.Interaction, codigo: str, placar_nemesis: app_commands.Range[int, 0, 9999], placar_inimiga: app_commands.Range[int, 0, 9999], prova_url: str = None, observacoes: str = None):
         if interaction.guild is None:
@@ -553,7 +553,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
         registro["placar_a"] = registro["placar_nemesis"] = int(placar_nemesis)
         registro["placar_b"] = registro["placar_inimiga"] = int(placar_inimiga)
         registro["resultado"] = resultado
-        registro["vencedor"] = "NÊMESIS" if placar_nemesis > placar_inimiga else (nome if placar_inimiga > placar_nemesis else "Empate")
+        registro["vencedor"] = "Chaos Org" if placar_nemesis > placar_inimiga else (nome if placar_inimiga > placar_nemesis else "Empate")
         registro["prova_url"] = prova_url.strip() if prova_url else registro.get("prova_url")
         if observacoes and observacoes.strip():
             registro["observacoes_finais"] = observacoes.strip()[:800]
@@ -565,8 +565,8 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             color=COR_NEMESIS if placar_nemesis >= placar_inimiga else 0x555555,
             timestamp=discord.utils.utcnow(), rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  ARQUIVO DE CONFRONTOS")
-        embed.add_field(name="NÊMESIS", value=f"**{placar_nemesis}** pontos", inline=True)
+        embed.set_author(name="Chaos Org  /  ARQUIVO DE CONFRONTOS")
+        embed.add_field(name="Chaos Org", value=f"**{placar_nemesis}** pontos", inline=True)
         embed.add_field(name="ADVERSÁRIA", value=f"**{discord.utils.escape_markdown(nome)[:100]}**\n**{placar_inimiga}** pontos", inline=True)
         embed.add_field(name="VENCEDOR", value=f"**{discord.utils.escape_markdown(registro['vencedor'])[:150]}**", inline=False)
         embed.add_field(name="CÓDIGO OPERACIONAL", value=f"`{registro['id']}`", inline=True)
@@ -628,7 +628,7 @@ class Guerras(commands.GroupCog, group_name="guerra", group_description="Guerras
             nome = guerra.get("gangue_inimiga", guerra.get("gangue_b", "Gangue desconhecida"))
             pn = guerra.get("placar_nemesis", guerra.get("placar_a", 0))
             pi = guerra.get("placar_inimiga", guerra.get("placar_b", 0))
-            linhas.append(f"**{guerra.get('id', 'SEM-ID')}** — NÊMESIS **{pn} × {pi}** **{discord.utils.escape_markdown(nome)}**")
+            linhas.append(f"**{guerra.get('id', 'SEM-ID')}** — Chaos Org **{pn} × {pi}** **{discord.utils.escape_markdown(nome)}**")
         embed = criar_embed(title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ GUERRAS EM ANDAMENTO", description="\n".join(linhas), color=COR_NEMESIS)
         embed.set_footer(text=f"{len(ativas)} guerra(s) ativa(s)")
         await interaction.response.send_message(embed=embed, ephemeral=True)
