@@ -35,7 +35,7 @@ ABAS = (
     ("competitivo", "⚔️ Competitivo", "XP, progressão, guerras e estatísticas de combate."),
     ("moderacao", "🛡️ Moderação", "Punições registradas e ocorrências de segurança."),
     ("atividade", "◷ Monitoramento", "Entradas, saídas, voz e alterações relevantes do membro."),
-    ("registros", "📚 Linha do tempo", "Eventos relevantes registrados nos sistemas da NÊMESIS."),
+    ("registros", "📚 Linha do tempo", "Eventos relevantes registrados nos sistemas da Chaos Org."),
 )
 
 
@@ -236,10 +236,10 @@ def _embed_geral(d: dict) -> discord.Embed:
     presente = d["membro_presente"]
 
     embed = criar_embed(
-        f"✦・ NÊMESIS — DOSSIÊ INDIVIDUAL ・✦",
+        f"✦・ Chaos Org — DOSSIÊ INDIVIDUAL ・✦",
         f"**{discord.utils.escape_markdown(membro.display_name if isinstance(membro, discord.Member) else membro.name)}**\n`{membro.id}` · {'🟢 Membro atual' if presente else '⚫ Não está mais no servidor'}",
         cor=0x9F2035,
-        rodape="NÊMESIS • CENTRAL DE HISTÓRICO • ACESSO ADMINISTRATIVO",
+        rodape="Chaos Org • CENTRAL DE HISTÓRICO • ACESSO ADMINISTRATIVO",
     )
     embed.set_thumbnail(url=membro.display_avatar.url)
 
@@ -261,7 +261,7 @@ def _embed_geral(d: dict) -> discord.Embed:
     rank_nome = ranks.get(_inteiro(rank_no, -1), "Não definido")
     embed.add_field(name="◈ PROGRESSÃO ORGANIZACIONAL", value=f"**Rank:** {rank_nome}\n**XP:** {xp_org:,}\n**Mensagens válidas:** {_inteiro(progressao.get('mensagens')):,}\n**Missões aprovadas:** {_inteiro(progressao.get('missoes'))}\n**Guerras registradas:** {_inteiro(progressao.get('guerras'))}".replace(",", "."), inline=True)
     embed.add_field(name="◈ ATIVIDADE COMPETITIVA", value=f"**Vitórias:** {_inteiro(perfil.get('vitorias'))}\n**Derrotas:** {_inteiro(perfil.get('derrotas'))}\n**Empates:** {_inteiro(perfil.get('empates'))}\n**Kills / Deaths:** {_inteiro(perfil.get('kills'))} / {_inteiro(perfil.get('deaths'))}\n**MVPs:** {_inteiro(perfil.get('mvps'))}", inline=True)
-    embed.add_field(name="◈ PARTICIPAÇÃO NA NÊMESIS", value=f"**Provas vinculadas:** {resumo['total']}\n**Aprovadas:** {resumo['aprovadas']} · **Pendentes:** {resumo['pendentes']} · **Recusadas:** {resumo['rejeitadas']}\n**Punições registradas:** {len(d['punicoes'])}\n**Registros relevantes:** {len(d['eventos'])}", inline=False)
+    embed.add_field(name="◈ PARTICIPAÇÃO NA Chaos Org", value=f"**Provas vinculadas:** {resumo['total']}\n**Aprovadas:** {resumo['aprovadas']} · **Pendentes:** {resumo['pendentes']} · **Recusadas:** {resumo['rejeitadas']}\n**Punições registradas:** {len(d['punicoes'])}\n**Registros relevantes:** {len(d['eventos'])}", inline=False)
     embed.add_field(name="◈ RECRUTAMENTO", value=(f"**Convidado por:** <@{d['convidador_id']}>" if d["convidador_id"] else "**Convidador:** Não identificado") + f"\n**Convidados ativos atribuídos:** {len(d['convidados_ativos'])}", inline=True)
     embed.add_field(name="◈ REGISTRO DE DADOS", value="As informações são consolidadas dos sistemas e registros atualmente disponíveis. Um campo sem registro não significa que a ação nunca ocorreu.", inline=False)
     return embed
@@ -269,7 +269,7 @@ def _embed_geral(d: dict) -> discord.Embed:
 
 def _embed_missoes(d: dict) -> discord.Embed:
     resumo = d["resumo_missoes"]
-    embed = criar_embed("🎯 NÊMESIS — MISSÕES E ATIVIDADES", "Histórico de provas em que o membro aparece como autor ou auxiliar.", cor=0x9F2035)
+    embed = criar_embed("🎯 Chaos Org — MISSÕES E ATIVIDADES", "Histórico de provas em que o membro aparece como autor ou auxiliar.", cor=0x9F2035)
     embed.add_field(name="◈ INDICADORES", value=f"**Total:** {resumo['total']}\n**Aprovadas:** {resumo['aprovadas']}\n**Pendentes:** {resumo['pendentes']}\n**Rejeitadas:** {resumo['rejeitadas']}\n**Categorias:** {', '.join(f'{k}: {v}' for k, v in resumo['por_tipo'].items()) or 'Sem registros'}", inline=False)
     linhas = []
     for item in d["revisoes"][:12]:
@@ -281,7 +281,7 @@ def _embed_missoes(d: dict) -> discord.Embed:
         motivo = f"\n↳ Motivo: {discord.utils.escape_markdown(str(item.get('motivo_rejeicao'))[:160])}" if item.get("motivo_rejeicao") else ""
         linhas.append(f"• **{titulo}** · {tipo} · **{status}**\n`{item.get('id', '—')}` · {papel}{responsavel}{motivo}")
     embed.add_field(name="◈ PROTOCOLOS RECENTES", value="\n\n".join(linhas)[:1024] if linhas else "Nenhuma prova vinculada encontrada.", inline=False)
-    embed.set_footer(text="NÊMESIS • Dados obtidos dos protocolos oficiais de revisão")
+    embed.set_footer(text="Chaos Org • Dados obtidos dos protocolos oficiais de revisão")
     return embed
 
 
@@ -292,7 +292,7 @@ def _embed_competitivo(d: dict) -> discord.Embed:
     vitorias, derrotas, empates = _inteiro(p.get("vitorias")), _inteiro(p.get("derrotas")), _inteiro(p.get("empates"))
     kills, deaths = _inteiro(p.get("kills")), _inteiro(p.get("deaths"))
     kdr = round(kills / max(1, deaths), 2)
-    embed = criar_embed("⚔️ NÊMESIS — DOSSIÊ COMPETITIVO", "Desempenho, progressão e marcos competitivos registrados.", cor=0x9F2035)
+    embed = criar_embed("⚔️ Chaos Org — DOSSIÊ COMPETITIVO", "Desempenho, progressão e marcos competitivos registrados.", cor=0x9F2035)
     embed.add_field(name="◈ COMBATE", value=f"**Vitórias:** {vitorias}\n**Derrotas:** {derrotas}\n**Empates:** {empates}\n**K/D:** {kills}/{deaths} · **KDR:** {kdr}\n**MVPs:** {_inteiro(p.get('mvps'))}\n**Sequência atual/máxima:** {_inteiro(p.get('sequencia_atual'))}/{_inteiro(p.get('maior_sequencia'))}", inline=True)
     embed.add_field(name="◈ ORGANIZAÇÃO", value=f"**XP:** {_inteiro(prog.get('xp')):,}\n**Rank nº:** {prog.get('rank_no', '—')}\n**Mensagens:** {_inteiro(prog.get('mensagens'))}\n**Missões aprovadas:** {_inteiro(prog.get('missoes'))}\n**Guerras registradas:** {_inteiro(prog.get('guerras'))}".replace(",", "."), inline=True)
     xp_comp = _inteiro(comp.get("xp", comp.get("xp_temporada")))
@@ -305,7 +305,7 @@ def _embed_competitivo(d: dict) -> discord.Embed:
 def _embed_conquistas(d: dict) -> discord.Embed:
     desbloqueadas = d["conquistas"]
     temporadas = d["temporadas"]
-    embed = criar_embed("🏅 NÊMESIS — CONQUISTAS E DISTINÇÕES", "Marcos individuais e resultados sazonais preservados.", cor=0x9F2035)
+    embed = criar_embed("🏅 Chaos Org — CONQUISTAS E DISTINÇÕES", "Marcos individuais e resultados sazonais preservados.", cor=0x9F2035)
     from utils.conquistas import CATALOGO_POR_ID
     linhas = []
     for identificador, registro in sorted(desbloqueadas.items(), key=lambda item: _timestamp(item[1].get("desbloqueada_em")), reverse=True):
@@ -320,7 +320,7 @@ def _embed_conquistas(d: dict) -> discord.Embed:
 def _embed_moderacao(d: dict) -> discord.Embed:
     punicoes = d["punicoes"]
     eventos = [x for x in d["eventos"] if x["categoria"] in {"moderacao", "automod"}]
-    embed = criar_embed("🛡️ NÊMESIS — HISTÓRICO DE MODERAÇÃO", "Registro administrativo de medidas e ocorrências vinculadas ao membro.", cor=0x9F2035)
+    embed = criar_embed("🛡️ Chaos Org — HISTÓRICO DE MODERAÇÃO", "Registro administrativo de medidas e ocorrências vinculadas ao membro.", cor=0x9F2035)
     linhas = []
     for item in punicoes[:15]:
         tipo = str(item.get("tipo") or "Ação").upper()
@@ -330,7 +330,7 @@ def _embed_moderacao(d: dict) -> discord.Embed:
     embed.add_field(name=f"◈ PUNIÇÕES REGISTRADAS ({len(punicoes)})", value="\n\n".join(linhas)[:1024] if linhas else "Nenhuma punição encontrada no banco de punições.", inline=False)
     recentes = [f"• **{x['titulo']}** · {x['categoria']} · {_data(x['timestamp'])}" for x in eventos[:10]]
     embed.add_field(name=f"◈ OCORRÊNCIAS AUTOMÁTICAS E ADMINISTRATIVAS ({len(eventos)})", value="\n".join(recentes)[:1024] if recentes else "Nenhuma ocorrência adicional localizada nos registros recentes.", inline=False)
-    embed.set_footer(text="NÊMESIS • Consulta restrita à liderança autorizada")
+    embed.set_footer(text="Chaos Org • Consulta restrita à liderança autorizada")
     return embed
 
 
@@ -342,7 +342,7 @@ def _embed_mensagens(d: dict, pagina: int = 0) -> discord.Embed:
     pagina = max(0, min(int(pagina), paginas - 1))
     inicio = pagina * por_pagina
     embed = criar_embed(
-        "💬 NÊMESIS — HISTÓRICO DE MENSAGENS",
+        "💬 Chaos Org — HISTÓRICO DE MENSAGENS",
         f"Mensagens registradas nos últimos 30 dias (limite de 500) · {total} registro(s) · Página {pagina + 1}/{paginas}.",
         cor=0x9F2035,
     )
@@ -370,13 +370,13 @@ def _embed_mensagens(d: dict, pagina: int = 0) -> discord.Embed:
         embed.add_field(name=f"{selo} · {data}{canal}", value=valor[:1024], inline=False)
     if not mensagens:
         embed.description += "\n\nNenhuma mensagem foi capturada ainda. O monitoramento começa após a implantação; mensagens antigas não podem ser recuperadas pelo Discord."
-    embed.set_footer(text="NÊMESIS • Até 500 mensagens / 30 dias • Consulta restrita à liderança")
+    embed.set_footer(text="Chaos Org • Até 500 mensagens / 30 dias • Consulta restrita à liderança")
     return embed
 
 
 def _embed_atividade(d: dict) -> discord.Embed:
     eventos = sorted(d.get("atividade", {}).get("eventos", []), key=lambda x: _timestamp(x.get("timestamp")), reverse=True)
-    embed = criar_embed("◷ NÊMESIS — MONITORAMENTO DE ATIVIDADE", f"Eventos individuais capturados nos últimos 30 dias · {len(eventos)} registro(s).", cor=0x9F2035)
+    embed = criar_embed("◷ Chaos Org — MONITORAMENTO DE ATIVIDADE", f"Eventos individuais capturados nos últimos 30 dias · {len(eventos)} registro(s).", cor=0x9F2035)
     linhas = []
     for item in eventos[:18]:
         tipo = discord.utils.escape_markdown(str(item.get("tipo", "atividade")).replace("_", " ").title())
@@ -384,13 +384,13 @@ def _embed_atividade(d: dict) -> discord.Embed:
         linhas.append(f"• **{tipo}** · {_data(_timestamp(item.get('timestamp')))}\n↳ {descricao}")
     embed.add_field(name="◈ ATIVIDADES RECENTES", value="\n\n".join(linhas)[:4000] if linhas else "Nenhum evento de atividade foi capturado ainda.", inline=False)
     embed.add_field(name="◈ COBERTURA", value="Entradas e saídas; mudanças de presença e jogos; apelidos e identidade; impulsionamento; timeouts; entradas, saídas e estados de voz; banimentos e desbanimentos. O monitoramento de mensagens e anexos permanece nos registros de comunicação, fora do Arquivo de Membros. Captura iniciada após a implantação, com retenção de 30 dias e limites de armazenamento. Não inclui DMs, atividade fora do servidor nem histórico anterior à ativação.", inline=False)
-    embed.set_footer(text="NÊMESIS • Retenção de 30 dias • Consulta restrita à liderança")
+    embed.set_footer(text="Chaos Org • Retenção de 30 dias • Consulta restrita à liderança")
     return embed
 
 
 def _embed_registros(d: dict) -> discord.Embed:
     eventos = d["eventos"]
-    embed = criar_embed("📚 NÊMESIS — LINHA DO TEMPO INDIVIDUAL", "Eventos localizados nos tópicos privados do Registro Global.", cor=0x9F2035)
+    embed = criar_embed("📚 Chaos Org — LINHA DO TEMPO INDIVIDUAL", "Eventos localizados nos tópicos privados do Registro Global.", cor=0x9F2035)
     linhas = []
     for item in eventos[:18]:
         titulo = discord.utils.escape_markdown(item["titulo"][:100])
@@ -415,7 +415,7 @@ def _embed_registros(d: dict) -> discord.Embed:
         for indice, bloco in enumerate(blocos[:4], start=1):
             embed.add_field(name=f"◈ EVENTOS LOCALIZADOS · {indice}/{min(len(blocos), 4)}", value=bloco[:1024], inline=False)
     embed.add_field(name="◈ COBERTURA DA CONSULTA", value=f"Foram consultadas até 40 mensagens recentes em cada uma das {len(CATEGORIAS_HISTORICO)} categorias individuais configuradas. Os bancos de missões, punições e progressão são consultados separadamente e não dependem deste limite.", inline=False)
-    embed.set_footer(text="NÊMESIS • Linha do tempo baseada nos registros efetivamente disponíveis")
+    embed.set_footer(text="Chaos Org • Linha do tempo baseada nos registros efetivamente disponíveis")
     return embed
 
 

@@ -1,4 +1,4 @@
-"""Centraliza os registros operacionais da NÊMESIS em tópicos permanentes de Fórum."""
+"""Centraliza os registros operacionais da Chaos Org em tópicos permanentes de Fórum."""
 from __future__ import annotations
 
 import asyncio
@@ -30,7 +30,7 @@ CARGOS_ACESSO_IDS = {
 # Estrutura enxuta: cada assunto tem um único destino canônico.
 # Os nomes antigos continuam aceitos pelos cogs durante a migração.
 CATEGORIAS = {
-    "administracao": ("👑・Central de Administração", "Decisões administrativas, permissões, configurações e diretrizes oficiais da NÊMESIS."),
+    "administracao": ("👑・Central de Administração", "Decisões administrativas, permissões, configurações e diretrizes oficiais da Chaos Org."),
     "historico_membros": ("👥・Arquivo de Membros", "Entradas, saídas e ocorrências individuais essenciais. Não recebe mensagens, cargos ou conquistas."),
     "moderacao": ("⚖️・Tribunal de Moderação", "Advertências, timeouts, expulsões, banimentos e decisões da equipe."),
     "seguranca": ("🛡️・Muralha de Segurança", "AutoMod, Anti-Raid, filtros, incidentes, bloqueios e falhas de proteção."),
@@ -45,7 +45,7 @@ CATEGORIAS = {
     "sugestoes": ("📋・Sugestões e Ideias", "Sugestões recebidas, votos, decisões e resultados."),
 }
 
-# Paleta NÊMESIS: carmesim escuro, vermelho profundo e preto.
+# Paleta Chaos Org: carmesim escuro, vermelho profundo e preto.
 # Tons próximos diferenciam as áreas sem descaracterizar a identidade visual.
 CORES_CATEGORIAS = {
     "administracao": 0xB3263E,
@@ -135,8 +135,8 @@ def _embed_cabecalho_topico(nome: str, descricao: str) -> discord.Embed:
     embed = discord.Embed(
         title=nome,
         description=(
-            "**REGISTRO OFICIAL DA NÊMESIS**\n"
-            "Área de consulta dos registros operacionais da NÊMESIS. "
+            "**REGISTRO OFICIAL DA Chaos Org**\n"
+            "Área de consulta dos registros operacionais da Chaos Org. "
             "As ocorrências são organizadas por assunto neste mesmo tópico."
         ),
         color=next((cor for chave, cor in CORES_CATEGORIAS.items() if CATEGORIAS[chave][0] == nome), 0x8B1E2D),
@@ -163,12 +163,12 @@ def _embed_cabecalho_topico(nome: str, descricao: str) -> discord.Embed:
     embed.add_field(
         name="Acesso e integridade",
         value=(
-            "Fórum restrito aos cargos autorizados da NÊMESIS. "
+            "Fórum restrito aos cargos autorizados da Chaos Org. "
             "O cabeçalho é mantido pelo Shinku; as ocorrências são acrescentadas abaixo."
         ),
         inline=False,
     )
-    embed.set_footer(text="NÊMESIS • Registro Global")
+    embed.set_footer(text="Chaos Org • Registro Global")
     return embed
 
 
@@ -272,7 +272,7 @@ async def _obter_topico(
                     name=nome,
                     archived=False,
                     locked=False,
-                    reason="Reorganização dos registros da NÊMESIS; preservação do histórico existente",
+                    reason="Reorganização dos registros da Chaos Org; preservação do histórico existente",
                 )
                 await _salvar_id(forum.guild.id, categoria, thread_salva.id)
                 await _atualizar_cabecalho_topico(thread_salva, nome, descricao)
@@ -290,7 +290,7 @@ async def _obter_topico(
             name=nome,
             embed=inicial,
             auto_archive_duration=10080,
-            reason="Provisionamento de categoria canônica do Registro Global NÊMESIS",
+            reason="Provisionamento de categoria canônica do Registro Global Chaos Org",
             allowed_mentions=discord.AllowedMentions.none(),
         )
         thread = criado.thread
@@ -305,7 +305,7 @@ async def _obter_topico(
 
 async def obter_topico(guild: discord.Guild, categoria: str) -> discord.Thread:
     if guild.id != GUILD_NEMESIS_ID:
-        raise ValueError("O Registro Global só está configurado para a NÊMESIS.")
+        raise ValueError("O Registro Global só está configurado para a Chaos Org.")
     canal = guild.get_channel(CANAL_REGISTRO_GLOBAL_ID)
     if canal is None:
         canal = await guild.fetch_channel(CANAL_REGISTRO_GLOBAL_ID)
@@ -456,7 +456,7 @@ async def _executar_migracao_destrutiva(forum: discord.ForumChannel) -> int | No
         for thread in topicos.values():
             try:
                 await thread.delete(
-                    reason="Migração única e autorizada do Registro Global NÊMESIS para a nova estrutura oficial",
+                    reason="Migração única e autorizada do Registro Global Chaos Org para a nova estrutura oficial",
                 )
                 apagados += 1
                 await asyncio.sleep(0.25)
@@ -494,7 +494,7 @@ async def garantir_topicos(guild: discord.Guild) -> dict[str, int]:
     if canal is None:
         canal = await guild.fetch_channel(CANAL_REGISTRO_GLOBAL_ID)
     if not isinstance(canal, discord.ForumChannel) or canal.guild.id != guild.id:
-        raise TypeError("O destino configurado não é o Fórum de Registro Global da NÊMESIS.")
+        raise TypeError("O destino configurado não é o Fórum de Registro Global da Chaos Org.")
     await configurar_permissoes(canal)
     validar_privacidade(canal)
 
@@ -599,9 +599,9 @@ async def registrar(
         if registro.timestamp is None:
             registro.timestamp = datetime.now(timezone.utc)
         if not registro.author.name:
-            registro.set_author(name="NÊMESIS | Registro Global")
+            registro.set_author(name="Chaos Org | Registro Global")
         if not registro.footer.text:
-            registro.set_footer(text=f"◈ NÊMESIS • REGISTRO GLOBAL • {CATEGORIAS[categoria][0]}")
+            registro.set_footer(text=f"◈ Chaos Org • REGISTRO GLOBAL • {CATEGORIAS[categoria][0]}")
         if isinstance(view, discord.ui.LayoutView):
             # Components V2 não podem coexistir com embeds tradicionais.
             # A LayoutView já deve conter o resumo e os controles no mesmo cartão.
