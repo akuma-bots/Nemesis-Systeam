@@ -1,4 +1,4 @@
-"""Temporadas independentes para o sistema de missões da NÊMESIS.
+"""Temporadas independentes para o sistema de missões da Chaos Org.
 
 A pontuação sazonal é derivada exclusivamente das revisões oficiais aprovadas.
 Este módulo não altera perfis, XP permanente, patentes, cargos ou ranking global.

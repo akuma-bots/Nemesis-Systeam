@@ -157,7 +157,7 @@ class TestConversaoDeComunicados(unittest.IsolatedAsyncioTestCase):
                     break
                 texto_conteudo.append(item.content)
         self.assertEqual("".join(texto_conteudo), texto_embed_components_v2(embed))
-        self.assertEqual(textos[-1], "-# Chaos Org • INTEGRAÇÃO OFICIAL • NΞM")
+        self.assertEqual(textos[-1], "-# Chaos Org • INTEGRAÇÃO OFICIAL • CØS")
         self.assertTrue(all(len(texto) <= 3900 for texto in textos))
         self.assertTrue(any(
             isinstance(item, discord.ui.MediaGallery)

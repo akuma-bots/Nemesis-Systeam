@@ -10,12 +10,12 @@ ARQUIVO_TICKETS = "tickets.json"
 
 
 TIPOS_PADRAO = [
-    {"valor": "recrutamento", "label": "Recrutamento e Admissão", "emoji": "✦", "descricao": "Inicie sua candidatura e obtenha informações sobre os critérios e as etapas de admissão à NÊMESIS.", "usa_ia": False},
+    {"valor": "recrutamento", "label": "Recrutamento e Admissão", "emoji": "✦", "descricao": "Inicie sua candidatura e obtenha informações sobre os critérios e as etapas de admissão à Chaos Org.", "usa_ia": False},
     {"valor": "hierarquia_divisoes", "label": "Estrutura e Hierarquia", "emoji": "♟️", "descricao": "Solicite esclarecimentos sobre a estrutura organizacional, atribuições, divisões e progressão hierárquica.", "usa_ia": False},
     {"valor": "conflitos_denuncias", "label": "Integridade e Conduta", "emoji": "⚖️", "descricao": "Comunique ocorrências, violações de normas ou questões disciplinares para análise da administração.", "usa_ia": False},
     {"valor": "guerras_desafios", "label": "Operações Competitivas", "emoji": "⚔️", "descricao": "Encaminhe assuntos relacionados a confrontos oficiais, desafios, disputas PvP e ", "usa_ia": False},
     {"valor": "suporte_comunidade", "label": "Assistência Técnica", "emoji": "⚙️", "descricao": "Solicite suporte para questões técnicas relacionadas ao servidor, ao bot, aos comandos e aos sistemas da comunidade.", "usa_ia": False},
-    {"valor": "aliancas", "label": "Relações Institucionais", "emoji": "🤝", "descricao": "Apresente propostas de aliança, parceria ou cooperação institucional entre a NÊMESIS e outras comunidades.", "usa_ia": False},
+    {"valor": "aliancas", "label": "Relações Institucionais", "emoji": "🤝", "descricao": "Apresente propostas de aliança, parceria ou cooperação institucional entre a Chaos Org e outras comunidades.", "usa_ia": False},
     {"valor": "eventos_atividades", "label": "Gestão de Eventos", "emoji": "🏆", "descricao": "Solicite informações e assistência referentes à organização, às inscrições e à participação em eventos e competições oficiais.", "usa_ia": False},
     {"valor": "sugestoes_projetos", "label": "Premiações e Reconhecimentos", "emoji": "🎖️", "descricao": "Solicite a validação, a atribuição ou o resgate de premiações obtidas em eventos, competições, sorteios e campanhas oficiais.", "usa_ia": False},
 ]

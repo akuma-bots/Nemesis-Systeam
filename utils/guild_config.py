@@ -7,7 +7,7 @@ ARQUIVO = "guild_configs.json"
 
 
 # ============================================================
-# CONFIGURAÇÃO OFICIAL DA NÊMESIS
+# CONFIGURAÇÃO OFICIAL DA Chaos Org
 # ============================================================
 
 PADRAO = {
@@ -316,7 +316,7 @@ async def remover_contador(
 
 
 # ============================================================
-# AUTORIZAÇÃO CENTRAL DA NÊMESIS
+# AUTORIZAÇÃO CENTRAL DA Chaos Org
 # ============================================================
 
 import discord

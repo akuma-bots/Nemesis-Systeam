@@ -56,13 +56,13 @@ FORMULARIOS_AUTOMATICOS = [
     {
         "chave": "staff",
         "nome": "Inscrição para Staff",
-        "titulo": "NÊMESIS — RECRUTAMENTO STAFF",
+        "titulo": "Chaos Org — RECRUTAMENTO STAFF",
         "descricao": (
-            "CENTRAL DE RECRUTAMENTO • EQUIPE NÊMESIS\n\n"
+            "CENTRAL DE RECRUTAMENTO • EQUIPE Chaos Org\n\n"
             "Use este formulário para se candidatar à equipe. Responda com clareza e sinceridade; "
             "candidaturas incompletas ou com informações falsas poderão ser recusadas.\n\n"
             "REQUISITOS\n"
-            "— Conhecer e respeitar as regras da NÊMESIS.\n"
+            "— Conhecer e respeitar as regras da Chaos Org.\n"
             "— Ter postura respeitosa, responsabilidade e maturidade.\n"
             "— Conseguir agir com imparcialidade em conflitos.\n"
             "— Ter disponibilidade para auxiliar a comunidade.\n\n"
@@ -71,13 +71,13 @@ FORMULARIOS_AUTOMATICOS = [
         "canal_id": 1563995880623841338,
         "paginas": [[
             "Qual é o seu nome ou apelido e qual é seu usuário do Discord?",
-            "Por que deseja fazer parte da Staff da NÊMESIS?",
+            "Por que deseja fazer parte da Staff da Chaos Org?",
             "Qual é sua disponibilidade semanal para ajudar no servidor?",
             "Você já teve experiência com moderação ou organização? Explique.",
             "Como agiria se dois membros começassem uma discussão séria?"
         ], [
             "Quais são seus principais pontos fortes para atuar na equipe?",
-            "Em quais áreas da NÊMESIS você acredita que poderia contribuir melhor?",
+            "Em quais áreas da Chaos Org você acredita que poderia contribuir melhor?",
             "Como reagiria se um membro desrespeitasse uma regra mesmo após ser alertado?",
             "O que faria se um amigo próximo cometesse uma infração?",
             "Como lidaria com uma situação em que não soubesse qual decisão tomar?"
@@ -92,16 +92,16 @@ FORMULARIOS_AUTOMATICOS = [
             "O que faria se percebesse que outro membro da equipe está abusando das permissões?",
             "Como manteria a confidencialidade de informações internas e denúncias?",
             "Que iniciativa concreta você proporia para melhorar a experiência dos membros?",
-            "Por que a liderança deveria confiar a você responsabilidades dentro da NÊMESIS?"
+            "Por que a liderança deveria confiar a você responsabilidades dentro da Chaos Org?"
         ]],
     },
     {
         "chave": "ingresso_nemesis",
-        "nome": "Inscrição para NÊMESIS",
-        "titulo": "NÊMESIS — PROCESSO DE INGRESSO",
+        "nome": "Inscrição para Chaos Org",
+        "titulo": "Chaos Org — PROCESSO DE INGRESSO",
         "descricao": (
-            "CENTRAL DE RECRUTAMENTO • 𓂀 NÊMESIS - ORG\n\n"
-            "Este é o processo oficial para quem deseja ingressar na NÊMESIS. "
+            "CENTRAL DE RECRUTAMENTO • 𓂀 Chaos Org - ORG\n\n"
+            "Este é o processo oficial para quem deseja ingressar na Chaos Org. "
             "Responda às 15 perguntas com sinceridade e atenção. "
             "A candidatura será analisada pela administração; o envio não garante aprovação.\n\n"
             "REQUISITOS\n"
@@ -117,11 +117,11 @@ FORMULARIOS_AUTOMATICOS = [
             {
                 "titulo": "Identificação e disponibilidade",
                 "perguntas": [
-                    {"texto": "Como gostaria de ser chamado dentro da NÊMESIS?", "tipo": "texto"},
+                    {"texto": "Como gostaria de ser chamado dentro da Chaos Org?", "tipo": "texto"},
                     {"texto": "Qual é seu usuário Roblox e o link do seu perfil?", "tipo": "texto"},
                     {"texto": "Há quanto tempo participa de grupos ou organizações no Roblox? Conte brevemente.", "tipo": "paragrafo"},
                     {"texto": "Qual é sua disponibilidade semanal e em quais horários costuma estar ativo?", "tipo": "paragrafo"},
-                    {"texto": "Por que deseja ingressar na NÊMESIS?", "tipo": "paragrafo"}
+                    {"texto": "Por que deseja ingressar na Chaos Org?", "tipo": "paragrafo"}
                 ]
             },
             {
@@ -138,7 +138,7 @@ FORMULARIOS_AUTOMATICOS = [
                         "opcoes": ["Combate", "Reconhecimento", "Defesa", "Suporte e organização", "Treinamento", "Ainda estou descobrindo"]
                     },
                     {"texto": "Quais experiências você possui em jogos, combate ou trabalho em equipe?", "tipo": "paragrafo"},
-                    {"texto": "O que você entende sobre o propósito e o funcionamento de uma organização como a NÊMESIS?", "tipo": "paragrafo"},
+                    {"texto": "O que você entende sobre o propósito e o funcionamento de uma organização como a Chaos Org?", "tipo": "paragrafo"},
                     {"texto": "Quais habilidades ou qualidades você pode oferecer à organização?", "tipo": "paragrafo"}
                 ]
             },
@@ -146,9 +146,9 @@ FORMULARIOS_AUTOMATICOS = [
                 "titulo": "Conduta e compromisso",
                 "perguntas": [
                     {"texto": "Como você lida com ordens, regras e a hierarquia de uma organização?", "tipo": "paragrafo"},
-                    {"texto": "Como agiria ao presenciar um conflito entre integrantes da NÊMESIS?", "tipo": "paragrafo"},
+                    {"texto": "Como agiria ao presenciar um conflito entre integrantes da Chaos Org?", "tipo": "paragrafo"},
                     {"texto": "Se discordasse de uma decisão de um superior, como apresentaria sua posição?", "tipo": "paragrafo"},
-                    {"texto": "Como pretende conciliar seus compromissos pessoais com as atividades da NÊMESIS?", "tipo": "paragrafo"},
+                    {"texto": "Como pretende conciliar seus compromissos pessoais com as atividades da Chaos Org?", "tipo": "paragrafo"},
                     {"texto": "Existe algo mais que gostaria que a comissão soubesse sobre você ou sua candidatura?", "tipo": "paragrafo"}
                 ]
             }
@@ -240,8 +240,8 @@ def _embeds_painel(formulario: dict, guild: discord.Guild | None = None, bot: di
             "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"
         )
         sufixo = f" • {indice}/{len(partes)}" if len(partes) > 1 else ""
-        embed = criar_embed(f"✦・ {titulo} ・✦{sufixo}", texto[:4096], cor=0x9F1239, rodape=f"N̷ÊMESIS  •  PROCESSO SELETIVO  •  {estado}")
-        embed.set_author(name="N̷ÊMESIS  /  DEPARTAMENTO DE RECRUTAMENTO")
+        embed = criar_embed(f"✦・ {titulo} ・✦{sufixo}", texto[:4096], cor=0x9F1239, rodape=f"Chaos Org  •  PROCESSO SELETIVO  •  {estado}")
+        embed.set_author(name="Chaos Org  /  DEPARTAMENTO DE RECRUTAMENTO")
         if indice == 1:
             embed.add_field(name="SITUAÇÃO", value=estado, inline=True)
             embed.add_field(name="ETAPAS", value=f"{total_etapas:02d}", inline=True)
@@ -272,7 +272,7 @@ def _embed_central_inscricoes(lista: list, guild: discord.Guild, bot: discord.Cl
     embed = criar_embed(
         "✦・ CENTRAL DE INSCRIÇÕES ・✦",
         "╭━━━━━━━━━━━━━━ ◈ ━━━━━━━━━━━━━━╮\n"
-        "　　　 **N̷ÊMESIS  /  RECRUTAMENTO**\n"
+        "　　　 **Chaos Org  /  RECRUTAMENTO**\n"
         "╰━━━━━━━━━━━━━━ ◈ ━━━━━━━━━━━━━━╯\n\n"
         "Acesse os processos seletivos disponíveis em um único lugar. "
         "Cada formulário possui suas próprias etapas e perguntas.\n\n"
@@ -283,9 +283,9 @@ def _embed_central_inscricoes(lista: list, guild: discord.Guild, bot: discord.Cl
         "Responda com atenção e aguarde a avaliação da comissão responsável.\n"
         "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",
         cor=0x9F1239,
-        rodape=f"N̷ÊMESIS  •  CENTRAL DE RECRUTAMENTO  •  {len(disponiveis)} inscrição(ões) aberta(s)",
+        rodape=f"Chaos Org  •  CENTRAL DE RECRUTAMENTO  •  {len(disponiveis)} inscrição(ões) aberta(s)",
     )
-    embed.set_author(name="N̷ÊMESIS  /  DEPARTAMENTO DE RECRUTAMENTO")
+    embed.set_author(name="Chaos Org  /  DEPARTAMENTO DE RECRUTAMENTO")
     aplicar_identidade_servidor(embed, guild, bot, banner=True)
     return embed
 
@@ -312,7 +312,7 @@ class SeletorInscricaoPublico(discord.ui.Select):
 
     async def callback(self, interaction: discord.Interaction):
         if interaction.guild is None:
-            await interaction.response.send_message("Este seletor só pode ser utilizado dentro do servidor da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este seletor só pode ser utilizado dentro do servidor da Chaos Org.", ephemeral=True)
             return
         formulario_id = self.values[0]
         if formulario_id == "indisponivel":
@@ -420,7 +420,7 @@ def _contar_componentes_aninhados(item) -> int:
 
 def _card_form_view(origem: discord.ui.View, embed: discord.Embed | list[discord.Embed] | None = None,
                     titulo: str = "CENTRAL DE INSCRIÇÕES", descricao: str = "",
-                    marcador: str = "NÊMESIS • Gestão de Inscrições") -> discord.ui.LayoutView:
+                    marcador: str = "Chaos Org • Gestão de Inscrições") -> discord.ui.LayoutView:
     """Mantém conteúdo integral, mídias e controles no mesmo cartão Components V2."""
     layout = discord.ui.LayoutView(timeout=origem.timeout)
     if isinstance(embed, (list, tuple)):
@@ -563,7 +563,7 @@ def _view_central_inscricoes(lista: list, embed: discord.Embed) -> discord.ui.La
         discord.ui.TextDisplay("### ◈ ACESSO AOS PROCESSOS SELETIVOS"),
         discord.ui.ActionRow(seletor),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam"),
     ])
     view.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     return view
@@ -743,7 +743,7 @@ class ModalFormulario(discord.ui.Modal):
                     "Evite enviar outra candidatura enquanto esta estiver pendente."
                 ),
                 cor=0x9F1239,
-                rodape="N̷ÊMESIS  •  CENTRAL DE RECRUTAMENTO",
+                rodape="Chaos Org  •  CENTRAL DE RECRUTAMENTO",
             ),
             ephemeral=True,
         )
@@ -775,9 +775,9 @@ def _embeds_resposta(formulario: dict, resposta: dict, guild: discord.Guild, bot
             f"**PROTOCOLO**　{resposta['id']}\n"
             "**SITUAÇÃO**　🟠 AGUARDANDO AVALIAÇÃO\n"
             f"**DOCUMENTO**　{indice:02d}/{len(blocos):02d}",
-            cor=0x9F1239, rodape=f"N̷ÊMESIS  •  ACESSO RESTRITO  •  {guild.name}",
+            cor=0x9F1239, rodape=f"Chaos Org  •  ACESSO RESTRITO  •  {guild.name}",
         )
-        embed.set_author(name="N̷ÊMESIS  /  COMISSÃO AVALIADORA")
+        embed.set_author(name="Chaos Org  /  COMISSÃO AVALIADORA")
         for numero, (pergunta, resp) in enumerate(bloco, start=(indice - 1) * 20 + 1):
             valor = str(resp if resp is not None else "—").strip() or "—"
             embed.add_field(name=f"〔 {numero:02d} 〕 {str(pergunta or 'Questão')[:245]}", value=valor[:1024], inline=False)
@@ -902,7 +902,7 @@ class ModalAvaliacaoFormulario(discord.ui.Modal):
                 f"**NOTAS**　{' · '.join(str(valor) for valor in valores)}\n\n"
                 f"**JUSTIFICATIVA**\n{self.justificativa.value[:1000]}",
                 cor=0x9F1239,
-                rodape="NÊMESIS • AVALIAÇÃO ESTRUTURADA",
+                rodape="Chaos Org • AVALIAÇÃO ESTRUTURADA",
             ),
             ephemeral=True,
         )
@@ -983,7 +983,7 @@ class ModalDecisaoFormulario(discord.ui.Modal):
             try:
                 await candidato.send(
                     f"{'🎉' if self.aprovado else '❌'} Sua candidatura para **{formulario.get('nome', 'Formulário')}** "
-                    f"foi **{status_texto}** pela administração da NÊMESIS.\n"
+                    f"foi **{status_texto}** pela administração da Chaos Org.\n"
                     f"**Justificativa:** {self.justificativa.value[:1000]}"
                 )
             except (discord.Forbidden, discord.HTTPException):
@@ -1073,7 +1073,7 @@ class FilaCandidaturasView(discord.ui.View):
             f"**PÁGINA**　{self.pagina + 1}/{self.total_paginas}\n\n"
             f"{instrucao}",
             cor=0x9F1239,
-            rodape="NÊMESIS • ACESSO ADMINISTRATIVO",
+            rodape="Chaos Org • ACESSO ADMINISTRATIVO",
         )
 
     def _montar(self):
@@ -1191,13 +1191,13 @@ class SeletorFichaPendente(discord.ui.Select):
             f"**RECEBIDA**　<t:{criado}:F>\n"
             f"**AVALIAÇÕES**　{len(avaliacoes) if isinstance(avaliacoes, list) else 0}",
             cor=0x9F1239,
-            rodape="NÊMESIS • DOSSIÊ RESTRITO • ADMINISTRAÇÃO",
+            rodape="Chaos Org • DOSSIÊ RESTRITO • ADMINISTRAÇÃO",
         )
         anexos = [resumo] + _embeds_resposta(formulario, resposta, interaction.guild, central.cog.bot)
         await interaction.response.send_message(
             view=_card_form_view(
                 _view_resposta(protocolo), anexos[:10],
-                marcador="NÊMESIS • DOSSIÊ DE CANDIDATURA • V2",
+                marcador="Chaos Org • DOSSIÊ DE CANDIDATURA • V2",
             ),
             ephemeral=True,
         )
@@ -1220,7 +1220,7 @@ def _administrador_formularios(
 
 class ModalCriarFormulario(discord.ui.Modal):
     def __init__(self, cog, guild_id: int, usuario_id: int):
-        super().__init__(title="Novo formulário · NÊMESIS")
+        super().__init__(title="Novo formulário · Chaos Org")
         self.cog, self.guild_id, self.usuario_id = cog, guild_id, usuario_id
         self.nome = discord.ui.TextInput(label="Nome interno", placeholder="Ex.: Recrutamento Staff", max_length=100)
         self.titulo = discord.ui.TextInput(label="Título do painel", placeholder="Título exibido aos membros", max_length=200)
@@ -1807,7 +1807,7 @@ class FilaHistoricoView(discord.ui.View):
             f"**PÁGINA**　{self.pagina + 1}/{self.total_paginas}\n\n"
             f"{instrucao}",
             cor=0x9F1239,
-            rodape="NÊMESIS • HISTÓRICO RESTRITO",
+            rodape="Chaos Org • HISTÓRICO RESTRITO",
         )
 
     def _montar(self):
@@ -1906,7 +1906,7 @@ class SeletorFichaHistorica(discord.ui.Select):
             f"**SITUAÇÃO**　{str(resposta.get('status')).upper()}\n"
             f"**RECEBIDA**　<t:{criado}:F>",
             cor=0x9F1239,
-            rodape="NÊMESIS • DOSSIÊ HISTÓRICO • ADMINISTRAÇÃO",
+            rodape="Chaos Org • DOSSIÊ HISTÓRICO • ADMINISTRAÇÃO",
         )
         anexos = [resumo] + _embeds_resposta(formulario, resposta, interaction.guild, central.cog.bot)
         view = discord.ui.View(timeout=120)
@@ -1988,13 +1988,13 @@ class CentralFormulariosView(discord.ui.View):
         if mensagem:
             corpo += f"\n\n{mensagem}"
         return criar_embed(
-            "✦・ CENTRAL DE FORMULÁRIOS — NÊMESIS ・✦",
+            "✦・ CENTRAL DE FORMULÁRIOS — Chaos Org ・✦",
             "╭────────────── ◈ ──────────────╮\n"
             "　　　 **GESTÃO DE PROCESSOS SELETIVOS**\n"
             "╰────────────── ◈ ──────────────╯\n\n"
             + corpo + "\n\nSelecione um formulário ou escolha uma ação nos menus abaixo.",
             cor=0x9F1239,
-            rodape="N̷ÊMESIS  •  ADMINISTRAÇÃO DE FORMULÁRIOS",
+            rodape="Chaos Org  •  ADMINISTRAÇÃO DE FORMULÁRIOS",
         )
 
     async def atualizar(self, interaction: discord.Interaction, mensagem: str | None = None):
@@ -2035,7 +2035,7 @@ class Formularios(commands.Cog):
 
     async def formulario_central(self, interaction: discord.Interaction):
         if interaction.guild is None or not membro_tem_lideranca(interaction.user):
-            await interaction.response.send_message("Acesso restrito à liderança autorizada da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Acesso restrito à liderança autorizada da Chaos Org.", ephemeral=True)
             return
         lista = await formularios.listar_formularios(interaction.guild.id)
         lista.sort(key=lambda item: (bool(item.get("arquivado")), str(item.get("nome", "")).casefold()))
@@ -2050,7 +2050,7 @@ class Formularios(commands.Cog):
         async with _LOCK_PAINÉIS_AUTOMÁTICOS:
             guild = self.bot.get_guild(GUILD_NEMESIS_ID)
             if guild is None:
-                logging.warning("Central de inscrições: servidor NÊMESIS não está disponível.")
+                logging.warning("Central de inscrições: servidor Chaos Org não está disponível.")
                 return
             for definicao in FORMULARIOS_AUTOMATICOS:
                 try:
@@ -2200,7 +2200,7 @@ class Formularios(commands.Cog):
 
         if custom_id.startswith(PREFIXO_CONTINUAR):
             if interaction.guild is None:
-                await interaction.response.send_message("Abra a continuação no servidor da NÊMESIS.", ephemeral=True)
+                await interaction.response.send_message("Abra a continuação no servidor da Chaos Org.", ephemeral=True)
                 return
             partes = custom_id[len(PREFIXO_CONTINUAR):].rsplit(":", 2)
             if len(partes) != 3:
@@ -2229,7 +2229,7 @@ class Formularios(commands.Cog):
 
         if custom_id.startswith(PREFIXO_ABRIR):
             if interaction.guild is None:
-                await interaction.response.send_message("Abra este formulário no servidor da NÊMESIS.", ephemeral=True)
+                await interaction.response.send_message("Abra este formulário no servidor da Chaos Org.", ephemeral=True)
                 return
             formulario_id = custom_id[len(PREFIXO_ABRIR):]
             formulario = await formularios.get_formulario(interaction.guild.id, formulario_id)
@@ -2256,7 +2256,7 @@ class Formularios(commands.Cog):
                 f"**AVALIAÇÕES**　{len(avaliacoes) if isinstance(avaliacoes, list) else 0}\n"
                 f"**DECISÕES**　{len(decisoes) if isinstance(decisoes, list) else 0}",
                 cor=0x9F1239,
-                rodape="NÊMESIS • AUDITORIA DO PROCESSO SELETIVO",
+                rodape="Chaos Org • AUDITORIA DO PROCESSO SELETIVO",
             )
             nomes = {"postura": "Postura", "responsabilidade": "Responsabilidade", "disponibilidade": "Disponibilidade", "imparcialidade": "Imparcialidade", "comunicacao": "Comunicação"}
             for indice, item in enumerate(avaliacoes[-8:] if isinstance(avaliacoes, list) else [], 1):

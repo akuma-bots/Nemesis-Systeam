@@ -45,7 +45,7 @@ TUTORIAIS = {
         "descricao": "Guia de integração para novos integrantes: identidade, cargo inicial, canais e primeiros passos.",
         "passos": [
             "Ao entrar no servidor, o Systeam atribui automaticamente o cargo Visitantes. Se ele não aparecer, aguarde alguns segundos e procure a equipe pelo canal de Atendimento.",
-            "A TAG oficial da organização é NΞM. Ela identifica a Chaos Org e deve ser preservada conforme as orientações da liderança.",
+            "A TAG oficial da organização é CØS. Ela identifica a Chaos Org e deve ser preservada conforme as orientações da liderança.",
             "Leia o canal Regras (categoria Informações) e acompanhe os comunicados em Anúncios antes de participar das atividades.",
             "Abra Como funciona para entender a proposta da organização e Divisões para conhecer a estrutura das equipes.",
             "Consulte #Sistemas: o painel Central de Tutoriais possui um seletor para abrir o guia de cada sistema sem precisar de comando.",
@@ -367,7 +367,7 @@ def _texto_embed_tutorial(embed: discord.Embed, titulo_padrao: str = "GUIA Chaos
 def _embed_tutorial(chave: str, guild: discord.Guild | None = None, bot: commands.Bot | None = None) -> discord.Embed:
     tutorial = TUTORIAIS[chave]
     embed = criar_embed(
-        title=f"𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ GUIA / {tutorial['titulo'].upper()}",
+        title=f"Chaos Org ━ GUIA / {tutorial['titulo'].upper()}",
         description=f"⟡・{tutorial['descricao']}\n\nSiga as orientações abaixo e utilize somente os fluxos oficiais.",
         color=COR_PRIMARIA,
     )

@@ -272,7 +272,7 @@ def _componentes_sao_agenda(componentes) -> bool:
         componente = pendentes.pop()
         if getattr(componente, "custom_id", None) == _AGENDA_ATUALIZAR_CUSTOM_ID:
             return True
-        if "NEMESIS_AGENDA_LIVE" in str(getattr(componente, "content", "") or ""):
+        if any(marcador in str(getattr(componente, "content", "") or "") for marcador in ("CHAOS_AGENDA_LIVE", "NEMESIS_AGENDA_LIVE")):
             return True
         pendentes.extend(list(getattr(componente, "children", []) or []))
     return False
@@ -302,7 +302,7 @@ class AgendaLayoutView(discord.ui.LayoutView):
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(AgendaAtualizarButton(cog)),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Chaos Org Systeam • NEMESIS_AGENDA_LIVE"),
+            discord.ui.TextDisplay("-# Chaos Org • Agenda oficial • Chaos Systeam • CØS"),
             accent_colour=0x9F1239,
         ))
 

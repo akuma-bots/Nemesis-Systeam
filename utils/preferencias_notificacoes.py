@@ -1,4 +1,4 @@
-"""Preferências individuais para notificações privadas da NÊMESIS."""
+"""Preferências individuais para notificações privadas da Chaos Org."""
 from utils.storage import carregar, atualizar_json
 
 ARQUIVO = "preferencias_notificacoes.json"

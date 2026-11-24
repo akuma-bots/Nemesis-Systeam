@@ -506,7 +506,7 @@ class Logs(commands.Cog):
         total_membros = member.guild.member_count or 0
         agora = datetime.now(timezone.utc)
         embed = criar_embed(
-            title="✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — NOVA PRESENÇA ・✦",
+            title="✦・ Chaos Org — NOVA PRESENÇA ・✦",
             description=(
                 "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮\n"
                 "     **UMA NOVA JORNADA COMEÇA**\n"
@@ -519,7 +519,7 @@ class Logs(commands.Cog):
             timestamp=agora,
         )
         if member.guild.icon:
-            embed.set_author(name="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  |  CENTRAL DE INTEGRAÇÃO", icon_url=member.guild.icon.url)
+            embed.set_author(name="Chaos Org  |  CENTRAL DE INTEGRAÇÃO", icon_url=member.guild.icon.url)
         embed.set_thumbnail(url=member.display_avatar.url)
         embed.add_field(
             name="◈  IDENTIFICAÇÃO",

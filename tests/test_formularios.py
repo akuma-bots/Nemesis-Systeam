@@ -11,7 +11,7 @@ from utils import formularios as storage_formularios
 
 class TestFormularios(unittest.IsolatedAsyncioTestCase):
     def test_descricao_longa_e_dividida_sem_ultrapassar_limite_do_discord(self):
-        descricao = ("Texto da descrição da NÊMESIS.\n" * 500)
+        descricao = ("Texto da descrição da Chaos Org.\n" * 500)
         embeds = _embeds_painel({
             "id": "teste",
             "titulo_painel": "Formulário de teste",
@@ -43,10 +43,10 @@ class TestFormularios(unittest.IsolatedAsyncioTestCase):
 
     def test_formularios_staff_e_ingresso_nemesis_coexistem_sem_substituicao(self):
         por_nome = {item["nome"]: item for item in cog_formularios.FORMULARIOS_AUTOMATICOS}
-        self.assertEqual(set(por_nome), {"Inscrição para Staff", "Inscrição para NÊMESIS"})
+        self.assertEqual(set(por_nome), {"Inscrição para Staff", "Inscrição para Chaos Org"})
 
         staff = por_nome["Inscrição para Staff"]
-        ingresso = por_nome["Inscrição para NÊMESIS"]
+        ingresso = por_nome["Inscrição para Chaos Org"]
         self.assertEqual(len(cog_formularios._perguntas_flat(staff)), 20)
         self.assertEqual(len(cog_formularios._paginas_modal(staff)), 4)
         self.assertEqual([len(p["perguntas"]) for p in cog_formularios._paginas_modal(staff)], [5, 5, 5, 5])
@@ -93,7 +93,7 @@ class TestFormularios(unittest.IsolatedAsyncioTestCase):
         )
         guild = SimpleNamespace(
             id=1563995879981981817,
-            name="NÊMESIS",
+            name="Chaos Org",
             get_channel=lambda _channel_id: canal,
             fetch_channel=AsyncMock(return_value=canal),
             get_role=lambda _role_id: None,
@@ -180,7 +180,7 @@ class TestFormularios(unittest.IsolatedAsyncioTestCase):
             "respostas": ["Resposta antiga"],
             "itens": [{"pergunta": "Pergunta original", "resposta": "Resposta antiga"}],
         }
-        embeds = _embeds_resposta(formulario, resposta, SimpleNamespace(name="NÊMESIS"))
+        embeds = _embeds_resposta(formulario, resposta, SimpleNamespace(name="Chaos Org"))
         texto = "\n".join(field.name + " " + field.value for embed in embeds for field in embed.fields)
         self.assertIn("Pergunta original", texto)
         self.assertNotIn("Pergunta editada depois", texto)
@@ -375,7 +375,7 @@ class TestFormularios(unittest.IsolatedAsyncioTestCase):
             "autor_id": 123456789,
             "respostas": [f"Resposta {i}" for i in range(61)],
         }
-        guild = SimpleNamespace(name="NÊMESIS")
+        guild = SimpleNamespace(name="Chaos Org")
 
         embeds = _embeds_resposta(formulario, resposta, guild)
 
@@ -443,7 +443,7 @@ class TestFormularios(unittest.IsolatedAsyncioTestCase):
         textos = [
             item.content for item in descendentes
             if isinstance(item, discord.ui.TextDisplay)
-            and item.content != "-# NÊMESIS • Gestão de Inscrições"
+            and item.content != "-# Chaos Org • Gestão de Inscrições"
         ]
         self.assertEqual("".join(textos), esperado)
         self.assertTrue(all(len(texto) <= 4000 for texto in textos))

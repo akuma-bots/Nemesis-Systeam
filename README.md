@@ -17,7 +17,7 @@ O bot é exclusivo do servidor configurado por `NEMESIS_GUILD_ID`. Não é um mo
 - **Painel Administrativo Central:** navegação privada por botões no tópico **Administração** do Registro Global, com visão operacional e atalhos para membros/hierarquia, operações, segurança, infraestrutura e auditoria. A central respeita `membro_tem_lideranca()`, não cria comandos slash e edita a mensagem existente para evitar publicações duplicadas. Detalhes em [docs/PAINEL_ADMINISTRATIVO.md](docs/PAINEL_ADMINISTRATIVO.md).
 - **Conquistas e medalhas:** catálogo automático com critérios verificáveis de progressão, participação, missões e combate; desbloqueios permanentes, recompensas de XP idempotentes, anúncio no canal de conquistas e consulta pelos comandos /conquistas e /perfil.
 - **Roblox:** vínculo por código de verificação, consulta de perfil, identificação de membros pelo nome Roblox e sincronização opcional de cargos por rank.
-- **Integração de novos membros:** mensagem pública e DM de boas-vindas preservam a TAG oficial `NΞM`, apresentam o cargo automático `Visitantes`, mostram os primeiros passos e oferecem botões para os canais essenciais. A DM também mantém o menu de códigos dos jogos.
+- **Integração de novos membros:** mensagem pública e DM de boas-vindas preservam a TAG oficial `CØS`, apresentam o cargo automático `Visitantes`, mostram os primeiros passos e oferecem botões para os canais essenciais. A DM também mantém o menu de códigos dos jogos.
 - **Central de códigos:** comando `/codigos` para abrir a lista interativa de Shigaku, Gakuran e Fistborn a qualquer momento, com recompensas, requisitos, período de referência e fontes.
 - **Tutoriais:** biblioteca interativa no canal `#Sistemas`, com seletor de guias por sistema, consulta privada e navegação entre assuntos.
 - **Avisos e atualizações:** notas automáticas enviadas por DM aos membros inscritos; comunicados privados respeitam a preferência individual e incluem botão de cancelamento. O recebimento das notas automáticas é controlado por um botão diretamente na mensagem privada.
@@ -111,7 +111,7 @@ O workflow é uma primeira barreira de qualidade; não substitui testes funciona
 ## Tutoriais e avisos automáticos
 
 - A central pública de tutoriais é mantida automaticamente no canal `#Sistemas`; o seletor abre cada guia em uma consulta privada. Não existe comando de tutorial.
-- O guia **Começando na Chaos Org** explica a TAG `NΞM`, o cargo automático `Visitantes`, os canais essenciais, a progressão e o fluxo de atendimento.
+- O guia **Começando na Chaos Org** explica a TAG `CØS`, o cargo automático `Visitantes`, os canais essenciais, a progressão e o fluxo de atendimento.
 - As notas automáticas são entregues por DM aos membros inscritos que mantêm a preferência ativa. O envio é sequencial, registra a reserva de cada destinatário no Upstash antes da tentativa e não repete automaticamente resultados incertos para evitar mensagens duplicadas. O comando `/notas-atualizacao` é somente leitura e não dispara comunicados.
 - Ao publicar uma nova versão com novidades para anunciar, atualize `config/novidades.json`: altere `release_id` para um identificador novo e revise `titulo`, `tipo` e `mensagem`. O bot registra o ID da mensagem publicada no canal para evitar duplicações após reiniciar.
 - Para vincular o Roblox, o membro usa `/roblox-vincular`, adiciona temporariamente o código à descrição do perfil Roblox e confirma com `/roblox-confirmar`. A mesma conta Roblox não pode ser vinculada a dois membros diferentes.

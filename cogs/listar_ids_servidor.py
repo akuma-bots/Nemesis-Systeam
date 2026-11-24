@@ -88,7 +88,7 @@ class ListarIDsServidor(commands.Cog):
             payload = "\n".join(lines).encode("utf-8")
             file = discord.File(
                 io.BytesIO(payload),
-                filename=f"nemesis_ids_{guild.id}.txt",
+                filename=f"chaos_org_ids_{guild.id}.txt",
             )
             await interaction.followup.send(
                 embed=embed_sucesso(

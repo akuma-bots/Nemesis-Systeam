@@ -41,7 +41,7 @@ CATEGORIAS = {
     "atendimento": ("🎫・Central de Atendimento", "Tickets, responsáveis, encerramentos, avaliações e transcrições."),
     "mensagens": ("💬・Comunicação Geral", "Registros técnicos de anexos e comunicação. O conteúdo de mensagens editadas e excluídas permanece somente na consulta privada de atividade."),
     "parcerias": ("🤝・Alianças e Parcerias", "Solicitações, aprovações, representantes e alterações de parcerias."),
-    "integracoes": ("⚙️・Sistemas e Integrações", "Roblox, APIs externas, Upstash, conexões, health checks, tarefas e disponibilidade do Shinku."),
+    "integracoes": ("⚙️・Sistemas e Integrações", "Roblox, APIs externas, Upstash, conexões, health checks, tarefas e disponibilidade do Systeam."),
     "sugestoes": ("📋・Sugestões e Ideias", "Sugestões recebidas, votos, decisões e resultados."),
 }
 
@@ -164,7 +164,7 @@ def _embed_cabecalho_topico(nome: str, descricao: str) -> discord.Embed:
         name="Acesso e integridade",
         value=(
             "Fórum restrito aos cargos autorizados da Chaos Org. "
-            "O cabeçalho é mantido pelo Shinku; as ocorrências são acrescentadas abaixo."
+            "O cabeçalho é mantido pelo Systeam; as ocorrências são acrescentadas abaixo."
         ),
         inline=False,
     )

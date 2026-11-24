@@ -39,7 +39,7 @@ def carregar_catalogo_codigos() -> dict:
 
 def _embed_inicio(membro: discord.abc.User) -> discord.Embed:
     embed = criar_embed(
-        title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ BEM-VINDO À ORGANIZAÇÃO",
+        title="Chaos Org ━ BEM-VINDO À ORGANIZAÇÃO",
         description=(
             f"Salve, **{discord.utils.escape_markdown(membro.display_name)}**. "
             "Sua entrada na Chaos Org foi registrada.\n\n"
@@ -86,7 +86,7 @@ def _embed_codigos(chave: str) -> discord.Embed:
     if semana.get("inicio") and semana.get("fim"):
         periodo = f"\n**Semana dos códigos:** {semana['inicio']} até {semana['fim']}"
     embed = criar_embed(
-        title=f"𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CÓDIGOS / {jogo['nome'].upper()}",
+        title=f"Chaos Org ━ CÓDIGOS / {jogo['nome'].upper()}",
         description=(f"{jogo.get('descricao', '')}\n\n**Verificado em:** {catalogo.get('atualizado_em', 'indisponível')}{periodo}\n\n{descricao_codigos}")[:4096],
         color=COR_PRIMARIA,
         url=jogo.get("fonte"),
