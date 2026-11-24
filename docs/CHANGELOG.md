@@ -1,4 +1,4 @@
-# Notas de atualização — NÊMESIS / Shinku
+# Notas de atualização — Chaos Org / Shinku
 
 Este arquivo registra mudanças por estado de entrega. Merge no GitHub não significa, por si só, que o recurso já esteja ativo no Discord; a ativação depende do deploy e da inicialização correta do bot.
 

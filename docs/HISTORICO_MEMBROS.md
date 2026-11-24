@@ -1,4 +1,4 @@
-# Central de Histórico Individual — NÊMESIS
+# Central de Histórico Individual — Chaos Org
 
 ## Acesso pelo Registro Global
 
@@ -9,7 +9,7 @@ Não existe comando para abrir o histórico individual. A consulta fica integrad
 3. Pesquise pelo nome e selecione a pessoa no seletor nativo do Discord.
 4. Navegue pelas seções do dossiê no menu privado.
 
-O painel é atualizado automaticamente pelo Nêmesis Systeam quando o Registro Global é inicializado. O botão é persistente e continua disponível após reinicializações.
+O painel é atualizado automaticamente pelo Chaos Org Systeam quando o Registro Global é inicializado. O botão é persistente e continua disponível após reinicializações.
 
 ## Seções do dossiê
 
@@ -38,7 +38,7 @@ A busca da linha do tempo percorre até 40 mensagens recentes por categoria conf
 - A consulta e o dossiê são efêmeros/privados; somente quem iniciou a consulta vê os dados.
 - Acesso verificado pela função central membro_tem_lideranca(); não depende de Administrator ou Manage Guild genéricos.
 - O botão, o seletor e o menu de navegação verificam novamente o usuário e a liderança em cada interação.
-- O painel é exclusivo do servidor oficial da NÊMESIS.
+- O painel é exclusivo do servidor oficial da Chaos Org.
 - A consulta não altera dados, cargos, punições ou histórico.
 
 ## Limites conhecidos

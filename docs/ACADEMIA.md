@@ -1,4 +1,4 @@
-# Academia Nêmesis
+# Academia Chaos Org
 
 A Academia mantém o cadastro de treinamentos, inscrições e resultados individuais no Shinku. Os dados são separados por servidor e persistidos pelo armazenamento já utilizado pelo bot.
 

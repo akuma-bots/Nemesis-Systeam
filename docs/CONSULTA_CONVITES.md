@@ -1,4 +1,4 @@
-# Central de Convites — NÊMESIS
+# Central de Convites — Chaos Org
 
 ## Consulta individual
 A consulta é aberta pelo botão **Consultar convites de membro** no canal **Convites** (`1563995880623841332`), pelo painel fixo **🔗 CENTRAL DE CONVITES**. A liderança pesquisa e seleciona uma pessoa pelo seletor nativo do Discord. O painel fica diretamente no canal de Convites, não no Registro Global. O resultado é privado e não apresenta ranking.

@@ -1,6 +1,6 @@
 # Registro Global — organização e critérios
 
-O Registro Global é o arquivo de auditoria privado da NÊMESIS. A estrutura foi simplificada para manter apenas áreas com finalidade clara, reduzir duplicidade e facilitar a navegação no celular.
+O Registro Global é o arquivo de auditoria privado da Chaos Org. A estrutura foi simplificada para manter apenas áreas com finalidade clara, reduzir duplicidade e facilitar a navegação no celular.
 
 ## Áreas oficiais
 
@@ -26,7 +26,7 @@ Não existe mais uma área independente de histórico de cargos. Toda alteraçã
 ## Migração única da estrutura
 
 - Na próxima inicialização após a implantação, o Shinku excluirá permanentemente todos os tópicos antigos deste Fórum, incluindo as mensagens dentro deles, conforme autorização expressa do responsável.
-- A exclusão é limitada ao Fórum Registro Global da NÊMESIS; o canal, outros canais e seus conteúdos não são removidos.
+- A exclusão é limitada ao Fórum Registro Global da Chaos Org; o canal, outros canais e seus conteúdos não são removidos.
 - A conclusão é registrada no Upstash para impedir que reinicializações futuras repitam a exclusão.
 - Os 12 tópicos oficiais serão criados e reutilizados nas próximas inicializações.
 - Se a criação de algum tópico falhar após a exclusão, a próxima inicialização apenas completa os tópicos ausentes; não apaga os que já foram criados.

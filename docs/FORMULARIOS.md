@@ -1,4 +1,4 @@
-# Gestão de formulários — Shinku / NÊMESIS
+# Gestão de formulários — Shinku / Chaos Org
 
 ## Acesso administrativo
 

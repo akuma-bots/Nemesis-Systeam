@@ -1,11 +1,11 @@
-# Painel Administrativo Central — NÊMESIS
+# Painel Administrativo Central — Chaos Org
 
 O Painel Administrativo Central é uma navegação privada por botões e menus, publicada no cabeçalho do tópico canônico **Administração** do Registro Global.
 
 ## Acesso
 
 - O botão persistente **Abrir Central Administrativa** é exibido no tópico Central de Administração.
-- Somente membros da NÊMESIS reconhecidos por `membro_tem_lideranca()` podem abrir a central.
+- Somente membros da Chaos Org reconhecidos por `membro_tem_lideranca()` podem abrir a central.
 - A consulta é efêmera e vinculada à pessoa que abriu a interface; outra pessoa não pode controlar a sessão.
 - A interface não cria comandos slash e não concede permissões novas.
 
