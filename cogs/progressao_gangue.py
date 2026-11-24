@@ -207,7 +207,8 @@ class ProgressaoGangue(commands.Cog):
                 perfil["mensagens"] = int(perfil.get("mensagens", 0) or 0) + 1
                 perfil["ultimo_xp"] = time.time()
             if tipo in {"missao", "especial"}:
-                perfil["missoes"] = int(perfil.get("missoes", 0) or 0) + 1            if evento_id:
+                perfil["missoes"] = int(perfil.get("missoes", 0) or 0) + 1
+            if evento_id:
                 eventos.append(evento_id)
                 perfil["eventos_recompensa"] = eventos[-1000:]
 
