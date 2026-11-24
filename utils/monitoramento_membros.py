@@ -1,4 +1,4 @@
-"""Armazenamento privado e limitado de atividade individual da NÊMESIS.
+"""Armazenamento privado e limitado de atividade individual da Chaos Org.
 
 Registra mensagens e eventos a partir da ativação do monitoramento. Os dados
 são mantidos por 30 dias e limitados por membro para controlar retenção/custo.
