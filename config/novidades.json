@@ -1,11 +1,11 @@
 {
-  "release_id": "20261124-070309",
+  "release_id": "20261124-070613",
   "habilitada": true,
   "tipo": "Melhorias dos sistemas",
-  "titulo": "Remove remaining legacy headers and repair component tests.",
-  "mensagem": "A Chaos Org recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove remaining legacy headers and repair component tests.\n\n**Áreas envolvidas:** sistemas e comandos, mecanismos internos e infraestrutura.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
+  "titulo": "Remove final legacy labels from embeds and progression.",
+  "mensagem": "A Chaos Org recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n• Remove final legacy labels from embeds and progression.\n\n**Áreas envolvidas:** sistemas e comandos.\n\nAs alterações foram integradas ao repositório principal. A disponibilidade das funções depende da conclusão do deploy do bot.",
   "data_atualizacao": "24/11/2026",
-  "hora_atualizacao": "07:03",
+  "hora_atualizacao": "07:06",
   "fuso_horario": "Horário de Brasília (BRT)",
-  "gerado_em": "2026-11-24T07:03:09.515584-03:00"
+  "gerado_em": "2026-11-24T07:06:13.914654-03:00"
 }
