@@ -58,7 +58,7 @@ def _layout_embed_publicado(embed: discord.Embed, origem: discord.ui.View | None
     return layout
 
 
-class EmbedModal(discord.ui.Modal, title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CRIAR MODELO"):
+class EmbedModal(discord.ui.Modal, title="Chaos Org ━ CRIAR MODELO"):
     parte1 = discord.ui.TextInput(label="Descrição — parte 1/5", style=discord.TextStyle.paragraph, required=False, max_length=4000)
     parte2 = discord.ui.TextInput(label="Descrição — parte 2/5", style=discord.TextStyle.paragraph, required=False, max_length=4000)
     parte3 = discord.ui.TextInput(label="Descrição — parte 3/5", style=discord.TextStyle.paragraph, required=False, max_length=4000)
@@ -160,7 +160,7 @@ class EmbedModal(discord.ui.Modal, title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CRIAR
         await interaction.followup.send(mensagem, ephemeral=True)
 
 
-class EditarEmbedModal(discord.ui.Modal, title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ EDITAR MODELO"):
+class EditarEmbedModal(discord.ui.Modal, title="Chaos Org ━ EDITAR MODELO"):
     titulo = discord.ui.TextInput(label="Título", required=False, max_length=256)
     descricao = discord.ui.TextInput(label="Descrição", style=discord.TextStyle.paragraph, required=False, max_length=4000)
     cor = discord.ui.TextInput(label="Cor em hex (ex: FF0000)", required=False, max_length=7)

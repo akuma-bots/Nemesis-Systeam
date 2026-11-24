@@ -402,7 +402,7 @@ class ProgressaoGangue(commands.Cog):
                 log.error("Canal de progressão %s não encontrado/acessível.", CANAL_PROGRESSAO_ID)
                 return
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  PROMOÇÃO DE RANK",
+            title="Chaos Org  ━  PROMOÇÃO DE RANK",
             description=(
                 "╭━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╮\n"
                 "       PROGRESSÃO CONFIRMADA\n"
@@ -445,7 +445,7 @@ class ProgressaoGangue(commands.Cog):
             cor=0x9F1239,
             rodape=None,
         )
-        embed.set_author(name="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  /  SISTEMA DE MÉRITO")
+        embed.set_author(name="Chaos Org  /  SISTEMA DE MÉRITO")
         embed.add_field(
             name="01  /  PARTICIPAÇÃO",
             value=f"**+{XP_POR_MENSAGEM} XP** por mensagem válida\nIntervalo de {COOLDOWN_MENSAGENS}s entre registros",
@@ -621,7 +621,7 @@ class ProgressaoGangue(commands.Cog):
         xp = max(0, int(perfil.get("xp", 0)))
         rank = rank_por_xp(xp)
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  BANCO DE EXPERIÊNCIA",
+            title="Chaos Org  ━  BANCO DE EXPERIÊNCIA",
             description=(
                 f"**Titular:** {interaction.user.mention}\n"
                 f"**Saldo disponível:** **{xp:,} XP**\n"
@@ -669,7 +669,7 @@ class ProgressaoGangue(commands.Cog):
         await self._aplicar_cargo_rank(interaction.guild, destinatario, rank_destino)
 
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  TRANSFERÊNCIA CONCLUÍDA",
+            title="Chaos Org  ━  TRANSFERÊNCIA CONCLUÍDA",
             description=(
                 f"**Remetente:** {interaction.user.mention}\n"
                 f"**Destinatário:** {destinatario.mention}\n"
@@ -686,7 +686,7 @@ class ProgressaoGangue(commands.Cog):
         canal = interaction.guild.get_channel(CANAL_PROGRESSAO_ID)
         if isinstance(canal, discord.TextChannel):
             registro = criar_embed(
-                title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  REGISTRO BANCÁRIO",
+                title="Chaos Org  ━  REGISTRO BANCÁRIO",
                 description=(
                     f"**De:** {interaction.user.mention}\n"
                     f"**Para:** {destinatario.mention}\n"
@@ -962,7 +962,7 @@ class ProgressaoGangue(commands.Cog):
 
         if isinstance(canal_registro, discord.TextChannel):
             registro = criar_embed(
-                title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  ATIVIDADE REGISTRADA",
+                title="Chaos Org  ━  ATIVIDADE REGISTRADA",
                 description=(
                     f"**Membro:** {membro.mention}\n"
                     f"**Registrado por:** {interaction.user.mention}\n"
