@@ -1,4 +1,4 @@
-# Auditoria técnica do Nêmesis Systeam — NÊMESIS
+# Auditoria técnica do Chaos Org Systeam — Chaos Org
 
 **Atualização:** 03/11/2026
 **Base:** branch `main` do repositório `akuma-bots/Nemesis-Systeam`
@@ -8,7 +8,7 @@
 
 ## Resultado executivo
 
-O Nêmesis Systeam já possui módulos dedicados para moderação, AutoMod/anti-raid, tickets, parcerias, formulários, missões, temporadas, perfil, ranking, conquistas, sorteios, logs e revisões. A prioridade desta rodada foi corrigir divergências de autorização, tornar o envio de comunicados mais resistente a concorrência e melhorar a visibilidade operacional, sem duplicar sistemas existentes.
+O Chaos Org Systeam já possui módulos dedicados para moderação, AutoMod/anti-raid, tickets, parcerias, formulários, missões, temporadas, perfil, ranking, conquistas, sorteios, logs e revisões. A prioridade desta rodada foi corrigir divergências de autorização, tornar o envio de comunicados mais resistente a concorrência e melhorar a visibilidade operacional, sem duplicar sistemas existentes.
 
 ## Alterações realizadas nesta rodada
 

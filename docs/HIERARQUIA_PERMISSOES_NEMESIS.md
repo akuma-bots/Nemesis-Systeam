@@ -1,4 +1,4 @@
-# Hierarquia e permissões da NÊMESIS
+# Hierarquia e permissões da Chaos Org
 
 Este documento registra a matriz aplicada pelo Shinku. Os IDs são os cargos do servidor configurado e devem ser mantidos sincronizados com a estrutura oficial.
 
@@ -36,7 +36,7 @@ Não há permissões atribuídas a responsáveis de divisões enquanto esses res
 | 2 | Capitão | `1563995879998754942` |
 | 1 | Capitão Geral | `1563995879998754943` |
 
-O Shinku preenche automaticamente os vínculos padrão sem sobrescrever configurações personalizadas. O OCTÓGONO pode alterar um vínculo pelo comando `/gangue-configurar-cargo`; cargos administrativos e o cargo-base NÊMESIS não podem ser usados como cargos de progressão.
+O Shinku preenche automaticamente os vínculos padrão sem sobrescrever configurações personalizadas. O OCTÓGONO pode alterar um vínculo pelo comando `/gangue-configurar-cargo`; cargos administrativos e o cargo-base Chaos Org não podem ser usados como cargos de progressão.
 
 ## Ações hierárquicas
 

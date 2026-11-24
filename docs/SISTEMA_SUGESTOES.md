@@ -1,10 +1,10 @@
-# Sistema de Sugestões — NÊMESIS
+# Sistema de Sugestões — Chaos Org
 
 ## Canal e publicação
 - Canal oficial: `1563995881508831336`.
 - O Cog sincroniza um único painel oficial; se a publicação já existir, ela é editada em vez de duplicada.
 - O canal configurado é um Fórum: o painel fica em uma publicação própria (fixada quando as permissões permitem) e cada sugestão vira uma publicação/tópico independente. O sistema também mantém compatibilidade com canal de texto.
-- Qualquer membro da NÊMESIS pode enviar uma sugestão pelo botão persistente **Enviar sugestão**.
+- Qualquer membro da Chaos Org pode enviar uma sugestão pelo botão persistente **Enviar sugestão**.
 - O formulário recebe título, descrição, resultado esperado e categoria. Categorias desconhecidas são classificadas como **Outros**.
 - Antes de publicar, o sistema procura títulos muito semelhantes para reduzir sugestões duplicadas e encaminha o membro à publicação existente.
 - Há um intervalo de 10 minutos por membro entre envios; a verificação de duplicidade acontece antes de consumir esse intervalo.

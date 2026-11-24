@@ -9,14 +9,14 @@ from utils.apresentacao import embed_erro, embed_info, embed_sucesso
 
 
 class ListarIDsServidor(commands.Cog):
-    """Gera um inventário dos canais, categorias e cargos do servidor NÊMESIS."""
+    """Gera um inventário dos canais, categorias e cargos do servidor Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
     @app_commands.command(
         name="listar-ids-servidor",
-        description="Gera um arquivo com os IDs de canais, categorias e cargos da NÊMESIS.",
+        description="Gera um arquivo com os IDs de canais, categorias e cargos da Chaos Org.",
     )
     @app_commands.guild_only()
     async def listar_ids_servidor(self, interaction: discord.Interaction):
@@ -37,7 +37,7 @@ class ListarIDsServidor(commands.Cog):
         guild_id = getattr(self.bot, "nemesis_guild_id", None)
         if guild_id is not None and interaction.guild.id != guild_id:
             await interaction.response.send_message(
-                embed=embed_erro("SERVIDOR NÃO AUTORIZADO", "Este comando só funciona no servidor NÊMESIS configurado para o bot."),
+                embed=embed_erro("SERVIDOR NÃO AUTORIZADO", "Este comando só funciona no servidor Chaos Org configurado para o bot."),
                 ephemeral=True,
             )
             return

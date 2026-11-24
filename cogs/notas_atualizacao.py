@@ -20,14 +20,14 @@ class NotasAtualizacao(commands.Cog):
 
     @app_commands.command(
         name="notas-atualizacao",
-        description="Consultar a nota de atualização programada da NÊMESIS.",
+        description="Consultar a nota de atualização programada da Chaos Org.",
     )
     @app_commands.guild_only()
     @lideranca_only()
     async def notas_atualizacao(self, interaction: discord.Interaction):
         if interaction.guild_id != GUILD_ID or interaction.guild is None:
             await interaction.response.send_message(
-                "Comando exclusivo da NÊMESIS.", ephemeral=True
+                "Comando exclusivo da Chaos Org.", ephemeral=True
             )
             return
         if (
@@ -56,7 +56,7 @@ class NotasAtualizacao(commands.Cog):
             )
             return
 
-        titulo = str(release.get("titulo") or "Atualização da NÊMESIS")[:200]
+        titulo = str(release.get("titulo") or "Atualização da Chaos Org")[:200]
         mensagem = str(release.get("mensagem") or "Sem descrição.")[:3500]
         data = str(release.get("data_atualizacao") or "Não informada")[:30]
         hora = str(release.get("hora_atualizacao") or "Não informado")[:20]
@@ -72,7 +72,7 @@ class NotasAtualizacao(commands.Cog):
         embed.add_field(name="◈ CATEGORIA", value=tipo, inline=True)
         embed.add_field(name="◈ DATA", value=data, inline=True)
         embed.add_field(name="◈ HORÁRIO", value=hora, inline=True)
-        embed.set_footer(text=f"NÊMESIS • Release {release_id}")
+        embed.set_footer(text=f"Chaos Org • Release {release_id}")
 
         usuario = self.bot.user
         avatar = getattr(getattr(usuario, "display_avatar", None), "url", None)

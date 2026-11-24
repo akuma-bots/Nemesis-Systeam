@@ -40,7 +40,7 @@ def _usuario_pode_consultar_historico(interaction: discord.Interaction) -> bool:
 
 def _layout_boas_vindas(embed: discord.Embed) -> discord.ui.LayoutView:
     """Mensagem de entrada com a navegação do servidor dentro do cartão."""
-    partes = [f"## {embed.title or 'NÊMESIS — BOAS-VINDAS'}"]
+    partes = [f"## {embed.title or 'Chaos Org — BOAS-VINDAS'}"]
     if embed.description:
         partes.append(embed.description)
     for campo in embed.fields:
@@ -54,14 +54,14 @@ def _layout_boas_vindas(embed: discord.Embed) -> discord.ui.LayoutView:
         discord.ui.TextDisplay("### ◈ PRIMEIROS PASSOS"),
         discord.ui.ActionRow(GuiaCanaisSelect()),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam • Integração de novos integrantes"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam • Integração de novos integrantes"),
         accent_colour=0x9F1239,
     ))
     return layout
 
 
 
-MARCADOR_ARQUIVO_MEMBROS = "NÊMESIS • ARQUIVO DE MEMBROS • V2"
+MARCADOR_ARQUIVO_MEMBROS = "Chaos Org • ARQUIVO DE MEMBROS • V2"
 
 
 def _componentes_contem_marcador(componentes, marcador: str) -> bool:
@@ -170,7 +170,7 @@ def _card_registro(origem: discord.ui.View, embed: discord.Embed | None = None,
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
         *linhas_componentes,
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam • Arquivo e auditoria"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam • Arquivo e auditoria"),
     ]
     if len(componentes_finais) > 10:
         raise ValueError(
@@ -277,7 +277,7 @@ class SeletorMembroRegistroView(discord.ui.View):
 
     async def _selecionar_membro(self, interaction: discord.Interaction):
         if interaction.guild is None or interaction.guild.id != GUILD_NEMESIS_ID:
-            await interaction.response.send_message("Esta consulta só está disponível na NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Esta consulta só está disponível na Chaos Org.", ephemeral=True)
             return
         selecionado_id = int((interaction.data or {}).get("values", [0])[0])
         membro = interaction.guild.get_member(selecionado_id)
@@ -285,7 +285,7 @@ class SeletorMembroRegistroView(discord.ui.View):
             try:
                 membro = await interaction.guild.fetch_member(selecionado_id)
             except (discord.NotFound, discord.Forbidden, discord.HTTPException):
-                await interaction.response.send_message("Não consegui localizar esse integrante na NÊMESIS.", ephemeral=True)
+                await interaction.response.send_message("Não consegui localizar esse integrante na Chaos Org.", ephemeral=True)
                 return
         await interaction.response.defer()
         try:
@@ -315,7 +315,7 @@ class PainelHistoricoMembrosView(discord.ui.View):
     @discord.ui.button(label="Consultar histórico de membro", emoji="🔎", style=discord.ButtonStyle.primary, custom_id="nemesis:registro:membro:abrir")
     async def abrir_historico(self, interaction: discord.Interaction, button: discord.ui.Button):
         if not _usuario_pode_consultar_historico(interaction):
-            await interaction.response.send_message("Acesso restrito à liderança autorizada da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Acesso restrito à liderança autorizada da Chaos Org.", ephemeral=True)
             return
         await interaction.response.send_message(
             view=_card_registro(
@@ -323,7 +323,7 @@ class PainelHistoricoMembrosView(discord.ui.View):
                 criar_embed(
                     "📚 CENTRAL DE HISTÓRICO INDIVIDUAL",
                     "Pesquise e selecione um integrante. O dossiê mostra mensagens enviadas/editadas/excluídas e eventos de atividade dos últimos 30 dias. O monitoramento é informado e começa após a implantação.",
-                    cor=0x9F2035, rodape="NÊMESIS • REGISTRO GLOBAL • CONSULTA PRIVADA",
+                    cor=0x9F2035, rodape="Chaos Org • REGISTRO GLOBAL • CONSULTA PRIVADA",
                 ),
             ),
             ephemeral=True,
@@ -349,14 +349,14 @@ class PainelHistoricoMembrosLayoutView(discord.ui.LayoutView):
             ),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(botao),
-            discord.ui.TextDisplay("-# Nêmesis Systeam • Consulta privada"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam • Consulta privada"),
             accent_colour=0x9F1239,
         ))
 
 
 class Logs(commands.Cog):
     """Registra eventos do servidor (entradas, saídas, edições e exclusões de mensagem)
-    no Fórum central de Registro Global da NÊMESIS."""
+    no Fórum central de Registro Global da Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -412,7 +412,7 @@ class Logs(commands.Cog):
     async def on_ready(self):
         guild = self.bot.get_guild(GUILD_NEMESIS_ID)
         if guild is None:
-            logger.error("Guild NÊMESIS não está em cache; guia e Registro Global aguardam conexão.")
+            logger.error("Guild Chaos Org não está em cache; guia e Registro Global aguardam conexão.")
             return
 
         if not self._topicos_prontos:
@@ -428,10 +428,10 @@ class Logs(commands.Cog):
             try:
                 self._guia_publicado = await publicar_guia_servidor(self.bot)
             except Exception:
-                logger.exception("Não foi possível publicar/atualizar o guia oficial da NÊMESIS.")
+                logger.exception("Não foi possível publicar/atualizar o guia oficial da Chaos Org.")
 
     async def _canal_logs(self, guild: discord.Guild):
-        """Resolve exclusivamente o Fórum central de registros da NÊMESIS."""
+        """Resolve exclusivamente o Fórum central de registros da Chaos Org."""
         if guild.id != GUILD_NEMESIS_ID:
             return None
         try:
@@ -452,7 +452,7 @@ class Logs(commands.Cog):
             if embed.timestamp is None:
                 embed.timestamp = datetime.now(timezone.utc)
             if not embed.footer.text:
-                embed.set_footer(text="NÊMESIS • Registro Global")
+                embed.set_footer(text="Chaos Org • Registro Global")
             if isinstance(canal, discord.ForumChannel):
                 titulo = embed.title or f"Registro • {categoria.replace('_', ' ').title()}"
                 return await registrar_global(
@@ -512,7 +512,7 @@ class Logs(commands.Cog):
                 "     **UMA NOVA JORNADA COMEÇA**\n"
                 "╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
                 f"⟡・Seja bem-vindo(a), {member.mention}.\n"
-                "Você acaba de entrar na **NÊMESIS** — uma organização de competição, evolução "
+                "Você acaba de entrar na **Chaos Org** — uma organização de competição, evolução "
                 "e comunidade. Explore os canais oficiais, conheça as divisões e participe das atividades."
             ),
             color=0xB3132B,
@@ -555,10 +555,10 @@ class Logs(commands.Cog):
         )
         embed.add_field(
             name="✦  SEU PRÓXIMO CAPÍTULO COMEÇA AGORA",
-            value="A TAG oficial da organização é **NΞM**. A NÊMESIS reconhece atitude, consistência e espírito competitivo. **Mostre do que você é capaz.**",
+            value="A TAG oficial da organização é **NΞM**. A Chaos Org reconhece atitude, consistência e espírito competitivo. **Mostre do que você é capaz.**",
             inline=False,
         )
-        embed.set_footer(text="NÊMESIS • TAG DA ORG: NΞM • Sistema oficial de integração")
+        embed.set_footer(text="Chaos Org • TAG DA ORG: NΞM • Sistema oficial de integração")
         if canal is not None:
             enviado = await self._enviar_log(canal, embed, view=_layout_boas_vindas(embed))
             if enviado:
@@ -726,7 +726,7 @@ class Logs(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        """Captura mensagens da NÊMESIS para consulta privada, com retenção limitada."""
+        """Captura mensagens da Chaos Org para consulta privada, com retenção limitada."""
         if not message.guild or message.guild.id != GUILD_NEMESIS_ID or message.author.bot:
             return
         await monitoramento_membros.registrar_mensagem(message.guild.id, message.author.id, {
@@ -971,7 +971,7 @@ class Logs(commands.Cog):
             detalhe = f"Mudou de {antes.channel.name} para {depois.channel.name}."
             await self._enviar_log(canal, criar_embed(description=f"🔀 {detalhe}", color=0xFEE75C), categoria="voz")
             await registrar_global(member.guild, "historico_membros", "Movimentação em chamada", detalhe, cor=0xFEE75C)
-        # Saídas de canais de voz não são registradas, conforme a configuração da NÊMESIS.
+        # Saídas de canais de voz não são registradas, conforme a configuração da Chaos Org.
 
         alteracoes_estado = []
         for atributo, rotulo in (
