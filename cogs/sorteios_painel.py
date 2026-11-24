@@ -106,10 +106,10 @@ def _embed_sorteio(sorteio, quantidade=0):
         f"**Encerra:** {timestamp_discord(fim, 'F')} ({timestamp_discord(fim, 'R')})\n"
         f"**Participantes:** {quantidade}"
     )
-    embed = criar_embed(title="🎉 " + str(sorteio.get("titulo") or "SORTEIO NÊMESIS"), description=descricao, color=COR_PRIMARIA)
+    embed = criar_embed(title="🎉 " + str(sorteio.get("titulo") or "SORTEIO Chaos Org"), description=descricao, color=COR_PRIMARIA)
     if sorteio.get("banner"):
         embed.set_image(url=sorteio["banner"])
-    embed.set_footer(text=f"NÊMESIS • Sorteios • ID:{sorteio['id']}")
+    embed.set_footer(text=f"Chaos Org • Sorteios • ID:{sorteio['id']}")
     return embed
 
 
@@ -119,7 +119,7 @@ def _calcular_chances(membro, sorteio):
 
 
 def _card_com_view(origem: discord.ui.View, titulo: str, descricao: str,
-                   rodape: str = "Nêmesis Systeam • Sorteios", imagem: str | None = None):
+                   rodape: str = "Chaos Org Systeam • Sorteios", imagem: str | None = None):
     """Converte controles tradicionais em componentes contidos no mesmo cartão."""
     layout = discord.ui.LayoutView(timeout=origem.timeout)
     componentes = []
@@ -190,7 +190,7 @@ def _mensagem_tem_cartao_sorteio(mensagem: discord.Message, sorteio_id: str) -> 
 def _card_sorteio(sorteio: dict, quantidade: int, view: discord.ui.View):
     return _card_com_view(
         view,
-        "🎉 " + str(sorteio.get("titulo") or "SORTEIO NÊMESIS"),
+        "🎉 " + str(sorteio.get("titulo") or "SORTEIO Chaos Org"),
         (
             f"{sorteio.get('descricao') or 'Participe e concorra ao prêmio.'}\n\n"
             f"**Prêmio:** {sorteio.get('premio', 'Não informado')}\n"
@@ -201,13 +201,13 @@ def _card_sorteio(sorteio: dict, quantidade: int, view: discord.ui.View):
             f"**Participantes:** {quantidade}\n\n"
             "Cada membro pode participar uma única vez."
         ),
-        rodape=f"NÊMESIS • Sorteios • ID:{sorteio['id']}",
+        rodape=f"Chaos Org • Sorteios • ID:{sorteio['id']}",
         imagem=sorteio.get("banner"),
     )
 
 
 class ModalCriarSorteio(discord.ui.Modal, title="Criar sorteio"):
-    titulo = discord.ui.TextInput(label="Nome do sorteio", placeholder="Ex.: Sorteio Diário", default="Sorteio NÊMESIS", max_length=100)
+    titulo = discord.ui.TextInput(label="Nome do sorteio", placeholder="Ex.: Sorteio Diário", default="Sorteio Chaos Org", max_length=100)
     premio = discord.ui.TextInput(label="Prêmio", placeholder="Ex.: recompensa, item ou benefício", max_length=300)
     requisitos = discord.ui.TextInput(label="Requisitos para participar", placeholder="Opcional. Ex.: possuir o cargo X, estar no servidor...", style=discord.TextStyle.paragraph, required=False, max_length=900)
     duracao = discord.ui.TextInput(label="Duração em minutos", placeholder="Ex.: 1440 para 24 horas", max_length=6)
@@ -219,7 +219,7 @@ class ModalCriarSorteio(discord.ui.Modal, title="Criar sorteio"):
 
     async def on_submit(self, interaction: discord.Interaction):
         if not _eh_lideranca(interaction):
-            await interaction.response.send_message("Acesso restrito à liderança da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Acesso restrito à liderança da Chaos Org.", ephemeral=True)
             return
         premio = str(self.premio.value).strip()
         try:
@@ -237,7 +237,7 @@ class ModalCriarSorteio(discord.ui.Modal, title="Criar sorteio"):
             "guild_id": interaction.guild.id,
             "canal_id": None,
             "mensagem_id": None,
-            "titulo": str(self.titulo.value or "Sorteio NÊMESIS").strip(),
+            "titulo": str(self.titulo.value or "Sorteio Chaos Org").strip(),
             "premio": premio,
             "descricao": "",
             "requisitos": str(self.requisitos.value or "").strip(),
@@ -263,7 +263,7 @@ class ModalCriarSorteio(discord.ui.Modal, title="Criar sorteio"):
                     f"O sorteio **{sorteio['id']}** foi criado e está salvo como rascunho.\n\n"
                     "Ajuste a apresentação, defina uma imagem se desejar e publique quando estiver pronto."
                 ),
-                rodape="NÊMESIS • Central de Sorteios",
+                rodape="Chaos Org • Central de Sorteios",
             ),
             ephemeral=True,
         )
@@ -459,7 +459,7 @@ class PainelAdministrativoView(discord.ui.View):
     @discord.ui.button(label="Criar sorteio", style=discord.ButtonStyle.success, emoji="🎉", custom_id="nemesis_sorteios:criar")
     async def criar(self, interaction: discord.Interaction, button):
         if not _eh_lideranca(interaction):
-            await interaction.response.send_message("A criação de sorteios é restrita à liderança da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("A criação de sorteios é restrita à liderança da Chaos Org.", ephemeral=True)
             return
         await interaction.response.send_modal(ModalCriarSorteio(interaction.client.get_cog("SorteiosPainel")))
 
@@ -539,11 +539,11 @@ class SorteiosPainel(commands.Cog):
         self._painel_lock = False
         bot.add_view(_card_com_view(
             PainelAdministrativoView(), "🎁 CENTRAL DE SORTEIOS",
-            "Área administrativa para criar e configurar sorteios oficiais da NÊMESIS. A criação e as configurações são restritas à liderança.",
+            "Área administrativa para criar e configurar sorteios oficiais da Chaos Org. A criação e as configurações são restritas à liderança.",
             rodape=MARCADOR_PAINEL,
         ))
         bot.add_view(_card_com_view(
-            ViewSorteioPublico(), "SORTEIO NÊMESIS",
+            ViewSorteioPublico(), "SORTEIO Chaos Org",
             "Participe do sorteio e consulte suas chances usando os controles abaixo.",
         ))
 
@@ -606,8 +606,8 @@ class SorteiosPainel(commands.Cog):
             fim_lote = min(indice + 10, len(fila))
             link = str(sorteio.get("lembrete_jump_url") or f"https://discord.com/channels/{guild.id}/{canal_id}/{mensagem_id}")
             mensagem = (
-                f"🔔 **NÊMESIS • Lembrete de sorteio**\n\n"
-                f"**{str(sorteio.get('titulo') or 'Sorteio NÊMESIS')[:100]}** ainda está recebendo participantes.\n"
+                f"🔔 **Chaos Org • Lembrete de sorteio**\n\n"
+                f"**{str(sorteio.get('titulo') or 'Sorteio Chaos Org')[:100]}** ainda está recebendo participantes.\n"
                 f"Confira o prêmio e as informações no canal oficial: {link}"
             )
             for user_id in fila[indice:fim_lote]:
@@ -661,7 +661,7 @@ class SorteiosPainel(commands.Cog):
 
     async def participar(self, interaction):
         if not interaction.guild or interaction.guild.id != GUILD_NEMESIS_ID:
-            await interaction.response.send_message("Este sorteio pertence à NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este sorteio pertence à Chaos Org.", ephemeral=True)
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
         sorteio = await self._por_mensagem(interaction.message.id)
@@ -703,7 +703,7 @@ class SorteiosPainel(commands.Cog):
 
     async def mostrar_chances(self, interaction):
         if not interaction.guild or interaction.guild.id != GUILD_NEMESIS_ID:
-            await interaction.response.send_message("Este sorteio pertence à NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Este sorteio pertence à Chaos Org.", ephemeral=True)
             return
         await interaction.response.defer(ephemeral=True, thinking=True)
         sorteio = await self._por_mensagem(interaction.message.id)
@@ -776,11 +776,11 @@ class SorteiosPainel(commands.Cog):
                 ):
                     paineis.append(mensagem)
             painel = paineis[0] if paineis else None
-            embed = criar_embed(title="🎁 CENTRAL DE SORTEIOS", description="Área administrativa para criar e configurar sorteios oficiais da NÊMESIS. A criação e as configurações são restritas à liderança.", color=COR_PRIMARIA)
+            embed = criar_embed(title="🎁 CENTRAL DE SORTEIOS", description="Área administrativa para criar e configurar sorteios oficiais da Chaos Org. A criação e as configurações são restritas à liderança.", color=COR_PRIMARIA)
             embed.set_footer(text=MARCADOR_PAINEL)
             view = _card_com_view(
                 PainelAdministrativoView(), "🎁 CENTRAL DE SORTEIOS",
-                "Área administrativa para criar e configurar sorteios oficiais da NÊMESIS. A criação e as configurações são restritas à liderança.",
+                "Área administrativa para criar e configurar sorteios oficiais da Chaos Org. A criação e as configurações são restritas à liderança.",
                 rodape=MARCADOR_PAINEL,
             )
             if painel:

@@ -1,4 +1,4 @@
-"""Candidaturas e revisões oficiais de parcerias da NÊMESIS."""
+"""Candidaturas e revisões oficiais de parcerias da Chaos Org."""
 from __future__ import annotations
 import asyncio, logging, time, uuid
 from urllib.parse import urlparse
@@ -40,10 +40,10 @@ async def atualizar_candidaturas(fn):
 
 def embed_painel():
     e = discord.Embed(
-        title="NÊMESIS  |  DIRETORIA DE RELAÇÕES INSTITUCIONAIS",
+        title="Chaos Org  |  DIRETORIA DE RELAÇÕES INSTITUCIONAIS",
         description=(
             "## CENTRAL DE CANDIDATURAS DE PARCERIA\n"
-            "A NÊMESIS estabelece alianças com comunidades que compartilham padrões elevados "
+            "A Chaos Org estabelece alianças com comunidades que compartilham padrões elevados "
             "de integridade, organização e crescimento sustentável. Toda candidatura passa "
             "por avaliação administrativa; o envio não garante aprovação.\n\n"
             "### CRITÉRIOS DE ELEGIBILIDADE\n"
@@ -51,7 +51,7 @@ def embed_painel():
             "◈ **Atividade:** participação recorrente e comunidade genuinamente ativa.\n"
             "◈ **Governança:** equipe administrativa responsável e acessível.\n"
             "◈ **Integridade:** sem evidências consistentes de golpes, fraudes ou práticas abusivas.\n"
-            "◈ **Compatibilidade:** objetivos e público alinhados aos da NÊMESIS.\n"
+            "◈ **Compatibilidade:** objetivos e público alinhados aos da Chaos Org.\n"
             "◈ **Reciprocidade:** divulgação equilibrada, sem spam ou práticas artificiais.\n"
             "◈ **Transparência:** convite válido e informações verdadeiras.\n\n"
             "### PADRÃO DE SELEÇÃO — RIGOROSO\n"
@@ -66,7 +66,7 @@ def embed_painel():
     )
     e.add_field(name="AUTORIDADE COMPETENTE", value="OCTÓGONO, Diretor Staff, Vice-Diretor Staff e Supervisor Staff, conforme a hierarquia oficial.", inline=False)
     e.add_field(name="CONFORMIDADE", value="Informações falsas, convites inválidos, publicidade enganosa ou violações dos critérios podem resultar em recusa ou encerramento da aliança.", inline=False)
-    e.set_author(name="NÊMESIS • ALIANÇAS ESTRATÉGICAS")
+    e.set_author(name="Chaos Org • ALIANÇAS ESTRATÉGICAS")
     e.set_footer(text="DOCUMENTO INSTITUCIONAL • AVALIAÇÃO ADMINISTRATIVA")
     return e
 
@@ -75,7 +75,7 @@ def embed_candidatura(item):
     status = str(item.get("status", "pendente"))
     cores = {"pendente": DOURADO, "aprovada": 0x2D9D68, "recusada": 0xB93636}
     e = discord.Embed(
-        title=f"NÊMESIS  |  DOSSIÊ DE CANDIDATURA • {item.get('protocolo', '—')}",
+        title=f"Chaos Org  |  DOSSIÊ DE CANDIDATURA • {item.get('protocolo', '—')}",
         description=(
             f"**Comunidade:** {item.get('nome', '—')}\n"
             f"**Responsável:** <@{item.get('responsavel_id')}>\n"
@@ -96,7 +96,7 @@ def embed_candidatura(item):
         e.add_field(name="FUNDAMENTAÇÃO", value=str(item["motivo_decisao"])[:1024], inline=False)
     if item.get("parceria_id"):
         e.add_field(name="REGISTRO DA ALIANÇA", value=str(item["parceria_id"]), inline=False)
-    e.set_author(name="NÊMESIS • COMITÊ DE PARCERIAS")
+    e.set_author(name="Chaos Org • COMITÊ DE PARCERIAS")
     e.set_footer(text="USO ADMINISTRATIVO • HISTÓRICO AUDITÁVEL")
     return e
 
@@ -132,7 +132,7 @@ def _card_parceria_view(origem: discord.ui.View, embed: discord.Embed | None = N
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Alianças e Parcerias"),
+        discord.ui.TextDisplay("-# Chaos Org • Alianças e Parcerias"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -141,7 +141,7 @@ def _card_parceria_view(origem: discord.ui.View, embed: discord.Embed | None = N
     return layout
 
 
-class FormularioCandidatura(discord.ui.Modal, title="Candidatura institucional NÊMESIS"):
+class FormularioCandidatura(discord.ui.Modal, title="Candidatura institucional Chaos Org"):
     nome = discord.ui.TextInput(label="Nome oficial da comunidade", max_length=80)
     convite = discord.ui.TextInput(label="Convite permanente do Discord", max_length=200, placeholder="https://discord.gg/...")
     membros = discord.ui.TextInput(label="Quantidade aproximada de membros", max_length=12, placeholder="Ex.: 850")
@@ -150,7 +150,7 @@ class FormularioCandidatura(discord.ui.Modal, title="Candidatura institucional N
 
     async def on_submit(self, interaction):
         if interaction.guild_id != GUILD_ID:
-            await interaction.response.send_message("Procedimento exclusivo da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Procedimento exclusivo da Chaos Org.", ephemeral=True)
             return
         if not convite_valido(self.convite.value):
             await interaction.response.send_message("Convite inválido. Use um link HTTPS de discord.gg ou discord.com/invite.", ephemeral=True)
@@ -224,13 +224,13 @@ class PainelCandidaturaView(discord.ui.LayoutView):
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(botao),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
             accent_colour=VERMELHO,
         ))
 
     async def candidatar(self, interaction: discord.Interaction):
         if interaction.guild_id != GUILD_ID:
-            await interaction.response.send_message("Ação exclusiva da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Ação exclusiva da Chaos Org.", ephemeral=True)
             return
         await interaction.response.send_modal(FormularioCandidatura())
 
@@ -383,7 +383,7 @@ class RevisaoParceriaView(discord.ui.View):
                 view=_card_parceria_view(
                     discord.ui.View(timeout=120),
                     discord.Embed(
-                        title="NÊMESIS  |  RESULTADO DA REVISÃO QUINZENAL",
+                        title="Chaos Org  |  RESULTADO DA REVISÃO QUINZENAL",
                         description="**Comunidade:** " + str(resultado.get("nome")) + "\n**Resultado:** " + ("Mantida por mais 15 dias" if manter else "Suspensa") + "\n**Responsável:** " + interaction.user.mention,
                         color=0x2D9D68 if manter else 0xB93636,
                     ),
@@ -422,7 +422,7 @@ class RevisaoParceriaView(discord.ui.View):
 
 def _mensagem_eh_painel_candidatura(mensagem: discord.Message) -> bool:
     if any(
-        embed.title == "NÊMESIS  |  DIRETORIA DE RELAÇÕES INSTITUCIONAIS"
+        embed.title == "Chaos Org  |  DIRETORIA DE RELAÇÕES INSTITUCIONAIS"
         for embed in mensagem.embeds
     ):
         return True

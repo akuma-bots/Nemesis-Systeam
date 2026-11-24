@@ -190,7 +190,7 @@ def _card_sorteio_legacy(origem: discord.ui.View, embed: discord.Embed | None = 
             if antigo.footer and antigo.footer.text:
                 partes.append(f"-# {antigo.footer.text}")
     componentes = [
-        discord.ui.TextDisplay("\n\n".join(partes)[:3900] or "## SORTEIO NÊMESIS\nParticipe pelo botão abaixo."),
+        discord.ui.TextDisplay("\n\n".join(partes)[:3900] or "## SORTEIO Chaos Org\nParticipe pelo botão abaixo."),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
     ]
     botoes = []
@@ -208,14 +208,14 @@ def _card_sorteio_legacy(origem: discord.ui.View, embed: discord.Embed | None = 
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Sorteios • V2"),
+        discord.ui.TextDisplay("-# Chaos Org • Sorteios • V2"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     return layout
 
 
 def _mensagem_tem_cartao_sorteio_legacy(mensagem: discord.Message) -> bool:
-    return "NÊMESIS • Sorteios • V2".casefold() in _texto_components_sorteio(mensagem).casefold()
+    return "Chaos Org • Sorteios • V2".casefold() in _texto_components_sorteio(mensagem).casefold()
 
 
 class BotaoParticipar(discord.ui.View):
@@ -557,7 +557,7 @@ class Sorteios(commands.Cog):
         )
 
         embed.set_author(
-            name="NÊMESIS"
+            name="Chaos Org"
         )
 
         if banner.strip():
@@ -1299,7 +1299,7 @@ class Sorteios(commands.Cog):
         )
 
         embed.set_footer(
-            text="NÊMESIS • Sorteios"
+            text="Chaos Org • Sorteios"
         )
 
         await interaction.response.send_message(
@@ -1436,7 +1436,7 @@ class Sorteios(commands.Cog):
                         logger.error("Cargo de recompensa %s não existe mais (sorteio %s).", cargo_id, sorteio.get("id"))
                         return False
                     if cargo not in membro.roles:
-                        await membro.add_roles(cargo, reason=f"Prêmio do sorteio NÊMESIS {sorteio.get('id')}")
+                        await membro.add_roles(cargo, reason=f"Prêmio do sorteio Chaos Org {sorteio.get('id')}")
                 elif tipo == "xp_perfil":
                     from utils.perfis import atualizar_perfil, _atualizar_ranking_competitivo
 
@@ -1603,7 +1603,7 @@ class Sorteios(commands.Cog):
             )
 
             embed.set_footer(
-                text=f"NÊMESIS • Sorteios • SORTEIO-ID:{sorteio_id}"
+                text=f"Chaos Org • Sorteios • SORTEIO-ID:{sorteio_id}"
             )
 
             try:
@@ -1658,7 +1658,7 @@ class Sorteios(commands.Cog):
         )
 
         embed.set_footer(
-            text=f"NÊMESIS • Sorteios • SORTEIO-ID:{sorteio_id}"
+            text=f"Chaos Org • Sorteios • SORTEIO-ID:{sorteio_id}"
         )
 
         try:

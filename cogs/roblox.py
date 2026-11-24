@@ -139,7 +139,7 @@ class SeletorCargoRoblox(discord.ui.View):
             return
         if cargo.id in (CARGOS_AUTORIZADOS_HIERARQUIA_IDS | CARGOS_LIDERANCA_IDS):
             await interaction.response.send_message(
-                "Cargos administrativos da NÊMESIS não podem ser concedidos por patente Roblox.",
+                "Cargos administrativos da Chaos Org não podem ser concedidos por patente Roblox.",
                 ephemeral=True,
             )
             return
@@ -314,18 +314,18 @@ class CentralRobloxView(discord.ui.View):
             await interaction.response.send_message("Sua conta ainda não está vinculada. Use o botão de vinculação para começar.", ephemeral=True)
             return
         rid = int(vinculo["roblox_id"])
-        embed = criar_embed(title="NÊMESIS • PERFIL ROBLOX", description=f"**Usuário:** {vinculo.get('roblox_username', 'Não informado')}\n**Perfil:** https://www.roblox.com/users/{rid}/profile\n**Comunidade:** [Abrir grupo oficial]({ROBLOX_GRUPO_URL})", color=0xB3132B)
+        embed = criar_embed(title="Chaos Org • PERFIL ROBLOX", description=f"**Usuário:** {vinculo.get('roblox_username', 'Não informado')}\n**Perfil:** https://www.roblox.com/users/{rid}/profile\n**Comunidade:** [Abrir grupo oficial]({ROBLOX_GRUPO_URL})", color=0xB3132B)
         try:
             config_grupo = await _config_grupo(interaction.guild_id)
             grupo_id = config_grupo["grupo_id"] or ROBLOX_GRUPO_ID
             rank = await _buscar_rank_no_grupo(rid, grupo_id)
             embed.add_field(
-                name="COMUNIDADE NÊMESIS",
+                name="COMUNIDADE Chaos Org",
                 value=f"Participação confirmada — **{rank}**" if rank else "Não encontrado como membro do grupo",
                 inline=False,
             )
         except (aiohttp.ClientError, ValueError, TypeError):
-            embed.add_field(name="COMUNIDADE NÊMESIS", value="Não foi possível consultar agora", inline=False)
+            embed.add_field(name="COMUNIDADE Chaos Org", value="Não foi possível consultar agora", inline=False)
         embed.set_thumbnail(url=f"https://www.roblox.com/headshot-thumbnail/image?userId={rid}&width=150&height=150&format=png")
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
@@ -334,7 +334,7 @@ class CentralRobloxView(discord.ui.View):
 
 
 
-MARCADOR_CENTRAL_ROBLOX = "NÊMESIS • CENTRAL ROBLOX • V2"
+MARCADOR_CENTRAL_ROBLOX = "Chaos Org • CENTRAL ROBLOX • V2"
 
 
 def _componentes_contem_marcador(componentes, marcador: str) -> bool:
@@ -397,7 +397,7 @@ def _card_roblox(origem: discord.ui.View, embed: discord.Embed | None = None,
             componentes.append(discord.ui.ActionRow(novo))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Nêmesis Systeam • Roblox"),
+        discord.ui.TextDisplay("-# Chaos Org Systeam • Roblox"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -435,7 +435,7 @@ class CentralRobloxLayoutView(discord.ui.LayoutView):
         for campo in embed.fields:
             partes.append(f"### {campo.name}\n{campo.value}")
         partes.append("### ◈ ACESSO À CENTRAL\nVincule sua conta, confirme sua participação na comunidade ou consulte seu perfil Roblox.")
-        partes.append(f"-# Nêmesis Systeam • {MARCADOR_CENTRAL_ROBLOX}")
+        partes.append(f"-# Chaos Org Systeam • {MARCADOR_CENTRAL_ROBLOX}")
 
         self.add_item(discord.ui.Container(
             discord.ui.TextDisplay("\n\n".join(partes)),
@@ -622,7 +622,7 @@ class Roblox(commands.Cog):
             if not isinstance(canal, discord.TextChannel):
                 _LOG.error("Canal configurado para a central Roblox não é um canal de texto.")
                 return
-            embed = criar_embed(title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CENTRAL ROBLOX", description="Acesse a comunidade oficial da NÊMESIS no Roblox e conecte sua conta ao Discord.\n\n**Comunidade:** [Comunidade Nik](" + ROBLOX_GRUPO_URL + ")\n**ID do grupo:** `" + str(ROBLOX_GRUPO_ID) + "`\n\n**Vinculação segura**\nA confirmação utiliza um código temporário na descrição do perfil Roblox. O bot nunca solicita senha ou cookie.", color=0xB3132B)
+            embed = criar_embed(title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CENTRAL ROBLOX", description="Acesse a comunidade oficial da Chaos Org no Roblox e conecte sua conta ao Discord.\n\n**Comunidade:** [Comunidade Nik](" + ROBLOX_GRUPO_URL + ")\n**ID do grupo:** `" + str(ROBLOX_GRUPO_ID) + "`\n\n**Vinculação segura**\nA confirmação utiliza um código temporário na descrição do perfil Roblox. O bot nunca solicita senha ou cookie.", color=0xB3132B)
             aplicar_identidade_servidor(embed, canal.guild, self.bot)
             try:
                 config_grupo = await _config_grupo(canal.guild.id)
@@ -674,7 +674,7 @@ class Roblox(commands.Cog):
 
     async def exigir_administracao_roblox(self, interaction: discord.Interaction) -> bool:
         if interaction.guild is None or not membro_tem_lideranca(interaction.user):
-            mensagem = "Esta área é restrita à administração da NÊMESIS."
+            mensagem = "Esta área é restrita à administração da Chaos Org."
             if interaction.response.is_done():
                 await interaction.followup.send(mensagem, ephemeral=True)
             else:
@@ -804,7 +804,7 @@ class Roblox(commands.Cog):
             )
             if vinculo_existente is not None:
                 await interaction.followup.send(
-                    "Esta conta Roblox já está vinculada a outro perfil Discord da NÊMESIS. "
+                    "Esta conta Roblox já está vinculada a outro perfil Discord da Chaos Org. "
                     "Se você acredita que houve um erro, abra um ticket para a staff verificar.",
                     ephemeral=True,
                 )
@@ -885,7 +885,7 @@ class Roblox(commands.Cog):
     async def roblox_identificar(self, interaction: discord.Interaction, usuario_roblox: str):
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Use este comando dentro do servidor da NÊMESIS.", ephemeral=True
+                "Use este comando dentro do servidor da Chaos Org.", ephemeral=True
             )
             return
 
@@ -903,7 +903,7 @@ class Roblox(commands.Cog):
         )
         if encontrado is None:
             await interaction.response.send_message(
-                "Não encontrei esse nome entre as contas Roblox verificadas da NÊMESIS.",
+                "Não encontrei esse nome entre as contas Roblox verificadas da Chaos Org.",
                 ephemeral=True,
             )
             return

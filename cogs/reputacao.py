@@ -67,13 +67,13 @@ def perfil_embed(guild, membro, perfil):
             f"{discord.utils.escape_markdown(str(item.get('motivo') or 'Sem justificativa'))[:120]} · <t:{inteiro(item.get('timestamp'))}:d>"
         )
     embed = criar_embed(
-        "NÊMESIS  /  DOSSIÊ DE REPUTAÇÃO",
+        "Chaos Org  /  DOSSIÊ DE REPUTAÇÃO",
         f"**Integrante:** {membro.mention}\n"
         f"**Reputação:** **{inteiro(perfil.get('pontos'))} pontos**\n"
         f"**Reconhecimentos aprovados:** {inteiro(perfil.get('aprovacoes'))}\n"
         f"**Registros no histórico:** {len(historico)}\n\n"
         "A reputação representa confiança, conduta e contribuição reconhecidas pela organização.",
-        cor=COR, rodape="NÊMESIS • REPUTAÇÃO INDIVIDUAL • Histórico auditável",
+        cor=COR, rodape="Chaos Org • REPUTAÇÃO INDIVIDUAL • Histórico auditável",
     )
     embed.add_field(name="HISTÓRICO RECENTE", value="\n\n".join(linhas) if linhas else "Nenhum reconhecimento registrado.", inline=False)
     return embed
@@ -144,7 +144,7 @@ class AlvoView(discord.ui.View):
             await interaction.response.send_message("Você não pode indicar a si mesmo.", ephemeral=True)
             return
         if not elegivel(alvo):
-            await interaction.response.send_message("O indicado precisa possuir o cargo oficial NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("O indicado precisa possuir o cargo oficial Chaos Org.", ephemeral=True)
             return
         await interaction.response.send_message(
             "Escolha o critério do reconhecimento.", view=CategoriaView(self.cog, self.autor_id, alvo.id), ephemeral=True
@@ -190,19 +190,19 @@ class RevisaoLayoutView(discord.ui.LayoutView):
             self.add_item(discord.ui.Container(
                 discord.ui.TextDisplay(texto[:3900]),
                 discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-                discord.ui.TextDisplay("-# NÊMESIS • REPUTAÇÃO • Análise concluída"),
+                discord.ui.TextDisplay("-# Chaos Org • REPUTAÇÃO • Análise concluída"),
                 accent_colour=COR,
             ))
         else:
             origem = RevisaoView(cog, protocolo)
-            self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO • Análise da liderança"))
+            self.add_item(_layout_reputacao(origem, texto, "Chaos Org • REPUTAÇÃO • Análise da liderança"))
 
 
 class PainelLayoutView(discord.ui.LayoutView):
     def __init__(self, cog, texto):
         super().__init__(timeout=None)
         origem = PainelView(cog)
-        self.add_item(_layout_reputacao(origem, texto, "NÊMESIS • REPUTAÇÃO INDIVIDUAL"))
+        self.add_item(_layout_reputacao(origem, texto, "Chaos Org • REPUTAÇÃO INDIVIDUAL"))
 
 
 class RevisaoView(discord.ui.View):
@@ -272,7 +272,7 @@ class PainelView(discord.ui.View):
         acao = interaction.data.get("values", [None])[0]
         if acao in ("perfil", "indicar", "ranking") and not elegivel(interaction.user):
             await interaction.response.send_message(
-                "Este recurso é exclusivo de integrantes com o cargo oficial NÊMESIS.", ephemeral=True
+                "Este recurso é exclusivo de integrantes com o cargo oficial Chaos Org.", ephemeral=True
             )
             return
         if acao == "perfil":
@@ -318,7 +318,7 @@ def _componentes_contem_marcador(componentes, marcador):
 
 
 def _texto_painel(embed):
-    partes = [f"## {embed.title or 'NÊMESIS / SISTEMA DE REPUTAÇÃO'}"]
+    partes = [f"## {embed.title or 'Chaos Org / SISTEMA DE REPUTAÇÃO'}"]
     if embed.description:
         partes.append(embed.description)
     for campo in embed.fields:
@@ -336,7 +336,7 @@ def _texto_revisao(protocolo, cog, pontos=None, status="pendente"):
     else:
         detalhe = "Indicação rejeitada. Nenhum ponto foi concedido."
     return (
-        "## NÊMESIS / INDICAÇÃO EM ANÁLISE\n"
+        "## Chaos Org / INDICAÇÃO EM ANÁLISE\n"
         f"**Protocolo:** {protocolo}\n"
         f"**Estado:** {status.capitalize()}\n"
         f"{detalhe}"
@@ -351,10 +351,10 @@ class Reputacao(commands.Cog):
 
     async def criar_indicacao(self, guild, autor_id, alvo_id, categoria, motivo):
         if guild is None or guild.id != GUILD_NEMESIS_ID:
-            raise ValueError("Sistema exclusivo da NÊMESIS.")
+            raise ValueError("Sistema exclusivo da Chaos Org.")
         autor, alvo = guild.get_member(autor_id), guild.get_member(alvo_id)
         if not elegivel(autor) or not elegivel(alvo):
-            raise ValueError("Autor e indicado precisam possuir o cargo oficial NÊMESIS.")
+            raise ValueError("Autor e indicado precisam possuir o cargo oficial Chaos Org.")
         if autor_id == alvo_id:
             raise ValueError("Autoindicação não é permitida.")
         if categoria not in CATEGORIAS or len(motivo.strip()) < 20:
@@ -387,7 +387,7 @@ class Reputacao(commands.Cog):
                 f"**Estado:** Pendente de análise\\n"
                 f"**Data:** <t:{agora}:F>\\n\\n"
                 f"**Justificativa**\\n{discord.utils.escape_markdown(motivo.strip())}",
-                cor=COR, rodape="NÊMESIS • AUDITORIA DE REPUTAÇÃO • INDICAÇÃO",
+                cor=COR, rodape="Chaos Org • AUDITORIA DE REPUTAÇÃO • INDICAÇÃO",
             )
             await registrar_registro_global(
                 guild, "reputacao", "Indicação de reputação recebida",
@@ -398,15 +398,15 @@ class Reputacao(commands.Cog):
         canal = guild.get_channel(CANAL_REPUTACAO_ID)
         if isinstance(canal, discord.TextChannel):
             embed = criar_embed(
-                "NÊMESIS  /  INDICAÇÃO EM ANÁLISE",
+                "Chaos Org  /  INDICAÇÃO EM ANÁLISE",
                 f"**Protocolo:** {protocolo}\n**Integrante indicado:** <@{alvo_id}>\n"
                 f"**Indicação enviada por:** <@{autor_id}>\n**Categoria:** {categoria}\n\n"
                 f"**Justificativa**\n{discord.utils.escape_markdown(motivo)}\n\n"
                 "**Estado:** aguardando decisão da liderança. Nenhum ponto foi concedido.",
-                cor=COR, rodape="NÊMESIS • REPUTAÇÃO • Registro de mérito",
+                cor=COR, rodape="Chaos Org • REPUTAÇÃO • Registro de mérito",
             )
             mensagem = await canal.send(view=RevisaoLayoutView(self, protocolo, (
-                f"## NÊMESIS / INDICAÇÃO EM ANÁLISE\n**Protocolo:** {protocolo}\n"
+                f"## Chaos Org / INDICAÇÃO EM ANÁLISE\n**Protocolo:** {protocolo}\n"
                 f"**Integrante indicado:** <@{alvo_id}>\n**Indicação enviada por:** <@{autor_id}>\n"
                 f"**Categoria:** {categoria}\n\n**Justificativa**\n{discord.utils.escape_markdown(motivo)}\n\n"
                 "**Estado:** aguardando decisão da liderança. Nenhum ponto foi concedido."
@@ -434,7 +434,7 @@ class Reputacao(commands.Cog):
                 raise ValueError("Você não pode aprovar a própria indicação.")
             alvo = guild.get_member(inteiro(item.get("alvo_id")))
             if not elegivel(alvo):
-                raise ValueError("O indicado não possui mais o cargo NÊMESIS; indicação não pode ser aprovada.")
+                raise ValueError("O indicado não possui mais o cargo Chaos Org; indicação não pode ser aprovada.")
             item.update({
                 "status": "aprovada" if pontos else "rejeitada",
                 "pontos": inteiro(pontos), "decisor_id": decisor_id, "decidido_em": agora,
@@ -475,7 +475,7 @@ class Reputacao(commands.Cog):
             registro = criar_embed(
                 "ANÁLISE DE REPUTAÇÃO • " + estado,
                 "\\n".join(linhas),
-                cor=COR, rodape="NÊMESIS • AUDITORIA DE REPUTAÇÃO • DECISÃO DA LIDERANÇA",
+                cor=COR, rodape="Chaos Org • AUDITORIA DE REPUTAÇÃO • DECISÃO DA LIDERANÇA",
             )
             await registrar_registro_global(
                 guild, "reputacao", "Decisão de reputação",
@@ -506,10 +506,10 @@ class Reputacao(commands.Cog):
                     message_id=inteiro(item.get("mensagem_id")),
                 )
         embed = criar_embed(
-            "NÊMESIS  /  SISTEMA DE REPUTAÇÃO",
+            "Chaos Org  /  SISTEMA DE REPUTAÇÃO",
             "A reputação registra o mérito individual, a confiança e a contribuição de cada integrante.\n\n"
             "**COMO FUNCIONA**\n"
-            "• Integrantes com o cargo oficial NÊMESIS podem indicar outro membro.\n"
+            "• Integrantes com o cargo oficial Chaos Org podem indicar outro membro.\n"
             "• Toda indicação exige categoria e justificativa objetiva.\n"
             "• A liderança avalia e concede **+1, +2, +3 ou +5 pontos**, ou rejeita.\n"
             "• Cada membro pode enviar uma indicação a cada 24 horas.\n\n"
@@ -518,7 +518,7 @@ class Reputacao(commands.Cog):
             "**INTEGRIDADE**\n"
             "Autoindicação e acordos de troca são proibidos. A reputação não é moeda, não substitui XP, "
             "não promove cargos e não concede permissões.",
-            cor=COR, rodape="NÊMESIS • AUTHORITY BEYOND RANK • Reputação individual",
+            cor=COR, rodape="Chaos Org • AUTHORITY BEYOND RANK • Reputação individual",
         )
         embed.set_thumbnail(url=self.bot.user.display_avatar.url)
         self.bot.add_view(PainelLayoutView(self, _texto_painel(embed)))
@@ -527,7 +527,7 @@ class Reputacao(commands.Cog):
             if mensagem.author.id != self.bot.user.id:
                 continue
             componentes_v2 = _componentes_contem_marcador(
-                mensagem.components, "NÊMESIS • REPUTAÇÃO INDIVIDUAL"
+                mensagem.components, "Chaos Org • REPUTAÇÃO INDIVIDUAL"
             )
             embed_legado = False
             if mensagem.embeds:
@@ -535,7 +535,7 @@ class Reputacao(commands.Cog):
                 titulo = primeiro.title or ""
                 rodape = primeiro.footer.text or "" if primeiro.footer else ""
                 embed_legado = (
-                    titulo == "NÊMESIS  /  SISTEMA DE REPUTAÇÃO"
+                    titulo == "Chaos Org  /  SISTEMA DE REPUTAÇÃO"
                     or "REPUTAÇÃO INDIVIDUAL" in rodape
                 )
             if componentes_v2 or embed_legado:

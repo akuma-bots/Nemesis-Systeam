@@ -42,7 +42,7 @@ def _embed_revisao(revisao: dict, guild: discord.Guild = None, bot: commands.Bot
         ),
         color=CORES.get(tipo, 0x9F2035),
     )
-    embed.set_author(name="NÊMESIS  /  AUDITORIA DE OPERAÇÕES")
+    embed.set_author(name="Chaos Org  /  AUDITORIA DE OPERAÇÕES")
     embed.add_field(name="◈ PARTICIPANTE", value=f"<@{autor_id}>" if autor_id else "Não identificado", inline=True)
     embed.add_field(name="◈ CATEGORIA", value=tipo.replace("_", " ").title(), inline=True)
     embed.add_field(name="◈ PROTOCOLO", value=f"`{revisao.get('id', '—')}`", inline=True)
@@ -76,7 +76,7 @@ def _embed_revisao(revisao: dict, guild: discord.Guild = None, bot: commands.Bot
             inline=False,
         )
     embed.set_image(url=revisao["print_url"])
-    embed.set_footer(text="NÊMESIS  •  CENTRAL DE VALIDAÇÃO  •  DECISÃO REGISTRADA EM AUDITORIA")
+    embed.set_footer(text="Chaos Org  •  CENTRAL DE VALIDAÇÃO  •  DECISÃO REGISTRADA EM AUDITORIA")
     return aplicar_identidade_servidor(embed, guild, bot, banner=False)
 
 def _view_link_revisao(url: str) -> discord.ui.View:
@@ -150,7 +150,7 @@ def _card_revisao_view(origem: discord.ui.View, embed: discord.Embed | None = No
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Auditoria de Operações"),
+        discord.ui.TextDisplay("-# Chaos Org • Auditoria de Operações"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -164,7 +164,7 @@ def _mensagem_tem_cartao_revisao(mensagem: discord.Message) -> bool:
     pendentes = list(getattr(mensagem, "components", []) or [])
     while pendentes:
         item = pendentes.pop()
-        if "NÊMESIS • Auditoria de Operações" in str(getattr(item, "content", "") or ""):
+        if "Chaos Org • Auditoria de Operações" in str(getattr(item, "content", "") or ""):
             return True
         pendentes.extend(list(getattr(item, "children", []) or []))
     return False
@@ -275,7 +275,7 @@ def _embed_painel_provas(
             inline=False,
         )
     embed.set_footer(
-        text=f"NÊMESIS • AUDITORIA OPERACIONAL • Exibindo {len(exibidos)} de {total} registros"
+        text=f"Chaos Org • AUDITORIA OPERACIONAL • Exibindo {len(exibidos)} de {total} registros"
     )
     return aplicar_identidade_servidor(embed, guild, bot, banner=True)
 
@@ -863,7 +863,7 @@ class Revisoes(commands.Cog):
                         else "Uma evidência em que você foi registrado como auxiliar"
                     )
                     await membro.send(
-                        f"✅ {contexto} para **{revisao.get('titulo', 'atividade')}** foi aprovada pela equipe da NÊMESIS.\n"
+                        f"✅ {contexto} para **{revisao.get('titulo', 'atividade')}** foi aprovada pela equipe da Chaos Org.\n"
                         f"Protocolo: `{revisao.get('id', '—')}`\n"
                         f"{resultado_texto or 'A validação foi concluída.'}"
                     )

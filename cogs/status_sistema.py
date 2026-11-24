@@ -46,7 +46,7 @@ def _resumo_tarefas_automaticas(bot):
 
 
 class StatusSistema(commands.Cog):
-    """Painel administrativo de estado e diagnóstico da NÊMESIS."""
+    """Painel administrativo de estado e diagnóstico da Chaos Org."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -55,7 +55,7 @@ class StatusSistema(commands.Cog):
     async def status(self, interaction: discord.Interaction):
         guild = interaction.guild
         if guild is None:
-            await interaction.response.send_message("Use este comando dentro do servidor da NÊMESIS.", ephemeral=True)
+            await interaction.response.send_message("Use este comando dentro do servidor da Chaos Org.", ephemeral=True)
             return
 
         falhas = getattr(self.bot, "cogs_falhos", [])
@@ -87,7 +87,7 @@ class StatusSistema(commands.Cog):
             "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE SISTEMA ・✦",
             "Diagnóstico operacional da conexão, armazenamento e módulos carregados.",
             cor=COR_SUCESSO if estado_ok else COR_AVISO if self.bot.is_ready() else COR_ERRO,
-            rodape="NÊMESIS • Diagnóstico administrativo",
+            rodape="Chaos Org • Diagnóstico administrativo",
             timestamp=True,
         )
         embed.add_field(name="◈ CONEXÃO DISCORD", value="🟢 Online" if self.bot.is_ready() else "🔴 Inicializando", inline=True)
@@ -140,7 +140,7 @@ class StatusSistema(commands.Cog):
                 embed=criar_embed(
                     "✕ CONFIGURAÇÃO DO UPSTASH INCOMPLETA",
                     "As variáveis de conexão do Upstash estão configuradas parcialmente. O bot não fará fallback silencioso para armazenamento local. Revise a URL e o token nas variáveis do Render, sem compartilhar seus valores.",
-                    cor=COR_ERRO, rodape="NÊMESIS • Diagnóstico", timestamp=True,
+                    cor=COR_ERRO, rodape="Chaos Org • Diagnóstico", timestamp=True,
                 ),
                 ephemeral=True,
             )
@@ -151,7 +151,7 @@ class StatusSistema(commands.Cog):
                 embed=criar_embed(
                     "⚠️ DIAGNÓSTICO DE ARMAZENAMENTO",
                     "O bot está usando armazenamento local. Dependendo do ambiente de hospedagem, os dados podem não persistir após reinicializações.",
-                    cor=COR_AVISO, rodape="NÊMESIS • Diagnóstico", timestamp=True,
+                    cor=COR_AVISO, rodape="Chaos Org • Diagnóstico", timestamp=True,
                 ),
                 ephemeral=True,
             )
@@ -165,7 +165,7 @@ class StatusSistema(commands.Cog):
                 embed=criar_embed(
                     "⚠️ ARMAZENAMENTO LENTO",
                     "O armazenamento não respondeu em até 8 segundos. Tente novamente; se persistir, consulte os logs do serviço.",
-                    cor=COR_AVISO, rodape="NÊMESIS • Diagnóstico", timestamp=True,
+                    cor=COR_AVISO, rodape="Chaos Org • Diagnóstico", timestamp=True,
                 ),
                 ephemeral=True,
             )
@@ -176,7 +176,7 @@ class StatusSistema(commands.Cog):
                 embed=criar_embed(
                     "✕ FALHA NO ARMAZENAMENTO",
                     f"O teste não foi concluído. Tipo do erro: {type(erro).__name__}. Consulte os logs do serviço.",
-                    cor=COR_ERRO, rodape="NÊMESIS • Diagnóstico", timestamp=True,
+                    cor=COR_ERRO, rodape="Chaos Org • Diagnóstico", timestamp=True,
                 ),
                 ephemeral=True,
             )
@@ -186,7 +186,7 @@ class StatusSistema(commands.Cog):
             embed=criar_embed(
                 "✓ ARMAZENAMENTO OPERACIONAL",
                 "O teste de conexão foi concluído com sucesso.",
-                cor=COR_SUCESSO, rodape="NÊMESIS • Diagnóstico concluído", timestamp=True,
+                cor=COR_SUCESSO, rodape="Chaos Org • Diagnóstico concluído", timestamp=True,
             ),
             ephemeral=True,
         )
