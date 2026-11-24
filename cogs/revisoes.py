@@ -33,7 +33,7 @@ def _embed_revisao(revisao: dict, guild: discord.Guild = None, bot: commands.Bot
     titulo = str(revisao.get("titulo") or "Comprovante de atividade")
     descricao = str(revisao.get("descricao") or "Sem observações adicionais.")
     embed = criar_embed(
-        title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  CENTRAL DE VALIDAÇÃO",
+        title="Chaos Org  ━  CENTRAL DE VALIDAÇÃO",
         description=(
             f"**◈ COMPROVANTE RECEBIDO**  ·  **{tipo.replace('_', ' ').upper()}**\n"
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
@@ -228,7 +228,7 @@ def _embed_painel_provas(
     exibidos = itens[inicio:inicio + ITENS_POR_PAGINA]
     contagens = contagens or _contagens_provas(itens)
     embed = criar_embed(
-        title="✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE VALIDAÇÃO ・✦",
+        title="✦・ Chaos Org — CENTRAL DE VALIDAÇÃO ・✦",
         description=(
             "⟡・Acompanhamento operacional de evidências, decisões e histórico de análise.\n"
             f"**Status:** {label}  •  **Categoria:** {TIPO_LABELS.get(tipo, tipo.title())}\n"

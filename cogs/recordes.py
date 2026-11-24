@@ -85,7 +85,7 @@ class Recordes(commands.Cog):
             return
 
         embed = criar_embed(
-            "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — NOVO RECORDE ・✦",
+            "✦・ Chaos Org — NOVO RECORDE ・✦",
             f"## {emoji} {discord.utils.escape_markdown(nome)}\n\n"
             f"**Competidor:** <@{user_id}>\n"
             f"**Marca registrada:** {_valor(valor, unidade)}",
@@ -154,7 +154,7 @@ class Recordes(commands.Cog):
 
         todos = await recordes.obter_todos(interaction.guild.id)
         embed = criar_embed(
-            "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — ARQUIVO DE RECORDES ・✦",
+            "✦・ Chaos Org — ARQUIVO DE RECORDES ・✦",
             "Marcas competitivas atualmente registradas no servidor.",
             cor=COR_PRIMARIA,
             rodape="Chaos Org • Estatísticas oficiais",

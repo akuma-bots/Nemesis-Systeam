@@ -84,7 +84,7 @@ class StatusSistema(commands.Cog):
         registros_ok = bool(getattr(cog_logs, "_topicos_prontos", False))
         estado_ok = self.bot.is_ready() and not falhas and armazenamento_ok and registros_ok
         embed = criar_embed(
-            "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE SISTEMA ・✦",
+            "✦・ Chaos Org — CENTRAL DE SISTEMA ・✦",
             "Diagnóstico operacional da conexão, armazenamento e módulos carregados.",
             cor=COR_SUCESSO if estado_ok else COR_AVISO if self.bot.is_ready() else COR_ERRO,
             rodape="Chaos Org • Diagnóstico administrativo",

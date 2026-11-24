@@ -258,7 +258,7 @@ class CentralRobloxView(discord.ui.View):
             rank = await _buscar_rank_no_grupo(int(vinculo["roblox_id"]), grupo_id)
             if rank:
                 embed = criar_embed(
-                    title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ VERIFICAÇÃO ROBLOX",
+                    title="Chaos Org ━ VERIFICAÇÃO ROBLOX",
                     description=(
                         "Sua conta vinculada foi encontrada na comunidade oficial.\n\n"
                         f"**Conta:** [{vinculo.get('roblox_username', 'Roblox')}]"
@@ -270,7 +270,7 @@ class CentralRobloxView(discord.ui.View):
                 )
             else:
                 embed = criar_embed(
-                    title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ VERIFICAÇÃO ROBLOX",
+                    title="Chaos Org ━ VERIFICAÇÃO ROBLOX",
                     description=(
                         "A conta está vinculada, mas não foi encontrada como membro da comunidade oficial.\n\n"
                         f"**Conta:** {vinculo.get('roblox_username', 'Roblox')}\n"
@@ -292,7 +292,7 @@ class CentralRobloxView(discord.ui.View):
         if not await self.cog.exigir_administracao_roblox(interaction):
             return
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ ADMINISTRAÇÃO ROBLOX",
+            title="Chaos Org ━ ADMINISTRAÇÃO ROBLOX",
             description=(
                 "**Configuração da comunidade**\nDefina o grupo Roblox oficial.\n\n"
                 "**Patentes e cargos**\nAssocie cada patente Roblox ao cargo equivalente do Discord.\n\n"
@@ -622,7 +622,7 @@ class Roblox(commands.Cog):
             if not isinstance(canal, discord.TextChannel):
                 _LOG.error("Canal configurado para a central Roblox não é um canal de texto.")
                 return
-            embed = criar_embed(title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CENTRAL ROBLOX", description="Acesse a comunidade oficial da Chaos Org no Roblox e conecte sua conta ao Discord.\n\n**Comunidade:** [Comunidade Nik](" + ROBLOX_GRUPO_URL + ")\n**ID do grupo:** `" + str(ROBLOX_GRUPO_ID) + "`\n\n**Vinculação segura**\nA confirmação utiliza um código temporário na descrição do perfil Roblox. O bot nunca solicita senha ou cookie.", color=0xB3132B)
+            embed = criar_embed(title="Chaos Org ━ CENTRAL ROBLOX", description="Acesse a comunidade oficial da Chaos Org no Roblox e conecte sua conta ao Discord.\n\n**Comunidade:** [Comunidade Nik](" + ROBLOX_GRUPO_URL + ")\n**ID do grupo:** `" + str(ROBLOX_GRUPO_ID) + "`\n\n**Vinculação segura**\nA confirmação utiliza um código temporário na descrição do perfil Roblox. O bot nunca solicita senha ou cookie.", color=0xB3132B)
             aplicar_identidade_servidor(embed, canal.guild, self.bot)
             try:
                 config_grupo = await _config_grupo(canal.guild.id)
@@ -913,7 +913,7 @@ class Roblox(commands.Cog):
         nome_membro = membro.mention if membro else f"ID Discord: {discord_id}"
         roblox_id = int(dados["roblox_id"])
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ IDENTIFICAÇÃO ROBLOX",
+            title="Chaos Org ━ IDENTIFICAÇÃO ROBLOX",
             description=f"Conta Roblox: {dados['roblox_username']} (https://www.roblox.com/users/{roblox_id}/profile)\nMembro Discord: {nome_membro}",
             color=0xB3132B,
         )
@@ -1026,7 +1026,7 @@ class Roblox(commands.Cog):
             except (TypeError, ValueError, OverflowError):
                 data_texto = "data indisponível"
             linhas.append(f"**{tipo}** · {nome}\n{membro} · `{anterior}` → `{atual}`\n{data_texto}")
-        embed = criar_embed(title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ HISTÓRICO ROBLOX", description="\n\n".join(linhas)[:3900] or "Nenhum evento válido encontrado.", color=0xB3132B)
+        embed = criar_embed(title="Chaos Org ━ HISTÓRICO ROBLOX", description="\n\n".join(linhas)[:3900] or "Nenhum evento válido encontrado.", color=0xB3132B)
         embed.set_footer(text="Últimas 12 alterações • Verificação automática a cada 30 minutos")
         await interaction.response.send_message(embed=embed, ephemeral=True)
     @tasks.loop(minutes=30)

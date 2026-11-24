@@ -75,7 +75,7 @@ def _embed_central(atividades: list, selecionada: dict = None, estatisticas: dic
     ativas = sum(1 for item in atividades if item.get("ativa", True) is not False)
     arquivadas = len(atividades) - ativas
     embed = criar_embed(
-        "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE GESTÃO DE MISSÕES ・✦",
+        "✦・ Chaos Org — CENTRAL DE GESTÃO DE MISSÕES ・✦",
         "⟡・ Administração do catálogo, acompanhamento de provas e controle do ciclo de vida das atividades.",
         cor=0x9F2035,
         rodape=None,
