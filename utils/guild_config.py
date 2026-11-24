@@ -22,7 +22,6 @@ PADRAO = {
 
     "contadores": [],
 
-    "canal_guerras_id": 1545834530085142678,
 
     # ========================================================
     # COMPETITIVO
@@ -76,7 +75,6 @@ CAMPOS_ID = (
     "canal_parcerias_id",
     "cargo_categoria_parcerias_id",
 
-    "canal_guerras_id",
 
     "canal_desafios_id",
     "canal_lutas_id",

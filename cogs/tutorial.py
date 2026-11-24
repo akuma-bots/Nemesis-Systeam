@@ -107,18 +107,6 @@ TUTORIAIS = {
         ],
         "comandos": "painéis de ajuda · perfil · Central Administrativa (staff)",
     },
-    "guerras": {
-        "titulo": "Guerras entre gangues",
-        "descricao": "Como organizar e registrar uma guerra oficial.",
-        "passos": [
-            "Defina a gangue adversária, formato, placar esperado e regras antes do confronto.",
-            "Confirme os participantes e a autorização da liderança.",
-            "Após a guerra, registre o placar e anexe uma prova quando disponível.",
-            "Use o histórico oficial para evitar registros repetidos ou conflitantes.",
-            "Cancelamentos e correções devem ser feitos pela equipe autorizada, com justificativa.",
-        ],
-        "comandos": "/guerra-registrar · /help",
-    },
     "revisoes": {
         "titulo": "Revisão de provas",
         "descricao": "Procedimento para quem envia provas e para a equipe revisora.",
@@ -149,7 +137,7 @@ TUTORIAIS = {
         "passos": [
             "O XP de progressão da gangue é separado do XP competitivo; cada sistema mantém seu próprio histórico.",
             "Mensagens válidas concedem XP com intervalo de segurança entre registros. Spam não acelera a progressão.",
-            "Missões são validadas pelo OCTÓGONO; contribuições e guerras seguem os fluxos oficiais de cada sistema.",
+            "Missões são validadas pelo OCTÓGONO; contribuições seguem os fluxos oficiais.",
             "Os ranks vão de Lutador a Capitão Geral e são calculados pelos limiares oficiais de XP.",
             "Promoções e rebaixamentos manuais exigem justificativa, registro e autorização de cargo acima de Elite.",
             "Use /perfil para acompanhar sua evolução. Em caso de divergência, abra um ticket com o horário e o sistema envolvido.",

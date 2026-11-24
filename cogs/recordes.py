@@ -13,7 +13,6 @@ _LOG = logging.getLogger(__name__)
 NOMES_CATEGORIA = {
     "vitorias_pvp": ("⚔️", "Vitórias em PvP", "vitória(s)"),
     "xp_total": ("✦", "XP acumulado", "XP"),
-    "vitorias_guerra": ("🏰", "Vitórias em guerra", "vitória(s)"),
 }
 
 

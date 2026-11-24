@@ -35,7 +35,7 @@ CATEGORIAS = {
     "moderacao": ("⚖️・Tribunal de Moderação", "Advertências, timeouts, expulsões, banimentos e decisões da equipe."),
     "seguranca": ("🛡️・Muralha de Segurança", "AutoMod, Anti-Raid, filtros, incidentes, bloqueios e falhas de proteção."),
     "missoes": ("🎯・Operações e Missões", "Missões, operações, formulários, relatórios, atribuições, provas, validações, conclusões e recompensas."),
-    "competitivo": ("🏆・Arena Competitiva", "Desafios, PvP, guerras, placares, participantes e resultados."),
+    "competitivo": ("🏆・Arena Competitiva", "Desafios, PvP, placares, participantes e resultados."),
     "reputacao": ("⭐・Registros de Reputação", "Indicações de reconhecimento, justificativas, integrantes envolvidos, decisões da liderança e pontuação concedida ou rejeitada."),
     "eventos": ("🎉・Eventos e Celebrações", "Agenda, inscrições, atividades coletivas, sorteios, vencedores e entrega de prêmios."),
     "atendimento": ("🎫・Central de Atendimento", "Tickets, responsáveis, encerramentos, avaliações e transcrições."),

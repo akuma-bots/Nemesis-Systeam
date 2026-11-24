@@ -9,7 +9,6 @@ from utils.apresentacao import criar_embed
 SISTEMAS = {
     "Missoes": ("🎯", "Missões"),
     "Desafios": ("⚔️", "PvP / Desafios"),
-    "Guerras": ("🏰", "Guerras"),
     "Perfil": ("🎖️", "Perfil & Patentes"),
     "Roblox": ("🎮", "Conta Roblox"),
     "RankingGeral": ("🌍", "Ranking Geral"),

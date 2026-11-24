@@ -1,6 +1,6 @@
 # Chaos Org — Bot oficial
 
-Bot oficial da Chaos Org, desenvolvido em Python com `discord.py`. O projeto reúne operações da gangue, atendimento, moderação, missões, revisão de provas, confrontos PvP, guerras, progressão, sorteios com armazenamento próprio, sem integração com o dashboard.
+Bot oficial da Chaos Org, desenvolvido em Python com `discord.py`. O projeto reúne operações da gangue, atendimento, moderação, missões, revisão de provas, confrontos PvP e progressão, sorteios com armazenamento próprio, sem integração com o dashboard.
 
 O bot é exclusivo do servidor configurado por `NEMESIS_GUILD_ID`. Não é um modelo multi-servidor.
 
@@ -11,7 +11,6 @@ O bot é exclusivo do servidor configurado por `NEMESIS_GUILD_ID`. Não é um mo
 - **Missões:** catálogo unificado de missões, contribuições e operações especiais; seleção de atividade por menu, envio de evidências, revisão manual e recompensas em XP com proteção contra duplicidade.
 - **Validação de provas:** painel administrativo privado com filtros por status e categoria, paginação, indicadores gerais e histórico de decisões.
 - **PvP:** desafios entre membros, apostas de XP, envio de resultados e revisão.
-- **Guerras:** registro de resultados, guerras em andamento, atualização de placar, regras, cancelamento e histórico.
 - **Progressão da gangue:** XP de participação, ranks, cargos configuráveis e recompensas.
 - **Perfil e competitivo:** XP, patentes, vitórias, derrotas, KDR, temporadas e rankings; o perfil também exibe a conta Roblox verificada.
 - **Histórico individual:** painel integrado ao tópico **👥・Arquivo de Membros** do Registro Global. A liderança abre a consulta pelo botão, pesquisa/seleciona um integrante pelo nome no seletor do Discord e navega por identidade, progressão, missões, provas, combate, convites, punições e linha do tempo. Mensagens enviadas, editadas e excluídas ficam em uma consulta privada de atividade; conquistas e cargos não são exibidos no dossiê. A auditoria de cargos permanece no tópico administrativo.

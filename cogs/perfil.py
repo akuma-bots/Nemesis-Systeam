@@ -39,7 +39,6 @@ def _resumo_progressao(perfil: dict) -> dict:
         "faltam": max(0, int(proximo["xp"]) - xp) if proximo else 0,
         "mensagens": inteiro("mensagens"),
         "missoes": inteiro("missoes"),
-        "guerras": inteiro("guerras"),
     }
 
 
@@ -107,7 +106,7 @@ class Perfil(commands.Cog):
         self.bot = bot
 
     # ---------------- Perfil ----------------
-    @app_commands.command(name="perfil", description="Mostra o perfil de guerra de um membro.")
+    @app_commands.command(name="perfil", description="Mostra o perfil organizacional e competitivo de um membro.")
     @app_commands.describe(membro="De quem ver o perfil (padrão: você mesmo)")
     async def perfil(self, interaction: discord.Interaction, membro: discord.Member = None):
         alvo = membro or interaction.user
@@ -258,8 +257,7 @@ class Perfil(commands.Cog):
             name="◈ PARTICIPAÇÃO REGISTRADA",
             value=(
                 f"**{resumo_progressao['mensagens']:,}** mensagens válidas\n"
-                f"**{resumo_progressao['missoes']:,}** missões\n"
-                f"**{resumo_progressao['guerras']:,}** guerras"
+                f"**{resumo_progressao['missoes']:,}** missões"
             ).replace(",", "."),
             inline=True,
         )

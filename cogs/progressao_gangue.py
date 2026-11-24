@@ -133,7 +133,7 @@ class ProgressaoGangue(commands.Cog):
             perfil = membros.get(chave_usuario)
             if not isinstance(perfil, dict):
                 perfil = {
-                    "xp": 0, "mensagens": 0, "missoes": 0, "guerras": 0,
+                    "xp": 0, "mensagens": 0, "missoes": 0,
                     "rank_no": 12, "ultimo_xp": 0, "historico_ranks": [],
                 }
                 membros[chave_usuario] = perfil
@@ -143,7 +143,6 @@ class ProgressaoGangue(commands.Cog):
                 "xp": 0,
                 "mensagens": 0,
                 "missoes": 0,
-                "guerras": 0,
                 "rank_no": 12,
                 "ultimo_xp": 0,
                 "historico_ranks": [],
@@ -189,13 +188,12 @@ class ProgressaoGangue(commands.Cog):
             guild = dados.setdefault(str(guild_id), {})
             membros = guild.setdefault("membros", {})
             perfil = membros.setdefault(str(user_id), {
-                "xp": 0, "mensagens": 0, "missoes": 0, "guerras": 0,
+                "xp": 0, "mensagens": 0, "missoes": 0,
                 "rank_no": 12, "ultimo_xp": 0, "historico_ranks": [],
             })
             perfil.setdefault("xp", 0)
             perfil.setdefault("mensagens", 0)
             perfil.setdefault("missoes", 0)
-            perfil.setdefault("guerras", 0)
             perfil.setdefault("rank_no", 12)
             perfil.setdefault("eventos_recompensa", [])
             eventos = perfil["eventos_recompensa"]
@@ -209,10 +207,7 @@ class ProgressaoGangue(commands.Cog):
                 perfil["mensagens"] = int(perfil.get("mensagens", 0) or 0) + 1
                 perfil["ultimo_xp"] = time.time()
             if tipo in {"missao", "especial"}:
-                perfil["missoes"] = int(perfil.get("missoes", 0) or 0) + 1
-            elif tipo == "guerra":
-                perfil["guerras"] = int(perfil.get("guerras", 0) or 0) + 1
-            if evento_id:
+                perfil["missoes"] = int(perfil.get("missoes", 0) or 0) + 1            if evento_id:
                 eventos.append(evento_id)
                 perfil["eventos_recompensa"] = eventos[-1000:]
 
@@ -239,13 +234,12 @@ class ProgressaoGangue(commands.Cog):
 
             def obter(uid: int) -> dict:
                 perfil = membros.setdefault(str(uid), {
-                    "xp": 0, "mensagens": 0, "missoes": 0, "guerras": 0,
+                    "xp": 0, "mensagens": 0, "missoes": 0,
                     "rank_no": 12, "ultimo_xp": 0, "historico_ranks": [],
                 })
                 perfil.setdefault("xp", 0)
                 perfil.setdefault("mensagens", 0)
                 perfil.setdefault("missoes", 0)
-                perfil.setdefault("guerras", 0)
                 perfil.setdefault("rank_no", 12)
                 perfil.setdefault("ultimo_xp", 0)
                 perfil.setdefault("historico_ranks", [])
@@ -372,7 +366,7 @@ class ProgressaoGangue(commands.Cog):
             perfil = membros.get(str(user_id))
             if not isinstance(perfil, dict):
                 perfil = {
-                    "xp": 0, "mensagens": 0, "missoes": 0, "guerras": 0,
+                    "xp": 0, "mensagens": 0, "missoes": 0,
                     "rank_no": 12, "ultimo_xp": 0, "historico_ranks": [],
                 }
             xp_anterior = max(0, int(perfil.get("xp", 0) or 0))
@@ -443,7 +437,7 @@ class ProgressaoGangue(commands.Cog):
             title="⚔️ PROGRESSÃO · HIERARQUIA Chaos Org",
             description=(
                 "**SUA EVOLUÇÃO É CONQUISTADA EM ATIVIDADE REAL.**\n"
-                "A progressão registra participação legítima, missões e guerras. "
+                "A progressão registra participação legítima e missões. "
                 "Missões são validadas pelo OCTÓGONO; promoções e rebaixamentos manuais exigem justificativa "
                 "e respeito à autoridade hierárquica."
             ),
@@ -458,7 +452,7 @@ class ProgressaoGangue(commands.Cog):
         )
         embed.add_field(
             name="02  /  ATIVIDADES OFICIAIS",
-            value="Missões são validadas pelo OCTÓGONO; contribuições e guerras seguem os fluxos oficiais.",
+            value="Missões são validadas pelo OCTÓGONO; contribuições seguem os fluxos oficiais.",
             inline=True,
         )
         hierarquia = "\n".join(
@@ -579,7 +573,6 @@ class ProgressaoGangue(commands.Cog):
         )
         embed.add_field(name="MENSAGENS VÁLIDAS", value=f"**{int(perfil.get('mensagens', 0)):,}**".replace(",", "."), inline=True)
         embed.add_field(name="MISSÕES", value=f"**{int(perfil.get('missoes', 0)):,}**".replace(",", "."), inline=True)
-        embed.add_field(name="GUERRAS", value=f"**{int(perfil.get('guerras', 0)):,}**".replace(",", "."), inline=True)
         embed.set_thumbnail(url=alvo.display_avatar.url)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
@@ -928,12 +921,11 @@ class ProgressaoGangue(commands.Cog):
     ):
         await self._ajustar_rank_manual(interaction, membro, rank, motivo, "Rebaixamento")
 
-    @app_commands.command(name="gangue-registrar-atividade", description="Registra missão, contribuição ou guerra concluída para a progressão.")
+    @app_commands.command(name="gangue-registrar-atividade", description="Registra missão ou contribuição concluída para a progressão.")
     @app_commands.describe(membro="Membro reconhecido", atividade="Tipo de atividade", quantidade="XP de recompensa", motivo="Prova ou motivo do registro")
     @app_commands.choices(atividade=[
         app_commands.Choice(name="Missão", value="missao"),
         app_commands.Choice(name="Contribuição", value="contribuicao"),
-        app_commands.Choice(name="Guerra", value="guerra"),
     ])
     @octogono_only()
     async def gangue_registrar_atividade(self, interaction: discord.Interaction, membro: discord.Member, atividade: app_commands.Choice[str], quantidade: app_commands.Range[int, 1, 5000], motivo: str):

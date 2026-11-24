@@ -32,7 +32,7 @@ CATEGORIAS_HISTORICO = (
 ABAS = (
     ("geral", "◈ Visão geral", "Identificação e indicadores essenciais do membro."),
     ("missoes", "🎯 Missões e atividades", "Provas, contribuições, aprovações e recusas."),
-    ("competitivo", "⚔️ Competitivo", "XP, progressão, guerras e estatísticas de combate."),
+    ("competitivo", "⚔️ Competitivo", "XP, progressão e estatísticas de combate."),
     ("moderacao", "🛡️ Moderação", "Punições registradas e ocorrências de segurança."),
     ("atividade", "◷ Monitoramento", "Entradas, saídas, voz e alterações relevantes do membro."),
     ("registros", "📚 Linha do tempo", "Eventos relevantes registrados nos sistemas da Chaos Org."),
@@ -259,7 +259,7 @@ def _embed_geral(d: dict) -> discord.Embed:
          2: "Capitão", 1: "Capitão Geral"}
     )
     rank_nome = ranks.get(_inteiro(rank_no, -1), "Não definido")
-    embed.add_field(name="◈ PROGRESSÃO ORGANIZACIONAL", value=f"**Rank:** {rank_nome}\n**XP:** {xp_org:,}\n**Mensagens válidas:** {_inteiro(progressao.get('mensagens')):,}\n**Missões aprovadas:** {_inteiro(progressao.get('missoes'))}\n**Guerras registradas:** {_inteiro(progressao.get('guerras'))}".replace(",", "."), inline=True)
+    embed.add_field(name="◈ PROGRESSÃO ORGANIZACIONAL", value=f"**Rank:** {rank_nome}\n**XP:** {xp_org:,}\n**Mensagens válidas:** {_inteiro(progressao.get('mensagens')):,}\n**Missões aprovadas:** {_inteiro(progressao.get('missoes'))}".replace(",", "."), inline=True)
     embed.add_field(name="◈ ATIVIDADE COMPETITIVA", value=f"**Vitórias:** {_inteiro(perfil.get('vitorias'))}\n**Derrotas:** {_inteiro(perfil.get('derrotas'))}\n**Empates:** {_inteiro(perfil.get('empates'))}\n**Kills / Deaths:** {_inteiro(perfil.get('kills'))} / {_inteiro(perfil.get('deaths'))}\n**MVPs:** {_inteiro(perfil.get('mvps'))}", inline=True)
     embed.add_field(name="◈ PARTICIPAÇÃO NA Chaos Org", value=f"**Provas vinculadas:** {resumo['total']}\n**Aprovadas:** {resumo['aprovadas']} · **Pendentes:** {resumo['pendentes']} · **Recusadas:** {resumo['rejeitadas']}\n**Punições registradas:** {len(d['punicoes'])}\n**Registros relevantes:** {len(d['eventos'])}", inline=False)
     embed.add_field(name="◈ RECRUTAMENTO", value=(f"**Convidado por:** <@{d['convidador_id']}>" if d["convidador_id"] else "**Convidador:** Não identificado") + f"\n**Convidados ativos atribuídos:** {len(d['convidados_ativos'])}", inline=True)
@@ -294,7 +294,7 @@ def _embed_competitivo(d: dict) -> discord.Embed:
     kdr = round(kills / max(1, deaths), 2)
     embed = criar_embed("⚔️ Chaos Org — DOSSIÊ COMPETITIVO", "Desempenho, progressão e marcos competitivos registrados.", cor=0x9F2035)
     embed.add_field(name="◈ COMBATE", value=f"**Vitórias:** {vitorias}\n**Derrotas:** {derrotas}\n**Empates:** {empates}\n**K/D:** {kills}/{deaths} · **KDR:** {kdr}\n**MVPs:** {_inteiro(p.get('mvps'))}\n**Sequência atual/máxima:** {_inteiro(p.get('sequencia_atual'))}/{_inteiro(p.get('maior_sequencia'))}", inline=True)
-    embed.add_field(name="◈ ORGANIZAÇÃO", value=f"**XP:** {_inteiro(prog.get('xp')):,}\n**Rank nº:** {prog.get('rank_no', '—')}\n**Mensagens:** {_inteiro(prog.get('mensagens'))}\n**Missões aprovadas:** {_inteiro(prog.get('missoes'))}\n**Guerras registradas:** {_inteiro(prog.get('guerras'))}".replace(",", "."), inline=True)
+    embed.add_field(name="◈ ORGANIZAÇÃO", value=f"**XP:** {_inteiro(prog.get('xp')):,}\n**Rank nº:** {prog.get('rank_no', '—')}\n**Mensagens:** {_inteiro(prog.get('mensagens'))}\n**Missões aprovadas:** {_inteiro(prog.get('missoes'))}".replace(",", "."), inline=True)
     xp_comp = _inteiro(comp.get("xp", comp.get("xp_temporada")))
     embed.add_field(name="◈ RANKING COMPETITIVO", value=f"**XP competitivo:** {xp_comp:,}\n**Temporada:** {_inteiro(comp.get('xp_temporada')):,}\n**Medalhas:** {len(p.get('medalhas', []))}".replace(",", "."), inline=False)
     medalhas = p.get("medalhas", [])

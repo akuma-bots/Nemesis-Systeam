@@ -3,21 +3,7 @@ from pathlib import Path
 import pytest
 
 from cogs.formularios import _paginas_modal, _perguntas_flat, _perguntas_pagina
-from cogs.guerras import _resultado
 from utils.storage import ErroStorage, _path
-
-
-@pytest.mark.parametrize(
-    ("placar_nemesis", "placar_inimiga", "esperado"),
-    [
-        (3, 1, "VITÓRIA DA NÊMESIS"),
-        (0, 2, "DERROTA DA NÊMESIS"),
-        (4, 4, "EMPATE"),
-        (0, 0, "EMPATE"),
-    ],
-)
-def test_resultado_guerra(placar_nemesis, placar_inimiga, esperado):
-    assert _resultado(placar_nemesis, placar_inimiga) == esperado
 
 
 def test_formulario_divide_perguntas_em_blocos_validos_para_discord():
