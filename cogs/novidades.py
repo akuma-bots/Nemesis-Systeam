@@ -39,10 +39,10 @@ def _aplicar_identidade_bot(embed: discord.Embed, guild: discord.Guild, bot: dis
     banner_servidor = getattr(getattr(guild, "banner", None), "url", None)
 
     if avatar:
-        embed.set_author(name="N̷ÊMESIS  •  COMUNICADO OFICIAL", icon_url=avatar)
+        embed.set_author(name="Chaos Org  •  COMUNICADO OFICIAL", icon_url=avatar)
         embed.set_thumbnail(url=avatar)
     else:
-        embed.set_author(name="N̷ÊMESIS  •  COMUNICADO OFICIAL")
+        embed.set_author(name="Chaos Org  •  COMUNICADO OFICIAL")
 
     # Prioriza o banner configurado no perfil do bot; usa o banner do servidor
     # como alternativa quando a aplicação não possui banner próprio.
@@ -59,7 +59,7 @@ class NotasDMView(discord.ui.LayoutView):
     def __init__(self, release: dict):
         super().__init__(timeout=None)
         texto = (
-            "## 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  /  NOTAS DE ATUALIZAÇÃO\n"
+            "## Chaos Org  /  NOTAS DE ATUALIZAÇÃO\n"
             f"### {release['titulo']}\n"
             f"{release['mensagem']}\n\n"
             "### ◈ INFORMAÇÕES DA ATUALIZAÇÃO\n"

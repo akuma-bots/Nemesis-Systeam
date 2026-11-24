@@ -135,7 +135,7 @@ class Conquistas(commands.Cog):
             canal = guild.get_channel(CANAL_CONQUISTAS_ID)
             if isinstance(canal, discord.TextChannel):
                 embed = criar_embed(
-                    title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ CONQUISTA DESBLOQUEADA",
+                    title="Chaos Org ━ CONQUISTA DESBLOQUEADA",
                     description=(
                         f"**{membro.mention}** ampliou seu histórico na organização.\n"
                         "Uma nova marca foi registrada permanentemente."
@@ -188,7 +188,7 @@ class Conquistas(commands.Cog):
         )
 
         embed = criar_embed(
-            title=f"𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ DOSSIÊ DE CONQUISTAS",
+            title=f"Chaos Org ━ DOSSIÊ DE CONQUISTAS",
             description=(
                 f"**Integrante:** {alvo.mention}\n"
                 f"**Marcos desbloqueados:** {len(desbloqueadas)}/{len(conquistas_storage.CATALOGO_CONQUISTAS)}\n"

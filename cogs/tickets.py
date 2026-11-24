@@ -40,7 +40,7 @@ TEMPO_INATIVIDADE_SEGUNDOS = 10 * 60  # 10 minutos
 CUSTOM_ID_SELECT = "ticket:abrir_select"
 TICKET_PAINEL_CANAL_ID = 1563995881655509057  # ticket-available no servidor atual
 
-TITULO_PADRAO = "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE ATENDIMENTO ・✦"
+TITULO_PADRAO = "✦・ Chaos Org — CENTRAL DE ATENDIMENTO ・✦"
 COR_TICKET = 0x9F1239
 DESCRICAO_PADRAO = (
     "Precisa de ajuda? Selecione abaixo a categoria que melhor representa "
@@ -441,7 +441,7 @@ class FeedbackTicketModal(discord.ui.Modal):
         media_texto = f"{media:.2f}/5 ⭐" if media is not None else "Ainda sem avaliações"
         if canal is not None and callable(getattr(canal, "send", None)):
             embed = criar_embed(
-                "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — AVALIAÇÃO DE ATENDIMENTO ・✦",
+                "✦・ Chaos Org — AVALIAÇÃO DE ATENDIMENTO ・✦",
                 f"**Ticket #{self.ticket_id}** · avaliação confirmada\n\n"
                 "O feedback abaixo foi enviado pelo responsável pelo ticket e será usado "
                 "para acompanhar a qualidade da Central de Atendimento.",
@@ -1533,7 +1533,7 @@ class Tickets(commands.Cog):
             rodape="Chaos Org  •  ATENDIMENTO PRIVADO  •  REGISTRO ATIVO",
             timestamp=True,
         )
-        embed.set_author(name="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  /  CENTRAL DE OPERAÇÕES")
+        embed.set_author(name="Chaos Org  /  CENTRAL DE OPERAÇÕES")
         embed.add_field(name="PROTOCOLO", value=f"**{tipo['label']}**\n{descricao_tipo[:300]}", inline=False)
         embed.add_field(name="SOLICITANTE", value=f"{user.mention}\n`{user.id}`", inline=True)
         embed.add_field(name="SITUAÇÃO", value="🟠  Aguardando responsável", inline=True)
@@ -1937,7 +1937,7 @@ class Tickets(commands.Cog):
             return
 
         embed = criar_embed(
-            "N̷ÊMESIS ━ RESPOSTA AUTOMÁTICA",
+            "Chaos Org ━ RESPOSTA AUTOMÁTICA",
             resultado["resposta"],
             rodape="Chaos Org • Se precisar, solicite atendimento humano",
         )

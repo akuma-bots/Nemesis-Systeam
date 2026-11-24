@@ -9,7 +9,6 @@ class TestPerfilIntegrado(unittest.TestCase):
             "xp": 900,
             "mensagens": 12,
             "missoes": 3,
-            "guerras": 2,
         })
 
         self.assertEqual(resumo["xp"], 900)
@@ -18,20 +17,17 @@ class TestPerfilIntegrado(unittest.TestCase):
         self.assertEqual(resumo["faltam"], 1300)
         self.assertEqual(resumo["mensagens"], 12)
         self.assertEqual(resumo["missoes"], 3)
-        self.assertEqual(resumo["guerras"], 2)
 
     def test_resumo_progressao_trata_dados_legados_invalidos(self):
         resumo = _resumo_progressao({
             "xp": "inválido",
             "mensagens": None,
             "missoes": "x",
-            "guerras": -4,
         })
 
         self.assertEqual(resumo["xp"], 0)
         self.assertEqual(resumo["mensagens"], 0)
         self.assertEqual(resumo["missoes"], 0)
-        self.assertEqual(resumo["guerras"], 0)
         self.assertEqual(resumo["rank"]["nome"], "Lutador")
 
     def test_historico_filtra_membro_conta_status_e_ordena_recente(self):

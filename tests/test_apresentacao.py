@@ -21,14 +21,14 @@ def test_criar_embed_aplica_padrao_visual():
     assert embed.color.value == COR_PRIMARIA
     assert embed.author.name == "Chaos Org • CENTRAL DE SISTEMAS"
     assert embed.timestamp is not None
-    assert embed.footer.text == "Chaos Org • SISTEMAS INTEGRADOS • Chaos Org Systeam"
+    assert embed.footer.text == "Chaos Org • SISTEMAS INTEGRADOS • Chaos Systeam"
 
 
 def test_criar_embed_respeita_cor_rodape_e_timestamp():
     embed = criar_embed("Teste", cor=COR_SUCESSO, rodape="Administração", timestamp=True)
 
     assert embed.color.value == COR_SUCESSO
-    assert embed.footer.text == "Administração • Chaos Org Systeam"
+    assert embed.footer.text == "Administração • Chaos Systeam"
     assert embed.timestamp is not None
 
 
@@ -52,6 +52,6 @@ def test_respostas_semanticas_preservam_assinatura_visual():
         embed_aviso("Atenção", "Verifique"),
         embed_info("Informação", "Detalhes"),
     ):
-        assert embed.footer.text == "Chaos Org • SISTEMAS INTEGRADOS • Chaos Org Systeam"
+        assert embed.footer.text == "Chaos Org • SISTEMAS INTEGRADOS • Chaos Systeam"
         assert embed.author.name == "Chaos Org • CENTRAL DE SISTEMAS"
         assert embed.title in {"OK", "Falha", "Atenção", "Informação"}

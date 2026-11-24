@@ -1298,7 +1298,7 @@ class Missoes(commands.Cog):
 
         for indice, parte in enumerate(partes, start=1):
             sufixo = f"  ━  PARTE {indice}/{len(partes)}" if len(partes) > 1 else ""
-            titulo = f"𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  {titulo_original}{sufixo}"[:256]
+            titulo = f"Chaos Org  ━  {titulo_original}{sufixo}"[:256]
             cabecalho = (
                 f"**{status_icone} {status}**  ·  **{tipo['nome'].upper()}**\n"
                 "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -1446,7 +1446,7 @@ class Missoes(commands.Cog):
         inicio = pagina * itens_por_pagina
         nome_categoria = tipo["plural"].upper()
         embed = criar_embed(
-            "✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — CENTRAL DE MISSÕES E OPERAÇÕES ・✦",
+            "✦・ Chaos Org — CENTRAL DE MISSÕES E OPERAÇÕES ・✦",
             (
                 "╭────────────── ◈ ──────────────╮\n"
                 f"                 **{nome_categoria}  /  TODOS OS JOGOS**\n"
@@ -1461,7 +1461,7 @@ class Missoes(commands.Cog):
             ),
             cor=tipo["cor"], rodape=None,
         )
-        embed.set_author(name="N̷ÊMESIS  •  DEPARTAMENTO GLOBAL DE OPERAÇÕES")
+        embed.set_author(name="Chaos Org  •  DEPARTAMENTO GLOBAL DE OPERAÇÕES")
         embed.add_field(name="◈ OPERAÇÕES ATIVAS", value=f"**{len(abertas):02d}**\nDisponíveis para execução", inline=True)
         embed.add_field(name="◈ ARQUIVADAS", value=f"**{encerradas:02d}**\nMantidas em histórico", inline=True)
         embed.add_field(name="◈ TOTAL REGISTRADO", value=f"**{len(atividades):02d}**\nTodos os jogos", inline=True)
@@ -1524,7 +1524,7 @@ class Missoes(commands.Cog):
     def _embed_selecao_prova(self, categoria: str, pagina: int, total_paginas: int, atividades: list, guild: discord.Guild = None) -> discord.Embed:
         tipo = TIPOS.get(categoria, TIPOS["missao"])
         embed = criar_embed(
-            "𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 ━ ENVIO DE EVIDÊNCIAS",
+            "Chaos Org ━ ENVIO DE EVIDÊNCIAS",
             (
                 f"⟡・Selecione a atividade da categoria **{tipo['plural']}** que deseja comprovar.\n\n"
                 "Após a seleção, informe o link da imagem hospedada no Discord. "
@@ -2281,7 +2281,7 @@ class Missoes(commands.Cog):
         pagina = max(0, min(int(pagina), total_paginas - 1))
         inicio = pagina * por_pagina
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  AUDITORIA DE INTEGRIDADE",
+            title="Chaos Org  ━  AUDITORIA DE INTEGRIDADE",
             description=(
                 "**ACESSO RESTRITO · OCTÓGONO**\n"
                 "Diagnóstico somente leitura dos protocolos de missão e suas trilhas de decisão.\n"
@@ -2405,7 +2405,7 @@ class Missoes(commands.Cog):
         )
         descricao += f"Apuração: **{nome_periodo}** · Base: evidências oficiais de missões."
         embed = criar_embed(
-            title=f"𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  {titulo}",
+            title=f"Chaos Org  ━  {titulo}",
             description=descricao,
             cor=0x9F2035,
             rodape="Chaos Org • RELATÓRIOS ADMINISTRATIVOS • DADOS AUDITÁVEIS",
@@ -2463,7 +2463,7 @@ class Missoes(commands.Cog):
         metricas = _calcular_inteligencia_missoes(revisoes, time.time())
         pagina = max(0, min(int(pagina), 3))
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  INTELIGÊNCIA DE OPERAÇÕES",
+            title="Chaos Org  ━  INTELIGÊNCIA DE OPERAÇÕES",
             description=(
                 "**ACESSO RESTRITO · OCTÓGONO**\n"
                 "Visão consolidada da execução, validação e distribuição de recompensas das missões."
@@ -2659,7 +2659,7 @@ class Missoes(commands.Cog):
         membro = guild.get_member(int(user_id)) if guild else None
         nome = membro.mention if membro else f"<@{user_id}>"
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  HISTÓRICO DE EVIDÊNCIAS",
+            title="Chaos Org  ━  HISTÓRICO DE EVIDÊNCIAS",
             description=(
                 f"**INTEGRANTE** · {nome}\n"
                 "Registro cronológico de protocolos enviados para validação."
@@ -2758,7 +2758,7 @@ class Missoes(commands.Cog):
         )
 
         embed = criar_embed(
-            title="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒  ━  DOSSIÊ DE DESEMPENHO",
+            title="Chaos Org  ━  DOSSIÊ DE DESEMPENHO",
             description=(
                 f"**INTEGRANTE** · {interaction.user.mention}\n"
                 "Acompanhamento individual de missões validadas, evidências e progressão organizacional."

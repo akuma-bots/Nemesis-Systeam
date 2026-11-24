@@ -370,7 +370,7 @@ class ParceriaLayoutView(discord.ui.LayoutView):
         componentes = []
         if embed and embed.image and embed.image.url:
             componentes.append(discord.ui.MediaGallery(
-                discord.MediaGalleryItem(url=embed.image.url, description="Chaos Org • Parceria")
+                discord.MediaGalleryItem(media=embed.image.url, description="Chaos Org • Parceria")
             ))
         componentes.extend([
             discord.ui.TextDisplay("\n\n".join(partes)[:3900]),

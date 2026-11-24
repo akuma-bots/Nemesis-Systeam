@@ -179,7 +179,7 @@ def aplicar_identidade_servidor(
         # discord.py atual não expõe discord.Embed.Empty. O argumento url é
         # opcional; omiti-lo quando não existe evita falha em runtime.
         autor_kwargs = {
-            "name": autor.name or "N̷ÊMESIS  •  CENTRAL DE SISTEMAS",
+            "name": autor.name or "Chaos Org  •  CENTRAL DE SISTEMAS",
             "icon_url": avatar_bot,
         }
         if autor.url:

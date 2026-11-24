@@ -11,10 +11,10 @@ class TestRegistroGlobal(unittest.IsolatedAsyncioTestCase):
     def test_define_topicos_permanentes_configurados(self):
         essenciais = {
             "mensagens", "atendimento", "moderacao", "historico_membros",
-            "administracao", "seguranca", "missoes",
+            "administracao", "seguranca", "missoes", "reputacao",
         }
         self.assertTrue(essenciais.issubset(registro_global.CATEGORIAS))
-        self.assertEqual(len(registro_global.CATEGORIAS), 12)
+        self.assertEqual(len(registro_global.CATEGORIAS), 13)
         nomes = [nome for nome, _ in registro_global.CATEGORIAS.values()]
         self.assertEqual(len(nomes), len(set(nomes)))
 

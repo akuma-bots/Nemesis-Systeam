@@ -1,6 +1,6 @@
 import copy
 import unittest
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 
 from cogs.progressao_gangue import ProgressaoGangue
 
@@ -9,6 +9,7 @@ class TestProgressaoAtomica(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.dados = {}
         self.cog = ProgressaoGangue(Mock())
+        self.cog._membro_tem_cargo_nemesis = AsyncMock(return_value=True)
 
         async def carregar_dados():
             return copy.deepcopy(self.dados)

@@ -125,7 +125,7 @@ def _card_com_view(origem: discord.ui.View, titulo: str, descricao: str,
     componentes = []
     if imagem:
         componentes.append(discord.ui.MediaGallery(
-            discord.MediaGalleryItem(url=imagem, description=titulo[:100])
+            discord.MediaGalleryItem(media=imagem, description=titulo[:100])
         ))
     componentes.extend([
         discord.ui.TextDisplay(f"## {titulo}\n{descricao}"),

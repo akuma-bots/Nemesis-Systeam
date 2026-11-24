@@ -528,7 +528,7 @@ class Desafios(commands.Cog):
                 await interaction.followup.send("⚠️ Canal de lutas não encontrado. Configure novamente com /desafio-canais.", ephemeral=True)
                 return
             aviso = criar_embed(
-                "N̷ÊMESIS ━ CONFRONTO EM ANDAMENTO",
+                "Chaos Org ━ CONFRONTO EM ANDAMENTO",
                 f"<@{desafio['desafiante_id']}> vs <@{desafio['desafiado_id']}>",
                 cor=COR_ERRO,
                 rodape=None,
@@ -726,7 +726,7 @@ class Desafios(commands.Cog):
                 linhas.append(f"✅ **{nome}** — {resolvido.mention} ({nota}).")
 
         embed = criar_embed(
-            "N̷ÊMESIS ━ DIAGNÓSTICO DE CANAIS",
+            "Chaos Org ━ DIAGNÓSTICO DE CANAIS",
             "\n".join(linhas),
             cor=COR_SUCESSO if all("❌" not in linha and "⚠️" not in linha for linha in linhas) else COR_AVISO,
             rodape="Chaos Org • Diagnóstico administrativo",

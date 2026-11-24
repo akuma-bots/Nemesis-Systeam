@@ -353,7 +353,7 @@ class Ajuda(commands.Cog):
         ):
 
             embed = criar_embed(
-                "N̷ÊMESIS ━ CENTRAL DE COMANDOS",
+                "Chaos Org ━ CENTRAL DE COMANDOS",
                 texto,
                 rodape=f"Chaos Org • Página {numero}/{total}",
             )
