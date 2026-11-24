@@ -1,4 +1,4 @@
-"""Central administrativa interativa da NÊMESIS, integrada ao Registro Global."""
+"""Central administrativa interativa da Chaos Org, integrada ao Registro Global."""
 from __future__ import annotations
 
 import asyncio
@@ -24,7 +24,7 @@ _COR_NEMESIS = 0x9F2035
 SECOES_ADMINISTRATIVAS = {
     "visao_geral": {
         "titulo": "📊 VISÃO GERAL DA ORGANIZAÇÃO",
-        "descricao": "Resumo operacional atualizado no momento da consulta, com acesso às áreas administrativas da NÊMESIS.",
+        "descricao": "Resumo operacional atualizado no momento da consulta, com acesso às áreas administrativas da Chaos Org.",
         "topicos": (),
         "canais": (),
     },
@@ -57,7 +57,7 @@ SECOES_ADMINISTRATIVAS = {
     },
     "sistemas": {
         "titulo": "⚙️ SISTEMAS E INFRAESTRUTURA",
-        "descricao": "Consulte a saúde do Nêmesis Systeam e execute verificações do armazenamento. Os diagnósticos são privados e restritos à liderança.",
+        "descricao": "Consulte a saúde do Chaos Org Systeam e execute verificações do armazenamento. Os diagnósticos são privados e restritos à liderança.",
         "topicos": ("integracoes",),
         "canais": (),
     },
@@ -152,11 +152,11 @@ async def _embed_visao_geral(bot: commands.Bot, guild: discord.Guild) -> discord
     )
     cor = COR_SUCESSO if estado_ok else COR_AVISO if bot.is_ready() else COR_ERRO
     embed = criar_embed(
-        "NÊMESIS • CENTRAL ADMINISTRATIVA",
+        "Chaos Org • CENTRAL ADMINISTRATIVA",
         "Visão consolidada da organização. Os atalhos levam aos painéis e registros oficiais já existentes.",
-        cor=cor, rodape="NÊMESIS • PAINEL ADMINISTRATIVO CENTRAL", timestamp=True,
+        cor=cor, rodape="Chaos Org • PAINEL ADMINISTRATIVO CENTRAL", timestamp=True,
     )
-    embed.add_field(name="◈ ESTADO DO NÊMESIS SYSTEAM", value="🟢 Online" if bot.is_ready() else "🔴 Inicializando", inline=True)
+    embed.add_field(name="◈ ESTADO DO Chaos Org SYSTEAM", value="🟢 Online" if bot.is_ready() else "🔴 Inicializando", inline=True)
     embed.add_field(name="◈ LATÊNCIA", value=f"{latencia} ms" if latencia is not None else "Indisponível", inline=True)
     embed.add_field(name="◈ TEMPO ATIVO", value=_formatar_uptime(bot), inline=True)
     embed.add_field(name="◈ EFETIVO", value=f"{guild.member_count or len(guild.members):,} membros\n{lideranca:,} em cargos de liderança", inline=True)
@@ -187,8 +187,8 @@ async def _embed_visao_geral(bot: commands.Bot, guild: discord.Guild) -> discord
 async def _embed_secao(bot: commands.Bot, guild: discord.Guild, chave: str):
     secao = SECOES_ADMINISTRATIVAS[chave]
     embed = criar_embed(
-        f"NÊMESIS • {secao['titulo']}", secao["descricao"], cor=CORES_SECOES.get(chave, _COR_NEMESIS),
-        rodape="NÊMESIS • CENTRAL ADMINISTRATIVA • ACESSO RESTRITO", timestamp=True,
+        f"Chaos Org • {secao['titulo']}", secao["descricao"], cor=CORES_SECOES.get(chave, _COR_NEMESIS),
+        rodape="Chaos Org • CENTRAL ADMINISTRATIVA • ACESSO RESTRITO", timestamp=True,
     )
     try:
         dados = await carregar(_ARQUIVO_TOPICOS, {})
@@ -239,7 +239,7 @@ def _texto_embed_componentes(embed: discord.Embed) -> str:
     rodape = getattr(getattr(embed, "footer", None), "text", None)
     if rodape:
         partes.append(f"-# {rodape}")
-    return "\n\n".join(partes)[:4000] or "Central administrativa da NÊMESIS."
+    return "\n\n".join(partes)[:4000] or "Central administrativa da Chaos Org."
 
 
 class CentralAdministrativaView(discord.ui.LayoutView):
@@ -260,9 +260,9 @@ class CentralAdministrativaView(discord.ui.LayoutView):
         self.bot, self.owner_id, self.guild = bot, owner_id, guild
         if embed is None:
             embed = criar_embed(
-                "NÊMESIS • CENTRAL ADMINISTRATIVA",
+                "Chaos Org • CENTRAL ADMINISTRATIVA",
                 "Selecione uma área para consultar os sistemas e registros da organização.",
-                rodape="NÊMESIS • PAINEL ADMINISTRATIVO CENTRAL",
+                rodape="Chaos Org • PAINEL ADMINISTRATIVO CENTRAL",
             )
         self.chave = chave
         self.seletor = discord.ui.Select(
@@ -306,7 +306,7 @@ class CentralAdministrativaView(discord.ui.LayoutView):
             async def executar(clique: discord.Interaction):
                 if not _tem_acesso(clique, self.owner_id):
                     await clique.response.send_message(
-                        "Acesso restrito à liderança autorizada da NÊMESIS.",
+                        "Acesso restrito à liderança autorizada da Chaos Org.",
                         ephemeral=True,
                     )
                     return
@@ -349,14 +349,14 @@ class CentralAdministrativaView(discord.ui.LayoutView):
 
         itens.extend([
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
         ])
         self.add_item(discord.ui.Container(*itens, accent_colour=CORES_SECOES.get(chave, _COR_NEMESIS)))
 
     async def interaction_check(self, interaction: discord.Interaction) -> bool:
         if not _tem_acesso(interaction, self.owner_id):
             await interaction.response.send_message(
-                "Acesso restrito à liderança autorizada da NÊMESIS. Abra sua própria central para continuar.",
+                "Acesso restrito à liderança autorizada da Chaos Org. Abra sua própria central para continuar.",
                 ephemeral=True,
             )
             return False
@@ -404,26 +404,26 @@ class PainelAdministrativoView(discord.ui.LayoutView):
         botao.callback = self.abrir_central
         self.add_item(discord.ui.Container(
             discord.ui.TextDisplay(
-                "## 🏛️ NÊMESIS • CENTRAL ADMINISTRATIVA\n"
+                "## 🏛️ Chaos Org • CENTRAL ADMINISTRATIVA\n"
                 "Área de gestão restrita à liderança autorizada. "
                 "Acesse a visão operacional, os membros, as operações, a segurança e os registros."
             ),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(botao),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
             accent_colour=_COR_NEMESIS,
         ))
 
     async def abrir_central(self, interaction: discord.Interaction):
         if not _tem_acesso(interaction):
             await interaction.response.send_message(
-                "Acesso restrito à liderança autorizada da NÊMESIS.", ephemeral=True,
+                "Acesso restrito à liderança autorizada da Chaos Org.", ephemeral=True,
             )
             return
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Esta central só funciona dentro da NÊMESIS.", ephemeral=True,
+                "Esta central só funciona dentro da Chaos Org.", ephemeral=True,
             )
             return
         embed = await _embed_visao_geral(self.bot, interaction.guild)
@@ -469,7 +469,7 @@ class PainelAdministrativo(commands.Cog):
                 return
             guild = self.bot.get_guild(GUILD_NEMESIS_ID)
             if guild is None:
-                _LOG.error("Guild NÊMESIS indisponível; painel administrativo aguardará reconexão.")
+                _LOG.error("Guild Chaos Org indisponível; painel administrativo aguardará reconexão.")
                 return
             try:
                 logs = self.bot.get_cog("Logs")

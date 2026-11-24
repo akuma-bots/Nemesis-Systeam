@@ -113,7 +113,7 @@ class Perfil(commands.Cog):
         alvo = membro or interaction.user
         if interaction.guild is None:
             await interaction.response.send_message(
-                "Use este comando dentro do servidor da NÊMESIS.", ephemeral=True
+                "Use este comando dentro do servidor da Chaos Org.", ephemeral=True
             )
             return
 
@@ -208,7 +208,7 @@ class Perfil(commands.Cog):
         embed = criar_embed(
             f"N̷ÊMESIS ━ PERFIL DE {alvo.display_name.upper()}"[:256],
             descricao_perfil,
-            rodape="NÊMESIS • Perfil de combate",
+            rodape="Chaos Org • Perfil de combate",
         )
         embed.set_thumbnail(url=alvo.display_avatar.url)
         embed.add_field(name="◈ NOME", value=discord.utils.escape_markdown(alvo.display_name)[:256], inline=True)
@@ -374,7 +374,7 @@ class Perfil(commands.Cog):
             await interaction.response.send_message("Nenhuma patente configurada ainda.", ephemeral=True)
             return
         linhas = [f"**{p['nome']}** — a partir de {p['xp_minimo']} XP" + (f" (cargo: <@&{p['cargo_id']}>)" if p.get("cargo_id") else "") for p in patentes]
-        embed = criar_embed("N̷ÊMESIS ━ HIERARQUIA DE PATENTES", "\n".join(linhas), rodape="NÊMESIS • Progressão e patentes")
+        embed = criar_embed("N̷ÊMESIS ━ HIERARQUIA DE PATENTES", "\n".join(linhas), rodape="Chaos Org • Progressão e patentes")
         await interaction.response.send_message(embed=embed)
 
     async def _definir_patente_manual(
@@ -531,7 +531,7 @@ class Perfil(commands.Cog):
         nomes_metrica = {"vitorias": "vitórias", "mvps": "MVPs", "maior_sequencia": "maior sequência", "xp": "XP"}
         linhas = [f"**#{i+1}** <@{uid}> — {perfil.get(metrica, 0)} {nomes_metrica[metrica]}" for i, (uid, perfil) in enumerate(top)]
 
-        embed = criar_embed(f"N̷ÊMESIS ━ RANKING / {nomes_metrica[metrica].upper()}", "\n".join(linhas), rodape="NÊMESIS • Classificação dos membros")
+        embed = criar_embed(f"N̷ÊMESIS ━ RANKING / {nomes_metrica[metrica].upper()}", "\n".join(linhas), rodape="Chaos Org • Classificação dos membros")
         await interaction.response.send_message(embed=embed)
 
 

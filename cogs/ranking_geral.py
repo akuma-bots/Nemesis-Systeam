@@ -91,7 +91,7 @@ def _card_ranking_view(origem: discord.ui.View, embed: discord.Embed | None = No
         componentes.append(discord.ui.ActionRow(*botoes[inicio:inicio + 5]))
     componentes.extend([
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# NÊMESIS • Competitivo"),
+        discord.ui.TextDisplay("-# Chaos Org • Competitivo"),
     ])
     layout.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
     verificacao = getattr(origem, "interaction_check", None)
@@ -232,10 +232,10 @@ class ConfirmarTemporadaRankingView(discord.ui.View):
         )
 
 
-class ResetarRankingGlobalModal(discord.ui.Modal, title="Reset global da NÊMESIS"):
+class ResetarRankingGlobalModal(discord.ui.Modal, title="Reset global da Chaos Org"):
     confirmacao = discord.ui.TextInput(
-        label="Digite RESETAR NÊMESIS para confirmar",
-        placeholder="RESETAR NÊMESIS",
+        label="Digite RESETAR Chaos Org para confirmar",
+        placeholder="RESETAR Chaos Org",
         required=True,
         max_length=32,
     )
@@ -256,7 +256,7 @@ class ResetarRankingGlobalModal(discord.ui.Modal, title="Reset global da NÊMESI
                 ephemeral=True,
             )
             return
-        if str(self.confirmacao.value).strip().upper() != "RESETAR NÊMESIS":
+        if str(self.confirmacao.value).strip().upper() != "RESETAR Chaos Org":
             await interaction.response.send_message(
                 "Confirmação inválida. Nenhum dado foi alterado.",
                 ephemeral=True,
@@ -345,7 +345,7 @@ class CentralRankingGeralView(discord.ui.View):
             inline=True,
         )
         embed.add_field(name="Canal do ranking", value=canal_texto, inline=False)
-        embed.set_footer(text="Acesso exclusivo à liderança • NÊMESIS")
+        embed.set_footer(text="Acesso exclusivo à liderança • Chaos Org")
         return embed
 
     @discord.ui.button(label="Reiniciar temporada", style=discord.ButtonStyle.danger, emoji="🏁", row=1)
@@ -515,14 +515,14 @@ class RankingGeral(
         embed = criar_embed(
             title="🏆 RANKING GLOBAL · TEMPORADA COMPETITIVA",
             description=(
-                "**CLASSIFICAÇÃO OFICIAL NÊMESIS**\n"
+                "**CLASSIFICAÇÃO OFICIAL Chaos Org**\n"
                 "A posição é definida pelo XP acumulado na temporada. Vitórias, derrotas e permanência no Top 10 "
                 "são métricas complementares; o histórico das temporadas concluídas é preservado."
             ),
             color=0x9F1239,
             rodape=None,
         )
-        embed.set_author(name="NÊMESIS  /  LIGA GLOBAL")
+        embed.set_author(name="Chaos Org  /  LIGA GLOBAL")
         embed.add_field(name="TEMPORADA", value=f"**#{numero_temporada}**", inline=True)
         embed.add_field(name="REINÍCIO EM", value=f"**{dias}d {horas}h**", inline=True)
         embed.add_field(name="CLASSIFICADOS", value=f"**{len(pontuados)}**", inline=True)
@@ -659,7 +659,7 @@ class RankingGeral(
 
     @app_commands.command(
         name="ranking-geral",
-        description="Mostra onde acessar o ranking geral da NÊMESIS.",
+        description="Mostra onde acessar o ranking geral da Chaos Org.",
     )
     async def ranking_geral(
         self,
@@ -670,7 +670,7 @@ class RankingGeral(
         canal = interaction.guild.get_channel(int(canal_id))
         mention = canal.mention if canal is not None else f"<#{canal_id}>"
         await interaction.response.send_message(
-            f"Acesse {mention} para consultar o **Ranking Geral da NÊMESIS**, que soma as pontuações de missões em todos os jogos em uma única classificação.",
+            f"Acesse {mention} para consultar o **Ranking Geral da Chaos Org**, que soma as pontuações de missões em todos os jogos em uma única classificação.",
             ephemeral=True,
         )
 

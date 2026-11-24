@@ -263,7 +263,7 @@ class ParceriaView(discord.ui.View):
             )
         ):
             await interaction.response.send_message(
-                "Esta ação só pode ser usada dentro do servidor da NÊMESIS.",
+                "Esta ação só pode ser usada dentro do servidor da Chaos Org.",
                 ephemeral=True,
             )
             return
@@ -343,7 +343,7 @@ class ParceriaView(discord.ui.View):
 
 
 
-MARCADOR_CARTAO_PARCERIAS = "NÊMESIS • ALIANÇAS E PARCERIAS • V2"
+MARCADOR_CARTAO_PARCERIAS = "Chaos Org • ALIANÇAS E PARCERIAS • V2"
 
 
 def _componentes_contem_marcador(componentes, marcador: str) -> bool:
@@ -370,7 +370,7 @@ class ParceriaLayoutView(discord.ui.LayoutView):
         componentes = []
         if embed and embed.image and embed.image.url:
             componentes.append(discord.ui.MediaGallery(
-                discord.MediaGalleryItem(url=embed.image.url, description="NÊMESIS • Parceria")
+                discord.MediaGalleryItem(url=embed.image.url, description="Chaos Org • Parceria")
             ))
         componentes.extend([
             discord.ui.TextDisplay("\n\n".join(partes)[:3900]),
@@ -387,7 +387,7 @@ class ParceriaLayoutView(discord.ui.LayoutView):
             componentes.append(discord.ui.ActionRow(botao))
         componentes.extend([
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay(f"-# Nêmesis Systeam • Alianças e parcerias • {MARCADOR_CARTAO_PARCERIAS}"),
+            discord.ui.TextDisplay(f"-# Chaos Org Systeam • Alianças e parcerias • {MARCADOR_CARTAO_PARCERIAS}"),
         ])
         self.add_item(discord.ui.Container(*componentes, accent_colour=0x9F1239))
 
@@ -395,9 +395,9 @@ class ParceriaLayoutView(discord.ui.LayoutView):
 def _embed_parceria_publica(parceria: dict, guild: discord.Guild, indice: int | None = None) -> discord.Embed:
     """Cartão público padronizado das alianças oficiais."""
     nome = str(parceria.get("nome") or "Comunidade parceira")[:180]
-    descricao = str(parceria.get("descricao") or "Aliança oficial da NÊMESIS.")[:3500]
+    descricao = str(parceria.get("descricao") or "Aliança oficial da Chaos Org.")[:3500]
     embed = discord.Embed(
-        title=f"◈ NÊMESIS  |  ALIANÇA OFICIAL",
+        title=f"◈ Chaos Org  |  ALIANÇA OFICIAL",
         description=f"**{nome}**\n{descricao}",
         color=0x8F1D2C,
         timestamp=discord.utils.utcnow(),
@@ -423,9 +423,9 @@ def _embed_parceria_publica(parceria: dict, guild: discord.Guild, indice: int | 
             embed.set_image(url=str(banner))
         except (TypeError, discord.HTTPException):
             pass
-    embed.set_author(name="NÊMESIS • RELAÇÕES INSTITUCIONAIS")
+    embed.set_author(name="Chaos Org • RELAÇÕES INSTITUCIONAIS")
     sufixo = f" • Registro {indice}" if indice else ""
-    embed.set_footer(text="Aliança verificada pela administração NÊMESIS" + sufixo)
+    embed.set_footer(text="Aliança verificada pela administração Chaos Org" + sufixo)
     return embed
 
 
@@ -450,7 +450,7 @@ async def registrar_parceria_aprovada(
             "guild_id": guild.id,
             "nome": nome,
             "convite": str(candidatura.get("convite") or ""),
-            "descricao": str(candidatura.get("proposta") or candidatura.get("segmento") or "Aliança oficial da NÊMESIS.")[:3500],
+            "descricao": str(candidatura.get("proposta") or candidatura.get("segmento") or "Aliança oficial da Chaos Org.")[:3500],
             "segmento": str(candidatura.get("segmento") or "")[:180],
             "membros": candidatura.get("membros"),
             "banner": candidatura.get("banner"),
@@ -513,7 +513,7 @@ async def registrar_parceria_aprovada(
 
 class Parcerias(commands.Cog):
     """
-    Sistema de parcerias da NÊMESIS.
+    Sistema de parcerias da Chaos Org.
 
     O arquivo parcerias.json é armazenamento interno do bot,
     persistido pelo adaptador de armazenamento configurado.

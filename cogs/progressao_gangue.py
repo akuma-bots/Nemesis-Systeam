@@ -83,7 +83,7 @@ def barra_progresso(xp: int, rank: dict, proximo: Optional[dict]) -> str:
 
 
 class ProgressaoGangue(commands.Cog):
-    """Progressão independente da NÊMESIS, com XP, ranks, cargos e anúncios."""
+    """Progressão independente da Chaos Org, com XP, ranks, cargos e anúncios."""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -174,13 +174,13 @@ class ProgressaoGangue(commands.Cog):
         tipo: str = "",
         contar_mensagem: bool = False,
     ) -> tuple[dict, dict, dict, bool]:
-        """Atualiza XP apenas para integrantes com o cargo-base oficial da NÊMESIS."""
+        """Atualiza XP apenas para integrantes com o cargo-base oficial da Chaos Org."""
         quantidade = max(0, int(quantidade))
         if guild_id != GUILD_ID or not await self._membro_tem_cargo_nemesis(guild_id, user_id):
             perfil_atual = await self._perfil(guild_id, user_id)
             rank_atual = rank_por_xp(max(0, int(perfil_atual.get("xp", 0) or 0)))
             log.info(
-                "XP de progressão bloqueado: usuário sem cargo NÊMESIS (guild=%s user=%s tipo=%s).",
+                "XP de progressão bloqueado: usuário sem cargo Chaos Org (guild=%s user=%s tipo=%s).",
                 guild_id, user_id, tipo or "recompensa",
             )
             return perfil_atual, rank_atual, rank_atual, False
@@ -225,13 +225,13 @@ class ProgressaoGangue(commands.Cog):
             return dict(perfil), rank_antigo, rank_novo, True
 
     async def _transferir_xp(self, guild_id: int, origem_id: int, destino_id: int, quantidade: int) -> tuple[dict, dict]:
-        """Transfere XP somente entre membros que possuem o cargo oficial NÊMESIS."""
+        """Transfere XP somente entre membros que possuem o cargo oficial Chaos Org."""
         if (
             guild_id != GUILD_ID
             or not await self._membro_tem_cargo_nemesis(guild_id, origem_id)
             or not await self._membro_tem_cargo_nemesis(guild_id, destino_id)
         ):
-            raise ValueError("A transferência de XP é exclusiva de membros com o cargo oficial NÊMESIS.")
+            raise ValueError("A transferência de XP é exclusiva de membros com o cargo oficial Chaos Org.")
         async with self._lock:
             dados = await self._dados()
             guild = dados.setdefault(str(guild_id), {})
@@ -334,10 +334,10 @@ class ProgressaoGangue(commands.Cog):
             # Adiciona o novo cargo antes de remover o anterior para evitar
             # deixar o membro sem rank caso a atribuição seja recusada.
             if adicionar not in membro.roles:
-                await membro.add_roles(adicionar, reason="Atualização da progressão da NÊMESIS")
+                await membro.add_roles(adicionar, reason="Atualização da progressão da Chaos Org")
                 cargo_adicionado = True
             if remover:
-                await membro.remove_roles(*remover, reason="Atualização da progressão da NÊMESIS")
+                await membro.remove_roles(*remover, reason="Atualização da progressão da Chaos Org")
             return True
         except (discord.Forbidden, discord.HTTPException):
             if cargo_adicionado:
@@ -415,13 +415,13 @@ class ProgressaoGangue(commands.Cog):
                 f"**Membro:** {membro.mention}\n"
                 f"**Novo rank:** ╭・𝐍̷𝐨.{rank['no']} — {rank['nome']}\n"
                 f"**Experiência de gangue:** {xp:,} XP".replace(",", ".")
-                + "\n\nO avanço foi registrado automaticamente pelo sistema da NÊMESIS."
+                + "\n\nO avanço foi registrado automaticamente pelo sistema da Chaos Org."
             ),
             color=0x9F1239,
             timestamp=discord.utils.utcnow(),
         )
         embed.set_thumbnail(url=membro.display_avatar.url)
-        embed.set_footer(text="NÊMESIS • PROGRESSÃO • A atividade válida impulsiona a hierarquia")
+        embed.set_footer(text="Chaos Org • PROGRESSÃO • A atividade válida impulsiona a hierarquia")
         try:
             await canal.send(embed=embed, allowed_mentions=discord.AllowedMentions(users=True, roles=False, everyone=False))
         except (discord.Forbidden, discord.HTTPException):
@@ -440,7 +440,7 @@ class ProgressaoGangue(commands.Cog):
         dados = await self._dados()
         config = dados.setdefault(str(guild.id), {})
         embed = criar_embed(
-            title="⚔️ PROGRESSÃO · HIERARQUIA NÊMESIS",
+            title="⚔️ PROGRESSÃO · HIERARQUIA Chaos Org",
             description=(
                 "**SUA EVOLUÇÃO É CONQUISTADA EM ATIVIDADE REAL.**\n"
                 "A progressão registra participação legítima, missões e guerras. "
@@ -467,7 +467,7 @@ class ProgressaoGangue(commands.Cog):
         )
         hierarquia += "\n00  **Liderança**  ·  atribuição exclusiva da direção"
         embed.add_field(name="03  /  ESCALA DE PATENTES", value=hierarquia[:1024], inline=False)
-        embed.set_footer(text="NÊMESIS • PROGRESSÃO OFICIAL • XP separado do competitivo • Ações manuais auditadas")
+        embed.set_footer(text="Chaos Org • PROGRESSÃO OFICIAL • XP separado do competitivo • Ações manuais auditadas")
         msg_id = config.get("painel_mensagem_id")
         if msg_id:
             try:
@@ -485,7 +485,7 @@ class ProgressaoGangue(commands.Cog):
             config["painel_mensagem_id"] = msg.id
             await self._salvar_dados(dados)
             try:
-                await msg.pin(reason="Painel oficial permanente da progressão da NÊMESIS")
+                await msg.pin(reason="Painel oficial permanente da progressão da Chaos Org")
             except (discord.Forbidden, discord.HTTPException):
                 pass
             self._prontos.add(guild.id)
@@ -553,7 +553,7 @@ class ProgressaoGangue(commands.Cog):
             if rank_novo["no"] != rank_antigo["no"]:
                 await self._anunciar_rank(guild, membro, rank_novo, perfil["xp"])
 
-    @app_commands.command(name="gangue-perfil", description="Mostra o progresso de um membro na hierarquia da NÊMESIS.")
+    @app_commands.command(name="gangue-perfil", description="Mostra o progresso de um membro na hierarquia da Chaos Org.")
     @app_commands.describe(membro="Membro para consultar; padrão: você")
     async def gangue_perfil(self, interaction: discord.Interaction, membro: discord.Member = None):
         if interaction.guild is None:
@@ -575,7 +575,7 @@ class ProgressaoGangue(commands.Cog):
                 f"**PRÓXIMO OBJETIVO** · {destino}"
             ).replace(",", "."),
             cor=0x9F1239,
-            rodape="NÊMESIS  •  PROGRESSÃO INDIVIDUAL",
+            rodape="Chaos Org  •  PROGRESSÃO INDIVIDUAL",
         )
         embed.add_field(name="MENSAGENS VÁLIDAS", value=f"**{int(perfil.get('mensagens', 0)):,}**".replace(",", "."), inline=True)
         embed.add_field(name="MISSÕES", value=f"**{int(perfil.get('missoes', 0)):,}**".replace(",", "."), inline=True)
@@ -583,7 +583,7 @@ class ProgressaoGangue(commands.Cog):
         embed.set_thumbnail(url=alvo.display_avatar.url)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.command(name="gangue-ranking", description="Mostra o ranking de progressão da NÊMESIS.")
+    @app_commands.command(name="gangue-ranking", description="Mostra o ranking de progressão da Chaos Org.")
     async def gangue_ranking(self, interaction: discord.Interaction):
         if interaction.guild is None:
             await interaction.response.send_message("Use este comando dentro do servidor.", ephemeral=True)
@@ -599,10 +599,10 @@ class ProgressaoGangue(commands.Cog):
             await interaction.response.send_message("Ainda não há membros no ranking de progressão.", ephemeral=True)
             return
         embed = criar_embed(
-            title="🏆 CLASSIFICAÇÃO · HIERARQUIA NÊMESIS",
+            title="🏆 CLASSIFICAÇÃO · HIERARQUIA Chaos Org",
             description="**TOP 10 DE PROGRESSÃO**\nClassificação ordenada por XP acumulado e, em caso de empate, por participação registrada.",
             cor=0x9F1239,
-            rodape="NÊMESIS  •  QUADRO DE MÉRITO",
+            rodape="Chaos Org  •  QUADRO DE MÉRITO",
         )
         medalhas = {1: "🥇", 2: "🥈", 3: "🥉"}
         for posicao, (uid, perfil) in enumerate(ranking, start=1):
@@ -618,7 +618,7 @@ class ProgressaoGangue(commands.Cog):
             )
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name="gangue-banco", description="Consulta seu saldo de XP transferível da NÊMESIS.")
+    @app_commands.command(name="gangue-banco", description="Consulta seu saldo de XP transferível da Chaos Org.")
     async def gangue_banco(self, interaction: discord.Interaction):
         if interaction.guild is None:
             await interaction.response.send_message("Use este comando dentro do servidor.", ephemeral=True)
@@ -638,10 +638,10 @@ class ProgressaoGangue(commands.Cog):
             color=0x9F1239,
             timestamp=discord.utils.utcnow(),
         )
-        embed.set_footer(text="NÊMESIS • BANCO DE XP • Transferências registradas")
+        embed.set_footer(text="Chaos Org • BANCO DE XP • Transferências registradas")
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
-    @app_commands.command(name="gangue-doar-xp", description="Transfere XP do seu saldo para outro membro da NÊMESIS.")
+    @app_commands.command(name="gangue-doar-xp", description="Transfere XP do seu saldo para outro membro da Chaos Org.")
     @app_commands.describe(destinatario="Membro que receberá a transferência", quantidade="Quantidade de XP a transferir")
     async def gangue_doar_xp(
         self,
@@ -686,7 +686,7 @@ class ProgressaoGangue(commands.Cog):
             color=0x9F1239,
             timestamp=discord.utils.utcnow(),
         )
-        embed.set_footer(text="NÊMESIS • BANCO DE XP • Operação registrada no histórico")
+        embed.set_footer(text="Chaos Org • BANCO DE XP • Operação registrada no histórico")
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
         canal = interaction.guild.get_channel(CANAL_PROGRESSAO_ID)
@@ -805,7 +805,7 @@ class ProgressaoGangue(commands.Cog):
             return
         if not await self._membro_tem_cargo_nemesis(interaction.guild.id, membro.id):
             await interaction.response.send_message(
-                "Apenas membros com o cargo oficial NÊMESIS podem receber um rank de progressão.",
+                "Apenas membros com o cargo oficial Chaos Org podem receber um rank de progressão.",
                 ephemeral=True,
             )
             return
@@ -902,7 +902,7 @@ class ProgressaoGangue(commands.Cog):
             ephemeral=True,
         )
 
-    @app_commands.command(name="gangue-promover", description="Promove um membro para um rank superior da NÊMESIS.")
+    @app_commands.command(name="gangue-promover", description="Promove um membro para um rank superior da Chaos Org.")
     @app_commands.describe(membro="Membro que será promovido", rank="Novo rank", motivo="Justificativa da promoção")
     @app_commands.choices(rank=RANK_CHOICES)
     @hierarquia_only()
@@ -915,7 +915,7 @@ class ProgressaoGangue(commands.Cog):
     ):
         await self._ajustar_rank_manual(interaction, membro, rank, motivo, "Promoção")
 
-    @app_commands.command(name="gangue-rebaixar", description="Rebaixa um membro para um rank inferior da NÊMESIS.")
+    @app_commands.command(name="gangue-rebaixar", description="Rebaixa um membro para um rank inferior da Chaos Org.")
     @app_commands.describe(membro="Membro que será rebaixado", rank="Novo rank", motivo="Justificativa do rebaixamento")
     @app_commands.choices(rank=RANK_CHOICES)
     @hierarquia_only()
@@ -942,7 +942,7 @@ class ProgressaoGangue(commands.Cog):
             return
         if not await self._membro_tem_cargo_nemesis(interaction.guild.id, membro.id):
             await interaction.response.send_message(
-                "Apenas membros com o cargo oficial NÊMESIS podem receber XP de progressão.",
+                "Apenas membros com o cargo oficial Chaos Org podem receber XP de progressão.",
                 ephemeral=True,
             )
             return
@@ -983,7 +983,7 @@ class ProgressaoGangue(commands.Cog):
                 timestamp=discord.utils.utcnow(),
             )
             registro.set_thumbnail(url=membro.display_avatar.url)
-            registro.set_footer(text="NÊMESIS • REGISTRO OFICIAL DE ATIVIDADES")
+            registro.set_footer(text="Chaos Org • REGISTRO OFICIAL DE ATIVIDADES")
             try:
                 await canal_registro.send(
                     embed=registro,

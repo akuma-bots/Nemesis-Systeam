@@ -84,7 +84,7 @@ class NotasDMView(discord.ui.LayoutView):
             discord.ui.ActionRow(sistemas, missoes),
             discord.ui.ActionRow(preferencias),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Nêmesis Systeam"),
+            discord.ui.TextDisplay("-# Chaos Org Systeam"),
             accent_colour=COR_PRIMARIA,
         ))
 
@@ -96,7 +96,7 @@ async def _enviar_dm_com_retry(
     embed: discord.Embed | None = None,
 ) -> str:
     if view is None and embed is not None:
-        texto = texto_embed_components_v2(embed) or "## NÊMESIS • Comunicado"
+        texto = texto_embed_components_v2(embed) or "## Chaos Org • Comunicado"
         componentes = [
             discord.ui.TextDisplay(parte)
             for parte in dividir_texto_components_v2(texto)
@@ -156,10 +156,10 @@ class Novidades(commands.Cog):
 
     async def cog_load(self):
         # Registra o botão de preferências para que DMs antigas continuem
-        # interativas mesmo depois de uma reinicialização da Nêmesis Systeam.
+        # interativas mesmo depois de uma reinicialização da Chaos Org Systeam.
         self.bot.add_view(NotasDMView({
             "titulo": "Atualização",
-            "mensagem": "Consulte as notas de atualização da NÊMESIS.",
+            "mensagem": "Consulte as notas de atualização da Chaos Org.",
             "tipo": "Sistema",
             "data_atualizacao": "—",
             "hora_atualizacao": "—",

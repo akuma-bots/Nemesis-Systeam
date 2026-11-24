@@ -9,7 +9,7 @@ from utils.apresentacao import criar_embed, COR_PRIMARIA
 GUILD_NEMESIS_ID = 1563995879981981817
 CANAL_REGRAS_ID = 1563995880833421508
 COR = COR_PRIMARIA
-MARCADOR_PUBLICACAO = "NÊMESIS • Código de Conduta oficial"
+MARCADOR_PUBLICACAO = "Chaos Org • Código de Conduta oficial"
 
 # Os códigos 01–08 são consumidos pelo AutoMod. Não renumerar sem
 # atualizar também as referências de infração em cogs/automod.py.
@@ -32,7 +32,7 @@ SECOES_REGRAS = (
     ),
     (
         "5 Divulgação e parcerias",
-        "1 Divulgue somente nos canais e formatos autorizados.\n\n2 Não envie anúncios não solicitados por mensagem privada nem insista após uma recusa.\n\n3 Não espalhe convites fraudulentos ou links enganosos.\n\n4 Toda parceria depende de análise e aprovação da autoridade responsável.\n\n5 Não utilize a NÊMESIS para autopromoção irregular.",
+        "1 Divulgue somente nos canais e formatos autorizados.\n\n2 Não envie anúncios não solicitados por mensagem privada nem insista após uma recusa.\n\n3 Não espalhe convites fraudulentos ou links enganosos.\n\n4 Toda parceria depende de análise e aprovação da autoridade responsável.\n\n5 Não utilize a Chaos Org para autopromoção irregular.",
     ),
     (
         "6 Atendimento e denúncias",
@@ -64,8 +64,8 @@ SECOES_REGRAS = (
 def construir_embed_regras() -> discord.Embed:
     """Reúne os 11 artigos em uma única embed, com títulos como campos."""
     embed = criar_embed(
-        title="CÓDIGO DE CONDUTA • NÊMESIS",
-        description="Código oficial da NÊMESIS. As regras se aplicam a todos os integrantes, sem distinção de cargo.\n\nCada artigo apresenta suas determinações em ordem numérica.",
+        title="CÓDIGO DE CONDUTA • Chaos Org",
+        description="Código oficial da Chaos Org. As regras se aplicam a todos os integrantes, sem distinção de cargo.\n\nCada artigo apresenta suas determinações em ordem numérica.",
         color=COR,
     )
     for titulo, texto in SECOES_REGRAS:
@@ -145,7 +145,7 @@ class RegrasOficiais(commands.Cog):
                         item.footer
                         and (item.footer.text or "").startswith(MARCADOR_PUBLICACAO)
                     )
-                    or item.title == "CÓDIGO DE CONDUTA • NÊMESIS"
+                    or item.title == "CÓDIGO DE CONDUTA • Chaos Org"
                     or any(campo.name in titulos_artigos for campo in item.fields)
                     for item in mensagem.embeds
                 )
