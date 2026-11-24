@@ -360,7 +360,7 @@ class TestCartaoHistoricoComponentsV2(unittest.IsolatedAsyncioTestCase):
             f"**{campo.name}**\n{campo.value}" for campo in embed.fields
         )
         partes_esperadas.append(f"-# {embed.footer.text}")
-        esperado = "\n\n".join(partes_esperadas) + "-# Nêmesis Systeam • Arquivo e auditoria"
+        esperado = "\n\n".join(partes_esperadas) + "-# Chaos Systeam • Arquivo e auditoria"
         self.assertEqual("".join(textos), esperado)
 
         linhas = [
