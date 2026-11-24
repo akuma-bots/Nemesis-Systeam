@@ -270,7 +270,7 @@ class GuiaServidoresView(discord.ui.LayoutView):
             discord.ui.TextDisplay("### ◈ NAVEGAÇÃO DO SERVIDOR"),
             discord.ui.ActionRow(seletor),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-            discord.ui.TextDisplay("-# Chaos Org Systeam"),
+            discord.ui.TextDisplay("-# Chaos Systeam"),
             accent_colour=0x9F1239,
         ))
 
@@ -295,11 +295,11 @@ async def publicar_guia_servidor(bot) -> bool:
 
     bot_member = guild.me or guild.get_member(bot.user.id)
     if bot_member is None:
-        logger.error("Não foi possível resolver o membro do Shinku na Chaos Org.")
+        logger.error("Não foi possível resolver o membro do Systeam na Chaos Org.")
         return False
     permissoes_bot = canal.permissions_for(bot_member)
     if not (permissoes_bot.view_channel and permissoes_bot.send_messages and permissoes_bot.read_message_history):
-        logger.error("Shinku precisa de Ver canal, Enviar mensagens e Ler histórico para manter o guia sem duplicações.")
+        logger.error("Systeam precisa de Ver canal, Enviar mensagens e Ler histórico para manter o guia sem duplicações.")
         return False
 
     embed = criar_embed_guia_servidor()

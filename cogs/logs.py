@@ -54,7 +54,7 @@ def _layout_boas_vindas(embed: discord.Embed) -> discord.ui.LayoutView:
         discord.ui.TextDisplay("### ◈ PRIMEIROS PASSOS"),
         discord.ui.ActionRow(GuiaCanaisSelect()),
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Chaos Org Systeam • Integração de novos integrantes"),
+        discord.ui.TextDisplay("-# Chaos Systeam • Integração de novos integrantes"),
         accent_colour=0x9F1239,
     ))
     return layout
@@ -170,7 +170,7 @@ def _card_registro(origem: discord.ui.View, embed: discord.Embed | None = None,
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
         *linhas_componentes,
         discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
-        discord.ui.TextDisplay("-# Chaos Org Systeam • Arquivo e auditoria"),
+        discord.ui.TextDisplay("-# Chaos Systeam • Arquivo e auditoria"),
     ]
     if len(componentes_finais) > 10:
         raise ValueError(
@@ -349,7 +349,7 @@ class PainelHistoricoMembrosLayoutView(discord.ui.LayoutView):
             ),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(botao),
-            discord.ui.TextDisplay("-# Chaos Org Systeam • Consulta privada"),
+            discord.ui.TextDisplay("-# Chaos Systeam • Consulta privada"),
             accent_colour=0x9F1239,
         ))
 

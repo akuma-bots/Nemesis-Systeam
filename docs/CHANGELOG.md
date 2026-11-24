@@ -1,4 +1,4 @@
-# Notas de atualização — Chaos Org / Shinku
+# Notas de atualização — Chaos Org / Systeam
 
 Este arquivo registra mudanças por estado de entrega. Merge no GitHub não significa, por si só, que o recurso já esteja ativo no Discord; a ativação depende do deploy e da inicialização correta do bot.
 
@@ -11,7 +11,7 @@ Este arquivo registra mudanças por estado de entrega. Merge no GitHub não sign
 - Recuperação do prazo de inatividade pelo histórico real após reinicializações; canais inacessíveis não são encerrados como se tivessem sido excluídos.
 - Fechamento com reserva temporária, retomada automática após falhas e proteção contra exclusões concorrentes.
 - O canal do ticket só é excluído depois que a transcrição é preservada; falhas no canal de histórico mantêm o atendimento para nova tentativa.
-- Avaliações com gravação única e botões dinâmicos compatíveis com reinicializações do Shinku.
+- Avaliações com gravação única e botões dinâmicos compatíveis com reinicializações do Systeam.
 - Gestão de tickets integrada à Central Administrativa, com configuração de categoria, equipe, painel e categorias visuais.
 - Remoção dos comandos independentes /ticket-painel-configurar e /ticket-categoria-visual.
 - O botão Atendimento foi adicionado à central administrativa existente.
@@ -65,7 +65,7 @@ Este arquivo registra mudanças por estado de entrega. Merge no GitHub não sign
 - Catálogos com mais de 25 atividades recebem paginação no seletor.
 - O formulário de evidência deixa de exigir que o membro copie e digite o código da missão.
 - O tutorial de missões foi atualizado para refletir o novo fluxo.
-- A navegação identifica a categoria pelo painel atual, inclusive após reinicializações do Shinku.
+- A navegação identifica a categoria pelo painel atual, inclusive após reinicializações do Systeam.
 
 ### Central de Validação de Provas — 2026-10-31
 - Painel administrativo privado com indicadores gerais de pendências, aprovações e recusas.
@@ -97,7 +97,7 @@ Este arquivo registra mudanças por estado de entrega. Merge no GitHub não sign
 ### Observações
 - As recompensas são XP organizacional e reconhecimento visual; não concedem permissões administrativas nem alteram a hierarquia de liderança.
 - O sistema não apaga nem substitui medalhas competitivas antigas.
-- Ativação no Discord depende do deploy e da inicialização do Shinku.
+- Ativação no Discord depende do deploy e da inicialização do Systeam.
 
 
 ## 2026-10-31 — Destinos de registro do AutoMod

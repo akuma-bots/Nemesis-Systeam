@@ -15,7 +15,7 @@ COR_NEUTRA = 0x111014
 MARCA = "Chaos Org"
 AUTOR_PADRAO = "Chaos Org • CENTRAL DE SISTEMAS"
 RODAPE_PADRAO = "Chaos Org • SISTEMAS INTEGRADOS"
-ASSINATURA_SISTEMA = "Chaos Org Systeam"
+ASSINATURA_SISTEMA = "Chaos Systeam"
 
 
 def criar_embed(

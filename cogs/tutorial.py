@@ -30,7 +30,7 @@ TUTORIAIS = {
         "titulo": "Dados e histórico de atividade",
         "descricao": "Entenda quais dados de atividade são registrados para segurança e moderação.",
         "passos": [
-            "O Shinku registra mensagens enviadas nos canais e tópicos da Chaos Org que o bot consegue acessar, incluindo o conteúdo atual, edições e exclusões.",
+            "O Systeam registra mensagens enviadas nos canais e tópicos da Chaos Org que o bot consegue acessar, incluindo o conteúdo atual, edições e exclusões.",
             "O histórico de mensagens mantém até 500 mensagens por membro, por no máximo 30 dias. São preservadas até duas versões anteriores de uma mensagem editada.",
             "O monitoramento também registra eventos do servidor, como entrada e saída, mudanças de apelido, timeout, banimento e movimentações em canais de voz.",
             "A consulta individual é privada e restrita à liderança autorizada. Os dados são usados para segurança, auditoria e moderação da comunidade.",
@@ -46,10 +46,10 @@ TUTORIAIS = {
         "passos": [
             "Entre primeiro no canal de voz em que quer ouvir música.",
             "Abra o painel Central Musical no canal Músicas e selecione Buscar para informar o nome ou link da faixa.",
-            "Conecte-se a um canal de voz antes de iniciar a busca. A Shinku entrará na sua call e começará a reprodução.",
+            "Conecte-se a um canal de voz antes de iniciar a busca. A Systeam entrará na sua call e começará a reprodução.",
             "Use os botões Fila e Tocando agora para consultar a reprodução atual.",
             "Use os botões de reprodução para pausar, continuar, avançar e ajustar o volume.",
-            "Use o controle Encerrar para limpar a reprodução e desconectar a Shinku da call.",
+            "Use o controle Encerrar para limpar a reprodução e desconectar a Systeam da call.",
             "Se o bot não entrar, confirme que ele tem as permissões Conectar, Falar e Ver canal; a hospedagem também precisa ter as dependências de voz instaladas.",
         ],
         "comandos": "Canal Músicas · Central Musical · Botões de reprodução",
@@ -58,7 +58,7 @@ TUTORIAIS = {
         "titulo": "Começando na Chaos Org",
         "descricao": "Guia de integração para novos integrantes: identidade, cargo inicial, canais e primeiros passos.",
         "passos": [
-            "Ao entrar no servidor, o Shinku atribui automaticamente o cargo Visitantes. Se ele não aparecer, aguarde alguns segundos e procure a equipe pelo canal de Atendimento.",
+            "Ao entrar no servidor, o Systeam atribui automaticamente o cargo Visitantes. Se ele não aparecer, aguarde alguns segundos e procure a equipe pelo canal de Atendimento.",
             "A TAG oficial da organização é NΞM. Ela identifica a Chaos Org e deve ser preservada conforme as orientações da liderança.",
             "Leia o canal Regras (categoria Informações) e acompanhe os comunicados em Anúncios antes de participar das atividades.",
             "Abra Como funciona para entender a proposta da organização e Divisões para conhecer a estrutura das equipes.",

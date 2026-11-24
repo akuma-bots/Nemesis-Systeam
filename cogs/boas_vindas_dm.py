@@ -273,7 +273,7 @@ def _reconstruir_cartao_preferencias(mensagem: discord.Message, botao: discord.u
     )
     ultima_linha = texto.rstrip().splitlines()[-1] if texto.strip() else ""
     if not ultima_linha.startswith("-#"):
-        componentes.append(discord.ui.TextDisplay("-# Chaos Org Systeam"))
+        componentes.append(discord.ui.TextDisplay("-# Chaos Systeam"))
 
     if len(componentes) > 10:
         raise ValueError(
