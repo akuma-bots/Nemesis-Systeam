@@ -19,7 +19,7 @@ class TestRankingCentral(unittest.TestCase):
     def test_central_concentra_seletor_e_acoes_em_componentes(self):
         central = CentralRankingGeralView(
             cog=None,
-            guild=SimpleNamespace(id=123, name="NÊMESIS"),
+            guild=SimpleNamespace(id=123, name="Chaos Org"),
             owner_id=456,
         )
         botoes = [

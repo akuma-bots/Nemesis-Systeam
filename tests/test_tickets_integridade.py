@@ -29,7 +29,7 @@ class TestTicketsIntegridade(unittest.IsolatedAsyncioTestCase):
 
         central = CentralTicketsView(
             cog=None,
-            guild=type("Guild", (), {"id": 123, "name": "NÊMESIS"})(),
+            guild=type("Guild", (), {"id": 123, "name": "Chaos Org"})(),
             owner_id=456,
         )
         botoes = {
@@ -44,7 +44,7 @@ class TestTicketsIntegridade(unittest.IsolatedAsyncioTestCase):
     async def test_central_carrega_seletor_de_categorias_para_edicao(self):
         central = CentralTicketsView(
             cog=None,
-            guild=type("Guild", (), {"id": 123, "name": "NÊMESIS"})(),
+            guild=type("Guild", (), {"id": 123, "name": "Chaos Org"})(),
             owner_id=456,
         )
         with patch(
@@ -61,7 +61,7 @@ class TestTicketsIntegridade(unittest.IsolatedAsyncioTestCase):
     async def test_modal_de_painel_carrega_configuracao_atual(self):
         central = CentralTicketsView(
             cog=None,
-            guild=type("Guild", (), {"id": 123, "name": "NÊMESIS"})(),
+            guild=type("Guild", (), {"id": 123, "name": "Chaos Org"})(),
             owner_id=456,
         )
         modal = PersonalizarPainelTicketModal(

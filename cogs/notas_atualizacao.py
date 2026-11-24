@@ -64,7 +64,7 @@ class NotasAtualizacao(commands.Cog):
         release_id = str(release.get("release_id") or "Não informado")[:100]
 
         embed = discord.Embed(
-            title=f"✦・ 𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 — {titulo} ・✦",
+            title=f"✦・ Chaos Org — {titulo} ・✦",
             description=mensagem,
             color=0xB3132B,
             timestamp=discord.utils.utcnow(),
@@ -79,7 +79,7 @@ class NotasAtualizacao(commands.Cog):
         banner = getattr(getattr(usuario, "banner", None), "url", None)
         banner_servidor = getattr(getattr(interaction.guild, "banner", None), "url", None)
         if avatar:
-            embed.set_author(name="𝐍̷Ê𝐌𝐄𝐒𝐈𝐒 • NOTAS OFICIAIS", icon_url=avatar)
+            embed.set_author(name="Chaos Org • NOTAS OFICIAIS", icon_url=avatar)
             embed.set_thumbnail(url=avatar)
         if banner or banner_servidor:
             embed.set_image(url=banner or banner_servidor)
