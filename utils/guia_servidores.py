@@ -8,7 +8,7 @@ GUILD_NEMESIS_ID = 1563995879981981817
 CANAL_GUIA_SERVIDOR_ID = 1563995880833421509
 CARGO_VISITANTES_ID = 1563995879990624371
 NOME_CARGO_VISITANTES = "Visitantes"
-TAG_ORG_NEMESIS = "NΞM"
+TAG_ORG_NEMESIS = "CØS"
 RODAPE_GUIA = "Chaos Org • GUIA OFICIAL DO SERVIDOR"
 
 # Somente áreas oficiais de orientação geral. Áreas privadas não são
@@ -43,7 +43,7 @@ def criar_embed_guia_servidor() -> discord.Embed:
             "evolução, estratégia e comunidade. Este espaço reúne integrantes "
             "que desejam participar de uma estrutura organizada, desenvolver "
             "suas capacidades e construir resultados em conjunto.\n\n"
-            "**TAG OFICIAL:** `NΞM`"
+            "**TAG OFICIAL:** `CØS`"
         ),
         colour=0xB3132B,
     )

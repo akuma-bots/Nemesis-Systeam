@@ -42,9 +42,9 @@ def test_welcome_guide_links_only_known_nemesis_channels():
 def test_start_tutorial_explains_visitor_role_and_org_tag():
     texto = " ".join(TUTORIAIS["inicio"]["passos"])
     assert "Visitantes" in texto
-    assert "NΞM" in texto
+    assert "CØS" in texto
     assert CARGO_VISITANTES_ID == 1563995879990624371
-    assert TAG_ORG_NEMESIS == "NΞM"
+    assert TAG_ORG_NEMESIS == "CØS"
 
 
 def test_visitor_role_is_part_of_automatic_entry_roles():

@@ -17,8 +17,8 @@ def test_welcome_codes_catalog_has_all_games_and_requirements():
 
 
 def test_welcome_uses_nemesis_tag_and_invite():
-    assert TAG_GANGUE == "NΞM"
-    assert TAG_ORG_NEMESIS == "NΞM"
+    assert TAG_GANGUE == "CØS"
+    assert TAG_ORG_NEMESIS == "CØS"
     assert CONVITE_NEMESIS.startswith("https://discord.gg/")
 
 

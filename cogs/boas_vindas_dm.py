@@ -65,7 +65,7 @@ def _embed_inicio(membro: discord.abc.User) -> discord.Embed:
         "Os códigos podem expirar sem aviso; consulte a fonte indicada em cada aba."
     ), inline=False)
     embed.set_thumbnail(url=membro.display_avatar.url)
-    embed.set_footer(text="Chaos Org • TAG DA ORG: NΞM • Integração oficial")
+    embed.set_footer(text="Chaos Org • TAG DA ORG: CØS • Integração oficial")
     return embed
 
 
@@ -363,7 +363,7 @@ class BoasVindasLayoutView(discord.ui.LayoutView):
             discord.ui.ActionRow(seletor),
             discord.ui.Separator(visible=True, spacing=discord.SeparatorSpacing.small),
             discord.ui.ActionRow(avisos),
-            discord.ui.TextDisplay("-# Chaos Org • INTEGRAÇÃO OFICIAL • NΞM"),
+            discord.ui.TextDisplay("-# Chaos Org • INTEGRAÇÃO OFICIAL • CØS"),
             accent_colour=0x9F1239,
         ))
 

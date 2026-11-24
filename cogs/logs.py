@@ -555,10 +555,10 @@ class Logs(commands.Cog):
         )
         embed.add_field(
             name="✦  SEU PRÓXIMO CAPÍTULO COMEÇA AGORA",
-            value="A TAG oficial da organização é **NΞM**. A Chaos Org reconhece atitude, consistência e espírito competitivo. **Mostre do que você é capaz.**",
+            value="A TAG oficial da organização é **CØS**. A Chaos Org reconhece atitude, consistência e espírito competitivo. **Mostre do que você é capaz.**",
             inline=False,
         )
-        embed.set_footer(text="Chaos Org • TAG DA ORG: NΞM • Sistema oficial de integração")
+        embed.set_footer(text="Chaos Org • TAG DA ORG: CØS • Sistema oficial de integração")
         if canal is not None:
             enviado = await self._enviar_log(canal, embed, view=_layout_boas_vindas(embed))
             if enviado:
