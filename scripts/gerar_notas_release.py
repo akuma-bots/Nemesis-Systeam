@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gera notas públicas somente para alterações funcionais relevantes da NÊMESIS."""
+"""Gera notas públicas somente para alterações funcionais relevantes da Chaos Org."""
 from __future__ import annotations
 
 import json
@@ -160,7 +160,7 @@ def gerar(before: str, after: str) -> dict | None:
     if not linhas:
         return None
     mensagem = (
-        "A NÊMESIS recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n"
+        "A Chaos Org recebeu uma atualização. Confira exatamente o que mudou nesta versão:\n\n"
         + "\n".join(linhas)
     )
     if areas:
@@ -176,7 +176,7 @@ def gerar(before: str, after: str) -> dict | None:
         "release_id": agora.strftime("%Y%m%d-%H%M%S"),
         "habilitada": True,
         "tipo": tipo,
-        "titulo": titulo[:180] or "Atualização da NÊMESIS",
+        "titulo": titulo[:180] or "Atualização da Chaos Org",
         "mensagem": mensagem[:3400],
         "data_atualizacao": agora.strftime("%d/%m/%Y"),
         "hora_atualizacao": agora.strftime("%H:%M"),

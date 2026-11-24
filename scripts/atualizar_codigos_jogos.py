@@ -106,7 +106,7 @@ def calcular_semana(data: date) -> tuple[date, date]:
 
 def main() -> int:
     catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
-    # Use o fuso do servidor da NÊMESIS, não o UTC do runner do GitHub.
+    # Use o fuso do servidor da Chaos Org, não o UTC do runner do GitHub.
     today = datetime.now(ZoneInfo("America/Sao_Paulo")).date()
     week_start, week_end = calcular_semana(today)
     failures = []
