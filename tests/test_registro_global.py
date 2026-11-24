@@ -206,7 +206,7 @@ class TestRegistroGlobal(unittest.IsolatedAsyncioTestCase):
             name=registro_global.CATEGORIAS["mensagens"][0],
             archived=False,
             locked=False,
-            reason="Reorganização dos registros da NÊMESIS; preservação do histórico existente",
+            reason="Reorganização dos registros da Chaos Org; preservação do histórico existente",
         )
         salvar.assert_awaited_once_with(registro_global.GUILD_NEMESIS_ID, "mensagens", 789)
 

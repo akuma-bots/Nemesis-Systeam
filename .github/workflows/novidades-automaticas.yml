@@ -1,4 +1,4 @@
-name: Gerar notas automáticas da NÊMESIS
+name: Gerar notas automáticas da Chaos Org
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add config/novidades.json
-          git commit -m "chore(releases): publicar notas automáticas da NÊMESIS"
+          git commit -m "chore(releases): publicar notas automáticas da Chaos Org"
           for tentativa in 1 2 3 4 5; do
             git fetch origin main
             if ! git rebase origin/main; then
